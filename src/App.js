@@ -18,16 +18,22 @@ import AdminUserManagment from "./pages/admin/AdminUserManagment";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 
 function App() {
-  // const user = useSelector((state) => state.user.isLogged);
+  const user = useSelector((state) => state.user.isLogged);
   const admin = useSelector((state) => state.admin.isLogged);
   return (
     <>
       <Router>
         <Routes>
           {/* User Routes */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={user ? <Navigate to={"/"} /> : <LoginPage />}
+          />
           <Route path="/register" element={<SignupPage />} />
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={user ? <HomePage /> : <Navigate to={"/login"} />}
+          />
 
           {/* Admin Routes */}
           <Route

@@ -4,9 +4,12 @@ import { Formik, Field, Form } from 'formik'
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import {userLogin} from '../../../services/redux/slice/userSlice'
 
 const Login = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const loginCheck = Yup.object().shape({
         email: Yup.string()
             .email("Invalid email")
@@ -39,6 +42,7 @@ const Login = () => {
                                 try {
                                     const response = await Axios.post('/login', values)
                                     if (response.status === 200) {
+                                        dispatch(userLogin());
                                         navigate('/');
                                     }
                                 } catch (err) {
@@ -55,10 +59,10 @@ const Login = () => {
                         >
                             <Form>
                                 <div>
-                                    <Field type="text" name='email' className='outline-none border-b w-full bg-gray-200 text-gray-800 my-5 p-2 rounded-md' placeholder='Email' />
+                                    <Field type="text" name='email' className='outline-none border-b w-full text-gray-800 my-5 p-2 rounded-md' placeholder='Email' />
                                 </div>
                                 <div>
-                                    <Field type="password" name='password' className='outline-none border-b w-full bg-gray-200 text-gray-800 mt-5 mb-2 p-2 rounded-md' placeholder='Password' />
+                                    <Field type="password" name='password' className='outline-none border-b w-full text-gray-800 mt-5 mb-2 p-2 rounded-md' placeholder='Password' />
                                 </div>
                                 <button className='text-blue-500 hover:cursor-pointer'>Forgot Password ?</button>
                                 <div className='mt-4 flex justify-evenly'>

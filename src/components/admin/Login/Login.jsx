@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Axios from "../../../services/axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -42,15 +42,6 @@ const Login = () => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   const adminToken = localStorage.getItem("adminToken");
-  //   if (adminToken) {
-  //     navigate("/admin/dashboard");
-  //   } else {
-  //     navigate("/admin");
-  //   }
-  // }, []);
 
   return (
     <>
