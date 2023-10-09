@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "../AdminHeader";
 import AdminSideBar from "../AdminSideBar";
 import Axios from "../../../services/axios";
@@ -7,11 +7,28 @@ import { toast } from "react-toastify";
 const Users = () => {
   const [usersData, setUsersData] = useState([]);
 
+  const adminToken = localStorage.getItem("adminToken");
+
   const handleAction = async (action, id) => {
     try {
       if (action === "block") {
-        const response = await Axios.put("/admin/blockUser", { id });
+        const response = await Axios.put(
+          "/admin/blockUser",
+          { id },
+          {
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+            },
+          }
+        );
         if (response.status === 200) {
+          const updatedUser = usersData.map((user) => {
+            if (user._id === id) {
+              return { ...user, accountStatus: true };
+            }
+            return user;
+          });
+          setUsersData(updatedUser);
           toast.error(`${response.data.name} has been blocked`, {
             position: "top-right",
             autoClose: 1000,
@@ -25,8 +42,23 @@ const Users = () => {
           });
         }
       } else if (action === "unBlock") {
-        const response = await Axios.put("/admin/unBlockUser", { id });
+        const response = await Axios.put(
+          "/admin/unBlockUser",
+          { id },
+          {
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+            },
+          }
+        );
         if (response.status === 200) {
+          const updatedUser = usersData.map((user) => {
+            if (user._id === id) {
+              return { ...user, accountStatus: false };
+            }
+            return user;
+          });
+          setUsersData(updatedUser);
           toast.success(`${response.data.name} has been unblocked`, {
             position: "top-right",
             autoClose: 1000,
@@ -46,20 +78,23 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await Axios.get("/admin/getUserData");
+        const response = await Axios.get("/admin/getUserData", {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        });
         setUsersData(response.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchUsers();
-  }, [usersData]);
+  }, []);
 
   return (
     <>
       <AdminHeader />
       <AdminSideBar />
-
       <div className="relative overflow-x-auto ml-[260px] flex justify-center mt-[20px]">
         {usersData && usersData.length !== 0 ? (
           <table className="w-4/5	 text-sm text-left text-gray-500 dark:text-gray-400 ">
@@ -85,7 +120,7 @@ const Users = () => {
             <tbody>
               {usersData.map((user) => (
                 <tr
-                  key={user.id}
+                  key={user._id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <th
