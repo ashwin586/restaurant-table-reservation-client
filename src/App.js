@@ -9,13 +9,16 @@ import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
-import LoginPage from "./pages/users/LoginPage";
-import SignupPage from "./pages/users/SignupPage";
+import LoginPage from "./pages/users/Authentication/LoginPage";
+import SignupPage from "./pages/users/Authentication/SignupPage";
 import HomePage from "./pages/users/HomePage";
+import ForgotPasswordPage from "./pages/users/Authentication/ForgotPasswordPage";
 
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import AdminUserManagment from "./pages/admin/AdminUserManagment";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
+import Otp from "./components/users/Recover/Otp";
+import NewPassword from "./components/users/Recover/NewPassword";
 
 function App() {
   const user = useSelector((state) => state.user.isLogged);
@@ -27,13 +30,16 @@ function App() {
           {/* User Routes */}
           <Route
             path="/login"
-            element={user ? <Navigate to={"/"} /> : <LoginPage />}
+            element={<LoginPage />}
           />
           <Route path="/register" element={<SignupPage />} />
           <Route
             path="/"
             element={user ? <HomePage /> : <Navigate to={"/login"} />}
           />
+          <Route path='/forgotpassword' element={<ForgotPasswordPage />}/>
+          <Route path='/otpverify' element={<Otp />} />
+          <Route path='/newPassword' element={<NewPassword />}/>
 
           {/* Admin Routes */}
           <Route

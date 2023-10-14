@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { adminLogout } from "../../services/redux/slice/adminSlice"; 
+import { adminLogout } from "../../redux/slice/adminSlice"; 
 
 const AdminSideBar = () => {
   const location = useLocation();

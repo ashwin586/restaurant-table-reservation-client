@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch} from 'react-redux'
-import {userLogin} from '../../../services/redux/slice/userSlice'
+import {userLogin} from '../../../redux/slice/userSlice'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -64,7 +64,7 @@ const Login = () => {
                                 <div>
                                     <Field type="password" name='password' className='outline-none border-b w-full text-gray-800 mt-5 mb-2 p-2 rounded-md' placeholder='Password' />
                                 </div>
-                                <button className='text-blue-500 hover:cursor-pointer'>Forgot Password ?</button>
+                                <button className='text-blue-500 hover:cursor-pointer' onClick={() => navigate('/forgotpassword')}>Forgot Password ?</button>
                                 <div className='mt-4 flex justify-evenly'>
                                     <div className='me-4'>
                                         <button className='px-4 py-1 rounded-xl bg-button text-white'>Login</button>

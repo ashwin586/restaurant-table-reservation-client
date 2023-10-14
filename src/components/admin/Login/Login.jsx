@@ -3,7 +3,7 @@ import Axios from "../../../services/axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {useDispatch} from 'react-redux';
-import { adminLogin } from "../../../services/redux/slice/adminSlice";
+import { adminLogin } from "../../../redux/slice/adminSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");

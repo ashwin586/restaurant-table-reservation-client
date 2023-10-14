@@ -1,4 +1,4 @@
-import Signup from "../../components/users/Signup/Signup";
+import Signup from "../../../components/users/Signup/Signup";
 
 import React from 'react'
 

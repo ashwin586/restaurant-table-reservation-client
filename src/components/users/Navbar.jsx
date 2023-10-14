@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {userLogout} from '../../services/redux/slice/userSlice';
+import {userLogout} from '../../redux/slice/userSlice';
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.isLogged);

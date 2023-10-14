@@ -74,7 +74,7 @@ const Signup = () => {
                       className="outline-none border-b w-full p-2 rounded-md text-gray-800"
                       placeholder="Full Name"
                     />
-                    <ErrorMessage name="name" component="p" className="error text-red-500 font-bold" />
+                    <ErrorMessage name="name" component="p" className="error text-red-600 " />
                   </div>
                   <div className="mx-8">
                     <Field
@@ -83,7 +83,7 @@ const Signup = () => {
                       className="outline-none border-b w-full p-2 mt-2 rounded-md text-gray-800"
                       placeholder="Phone Number"
                     />
-                    <ErrorMessage name="phoneNumber" component="p" className="error text-red-500 font-bold" />
+                    <ErrorMessage name="phoneNumber" component="p" className="error text-red-600 " />
                   </div>
                   <div className="mx-8">
                     <Field
@@ -92,7 +92,7 @@ const Signup = () => {
                       className="outline-none border-b w-full p-2 mt-2 rounded-md text-gray-800"
                       placeholder="Email"
                     />
-                    <ErrorMessage name="email" component="p" className="error text-red-500 font-bold" />
+                    <ErrorMessage name="email" component="p" className="error text-red-600 " />
                   </div>
                   <div className="mx-8">
                     <Field
@@ -101,7 +101,7 @@ const Signup = () => {
                       className="outline-none border-b w-full p-2 mt-2 rounded-md text-gray-800"
                       placeholder="Password"
                     />
-                    <ErrorMessage name="password" component="p" className="error text-red-500 font-bold" />
+                    <ErrorMessage name="password" component="p" className="error text-red-600 " />
                   </div>
                   <div className="mt-5 flex justify-center">
                     <button className="px-2 py-1 rounded-xl bg-button text-white">
