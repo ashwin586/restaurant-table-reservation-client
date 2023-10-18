@@ -43,6 +43,7 @@ const Login = () => {
                                     const response = await Axios.post('/login', values)
                                     if (response.status === 200) {
                                         dispatch(userLogin());
+                                        localStorage.setItem('userToken', response.data.userToken);
                                         navigate('/');
                                     }
                                 } catch (err) {
