@@ -23,7 +23,7 @@ const UserRouter = () => {
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         <Route path="/otpverify" element={<Otp />} />
         <Route path="/newPassword" element={<NewPassword />} />
-        <Route path="/profile" element={<ProfilePage />}/>
+        <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to={'/'}/>}/>
       </Routes>
     </>
   );

@@ -1,16 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { userLogout } from "../../redux/slice/userSlice";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user.isLogged);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const userlogout = () => {
-    dispatch(userLogout());
-    navigate("/login");
-  };
   return (
     <>
       <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
@@ -77,12 +71,6 @@ const Navbar = () => {
                     onClick={() => navigate("/profile")}
                   >
                     Profile
-                  </button>
-                  <button
-                    className="bg-button px-4 py-3 rounded-xl"
-                    onClick={userlogout}
-                  >
-                    Logout
                   </button>
                 </div>
               )}

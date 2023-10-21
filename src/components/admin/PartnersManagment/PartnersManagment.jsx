@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from "react";
-import AdminHeader from "../AdminHeader";
 import AdminSideBar from "../AdminSideBar";
+import AdminHeader from "../AdminHeader";
 import Axios from "../../../services/axios";
 import { toast } from "react-toastify";
 
-const Users = () => {
-  const [usersData, setUsersData] = useState([]);
-
-  const adminToken = localStorage.getItem("adminToken");
+const PartnersManagment = () => {
+  const [partnerData, setPartnerData] = useState([]);
+  const partnerToken = localStorage.getItem("partnerToken");
 
   const handleAction = async (action, id) => {
     try {
       if (action === "block") {
         const response = await Axios.put(
-          "/admin/blockUser",
+          "/admin/blockPartner",
           { id },
           {
             headers: {
-              Authorization: `Bearer ${adminToken}`,
+              Authorization: `Bearer ${partnerToken}`,
             },
           }
         );
         if (response.status === 200) {
-          const updatedUser = usersData.map((user) => {
-            if (user._id === id) {
-              return { ...user, accountStatus: true };
+          const updatedPartner = partnerData.map((partner) => {
+            if (partner._id === id) {
+              return { ...partner, accountStatus: true };
             }
-            return user;
+            return partner;
           });
-          setUsersData(updatedUser);
-          toast.error(`${response.data.name} has been blocked`, {
+          setPartnerData(updatedPartner);
+          toast.error(`Partner has been blocked`, {
             position: "top-right",
             autoClose: 1000,
             hideProgressBar: false,
@@ -43,23 +42,23 @@ const Users = () => {
         }
       } else if (action === "unBlock") {
         const response = await Axios.put(
-          "/admin/unBlockUser",
+          "/admin/unBlockPartner",
           { id },
           {
             headers: {
-              Authorization: `Bearer ${adminToken}`,
+              Authorization: `Bearer ${partnerToken}`,
             },
           }
         );
         if (response.status === 200) {
-          const updatedUser = usersData.map((user) => {
-            if (user._id === id) {
-              return { ...user, accountStatus: false };
+          const updatedPartner = partnerData.map((partner) => {
+            if (partner._id === id) {
+              return { ...partner, accountStatus: false };
             }
-            return user;
+            return partner;
           });
-          setUsersData(updatedUser);
-          toast.success(`${response.data.name} has been unblocked`, {
+          setPartnerData(updatedPartner);
+          toast.success(`Partner has been unblocked`, {
             position: "top-right",
             autoClose: 1000,
             hideProgressBar: false,
@@ -72,35 +71,48 @@ const Users = () => {
           });
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+      if (err && err.response.status === 400) {
+        toast.error(`${err.response.data.message}`, {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          style: {
+            background: "#EEEEFF",
+            color: "red",
+          },
+        });
+      }
+    }
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchPartners = async () => {
       try {
-        const response = await Axios.get("/admin/getUserData", {
+        const response = await Axios.get("/admin/getPartnersData", {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${partnerToken}`,
           },
         });
-        setUsersData(response.data);
+        setPartnerData(response.data);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchUsers();
+    fetchPartners();
   }, []);
-
   return (
     <>
       <AdminHeader />
       <AdminSideBar />
       <div className="relative overflow-x-auto ml-[260px] flex justify-center mt-[20px]">
-        {usersData && usersData.length !== 0 ? (
+        {partnerData && partnerData.length !== 0 ? (
           <table className="w-4/5	 text-sm text-left text-gray-500 dark:text-gray-400 ">
             <thead className="text-lg text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" className="text-center px-6 py-3"></th>
                 <th scope="col" className="text-center px-6 py-3">
                   Full Name
                 </th>
@@ -119,42 +131,37 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {usersData.map((user) => (
+              {partnerData.map((partner) => (
                 <tr
-                  key={user._id}
+                  key={partner._id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <td className="text-center px-6 py-4 font-medium dark:text-white">
-                    <img
-                      src={
-                        user?.userImage ||
-                        "/assets/blank-profile-picture-973460_1920.png"
-                      }
-                      alt="Avatar"
-                      className="w-10 h-10 rounded-full"
-                    />
-                  </td>
-                  <td className="text-center px-6 py-4 font-medium dark:text-white">
-                    {user?.name}
-                  </td>
+                  <th
+                    scope="row"
+                    className="text-center px-6 py-4 font-medium dark:text-white"
+                  >
+                    {partner?.name}
+                  </th>
                   <td className="text-center font-medium px-6 py-4 dark:text-white">
-                    {user?.email}
+                    {partner?.email}
                   </td>
                   <td className="text-center ont-medium px-6 py-4 dark:text-white">
-                    {user?.phoneNumber}
+                    {partner?.phoneNumber}
                   </td>
                   <td className="text-center font-medium px-6 py-4 dark:text-white">
-                    {user.accountStatus === false ? (
+                    {partner.accountStatus === false ? (
                       <p className="text-green-500">Active</p>
                     ) : (
                       <p className="text-red-500">Blocked</p>
                     )}
                   </td>
                   <td className="text-center font-medium px-6 py-4 dark:text-white">
-                    {user.accountStatus ? (
+                    {partner.accountStatus ? (
                       <button
                         value={"unBlock"}
-                        onClick={(e) => handleAction(e.target.value, user._id)}
+                        onClick={(e) =>
+                          handleAction(e.target.value, partner._id)
+                        }
                         className="bg-green-500 px-3 py-2 rounded-lg"
                       >
                         Unblock
@@ -162,7 +169,9 @@ const Users = () => {
                     ) : (
                       <button
                         value={"block"}
-                        onClick={(e) => handleAction(e.target.value, user._id)}
+                        onClick={(e) =>
+                          handleAction(e.target.value, partner._id)
+                        }
                         className="bg-red-500 px-3 py-2 rounded-lg"
                       >
                         Block
@@ -188,4 +197,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default PartnersManagment;

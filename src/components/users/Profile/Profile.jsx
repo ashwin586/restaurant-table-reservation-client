@@ -4,11 +4,20 @@ import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../../services/firebase/storage";
 import { Spinner } from "@chakra-ui/react";
+import { userLogout } from "../../../redux/slice/userSlice";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const userlogout = () => {
+    localStorage.removeItem('userToken');
+    dispatch(userLogout());
+    navigate("/");
+  };
 
   const handleImageUpload = () => {
     const input = document.createElement("input");
@@ -29,8 +38,9 @@ const Profile = () => {
           imageURL,
         });
         if (response.status === 200) {
-          navigate(0)};
-          setIsLoading(false)
+          navigate(0);
+        }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -56,7 +66,7 @@ const Profile = () => {
     fetchProfile();
   }, []);
   return (
-    <>
+    <div>
       {isLoading ? (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
           <Spinner />
@@ -64,7 +74,7 @@ const Profile = () => {
       ) : null}
       <Navbar />
       <div className="flex justify-center mt-10">
-        <div className="w-3/4 bg-gray-700 rounded-xl shadow-2xl">
+        <div className="w-3/4 rounded-xl shadow-2xl">
           <div className="bg-yellow-400 p-4 text-white rounded-t-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -84,24 +94,29 @@ const Profile = () => {
                     Edit
                   </button>
                 </div>
-                <h1 className="ml-4 text-2xl font-bold">{user?.name}</h1>
+                <h1 className="ml-4 text-2xl text-black font-bold">
+                  {user?.name}
+                </h1>
               </div>
             </div>
           </div>
 
           <div className="container mx-auto mt-8 p-4">
             <div className="flex">
-              <div className="w-1/4">
+              <div className="w-1/4 border-r border-yellow-400 pr-4">
                 <ul className="space-y-4">
                   <li>
-                    <a href="#" className="text-blue-500 text-lg">
+                    <button className="text-black text-lg w-full py-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white">
                       Bookings
-                    </a>
+                    </button>
                   </li>
                   <li>
-                    <a href="#" className="text-blue-500 text-lg">
+                    <button
+                      className="text-black text-lg w-full py-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white"
+                      onClick={userlogout}
+                    >
                       Logout
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -171,7 +186,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

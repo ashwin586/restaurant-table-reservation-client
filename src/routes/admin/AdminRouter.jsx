@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import AdminDashboardPage from "../../pages/admin/AdminDashboardPage";
 import AdminUserManagment from "../../pages/admin/AdminUserManagment";
 import AdminLoginPage from "../../pages/admin/AdminLoginPage";
+import AdminPartnerManagementPage from '../../pages/admin/AdminPartnerManagmentPage'
 
 const AdminRouter = () => {
   const admin = useSelector((state) => state.admin.isLogged);
@@ -12,35 +13,18 @@ const AdminRouter = () => {
     <>
       <Routes>
         <Route
-          path="/"
-          element={
-            admin === true ? (
-                <Navigate to={'dashboard'}/>
-            ) : (
-              <AdminLoginPage />
-            )
-          }
+          path="/login"
+          element={admin ? <Navigate to="/admin/dashboard" /> : <AdminLoginPage />}
         />
         <Route
           path="dashboard"
-          element={
-            admin === false ? (
-              <Navigate to="/" />
-            ) : (
-              <AdminDashboardPage />
-            )
-          }
+          element={!admin ? <Navigate to="/admin/login" /> : <AdminDashboardPage />}
         />
         <Route
           path="usermanagment"
-          element={
-            admin === false ? (
-              <Navigate to={"/"} />
-            ) : (
-              <AdminUserManagment />
-            )
-          }
+          element={!admin ? <Navigate to="/admin/login" /> : <AdminUserManagment />}
         />
+        <Route path="partnermanagment" element={!admin ? <Navigate to='/admin/login' /> : <AdminPartnerManagementPage/>}/>
       </Routes>
     </>
   );

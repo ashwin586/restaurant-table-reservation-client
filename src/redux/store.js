@@ -13,9 +13,11 @@ import {
 
 import { userAuthSlice } from "./slice/userSlice";
 import { adminAuthSlice } from "./slice/adminSlice";
+import { partnerAuthSlice } from "./slice/partnerSlice";
 
 const userPersistConfig = { key: "userAuth", storage, version: 1 };
 const adminPersistConfig = { key: "adminAuth", storage, version: 1 };
+const partnerPersistConfig = {key: "partnerAuth", storage, version:1};
 
 const userPersistConfigReducer = persistReducer(
   userPersistConfig,
@@ -27,10 +29,16 @@ const adminPersistConfigReducer = persistReducer(
   adminAuthSlice.reducer
 );
 
+const partnerPersistConfigReducer = persistReducer(
+  partnerPersistConfig,
+  partnerAuthSlice.reducer
+)
+
 export const store = configureStore({
   reducer: {
     user: userPersistConfigReducer,
     admin: adminPersistConfigReducer,
+    partner: partnerPersistConfigReducer
   },
 
   middleware: (getDefaultMiddleware) => {
