@@ -6,6 +6,7 @@ import PartnerRegisterPage from "../../pages/partners/Authentication/PartnerRegi
 // import OTPVerify from '../../components/partners/authentication/OTP/OTPVerify';
 import DashboardPage from "../../pages/partners/Home/DashboardPage";
 import ProfilePage from "../../pages/partners/Home/ProfilePage";
+import RestaurantPage from "../../pages/partners/Home/RestaurantPage";
 
 const PartnerRouter = () => {
   const partner = useSelector((state) => state.partner.isLogged);
@@ -33,6 +34,12 @@ const PartnerRouter = () => {
         <Route
           path="profile"
           element={partner ? <ProfilePage /> : <Navigate to="/partner/login" />}
+        />
+        <Route
+          path="restaurants"
+          element={
+            partner ? <RestaurantPage /> : <Navigate to="/partner/login" />
+          }
         />
       </Routes>
     </>

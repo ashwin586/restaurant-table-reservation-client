@@ -54,7 +54,6 @@ const Register = () => {
 
   const registerPartner = async (values) => {
     try {
-      console.log(info);
       const response = await Axios.post("/partner/register", { values });
       if (response.status === 200) {
         toast.success(response.data.message, {

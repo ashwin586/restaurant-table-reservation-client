@@ -49,6 +49,17 @@ const AdminSideBar = () => {
               <span className="text-[15px] ml-4 font-bold ">Partners</span>
             </div>
           </Link>
+          <Link to='/admin/restaurantmanagment'>
+          <div
+              className={`p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer ${
+                location.pathname === "/admin/restaurantmanagment"
+                  ? "bg-white text-yellow-500"
+                  : "hover:text-yellow-500 text-gray-200 hover:bg-white"
+              } `}
+            >
+              <span className="text-[15px] ml-4 font-bold ">Restaurants</span>
+            </div>
+          </Link>
           <div
             className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:text-yellow-500 text-white hover:bg-white"
             onClick={adminlogout}

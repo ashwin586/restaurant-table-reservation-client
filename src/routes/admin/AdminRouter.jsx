@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 import AdminDashboardPage from "../../pages/admin/AdminDashboardPage";
 import AdminUserManagment from "../../pages/admin/AdminUserManagment";
 import AdminLoginPage from "../../pages/admin/AdminLoginPage";
-import AdminPartnerManagementPage from '../../pages/admin/AdminPartnerManagmentPage'
+import AdminPartnerManagementPage from "../../pages/admin/AdminPartnerManagmentPage";
+import AdminRestaurantManagmentPage from "../../pages/admin/AdminRestaurantManagmentPage";
 
 const AdminRouter = () => {
   const admin = useSelector((state) => state.admin.isLogged);
@@ -14,17 +15,42 @@ const AdminRouter = () => {
       <Routes>
         <Route
           path="/login"
-          element={admin ? <Navigate to="/admin/dashboard" /> : <AdminLoginPage />}
+          element={
+            admin ? <Navigate to="/admin/dashboard" /> : <AdminLoginPage />
+          }
         />
         <Route
           path="dashboard"
-          element={!admin ? <Navigate to="/admin/login" /> : <AdminDashboardPage />}
+          element={
+            !admin ? <Navigate to="/admin/login" /> : <AdminDashboardPage />
+          }
         />
         <Route
           path="usermanagment"
-          element={!admin ? <Navigate to="/admin/login" /> : <AdminUserManagment />}
+          element={
+            !admin ? <Navigate to="/admin/login" /> : <AdminUserManagment />
+          }
         />
-        <Route path="partnermanagment" element={!admin ? <Navigate to='/admin/login' /> : <AdminPartnerManagementPage/>}/>
+        <Route
+          path="partnermanagment"
+          element={
+            !admin ? (
+              <Navigate to="/admin/login" />
+            ) : (
+              <AdminPartnerManagementPage />
+            )
+          }
+        />
+        <Route
+          path="restaurantmanagment"
+          element={
+            !admin ? (
+              <Navigate to="/admin/login" />
+            ) : (
+              <AdminRestaurantManagmentPage />
+            )
+          }
+        />
       </Routes>
     </>
   );
