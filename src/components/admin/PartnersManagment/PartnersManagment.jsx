@@ -105,7 +105,7 @@ const PartnersManagment = () => {
     fetchPartners();
   }, []);
   return (
-    <>
+    <div className="h-screen bg-adminDashboard">
       <AdminHeader />
       <AdminSideBar />
       <div className="relative overflow-x-auto ml-[260px] flex justify-center mt-[20px]">
@@ -193,7 +193,7 @@ const PartnersManagment = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

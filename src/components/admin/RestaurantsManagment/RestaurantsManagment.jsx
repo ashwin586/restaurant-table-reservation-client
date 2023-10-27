@@ -70,7 +70,7 @@ export const RestaurantsManagment = () => {
     fetchRestaurants();
   }, []);
   return (
-    <>
+    <div className="h-screen bg-adminDashboard">
       <AdminHeader />
       <AdminSideBar />
       <div className="ml-[250px] mt-5 ">
@@ -117,6 +117,6 @@ export const RestaurantsManagment = () => {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
