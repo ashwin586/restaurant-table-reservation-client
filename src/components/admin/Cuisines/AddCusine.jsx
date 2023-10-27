@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import Axios from "../../../services/axios";
 
-const AddCusine = ({ isClicked, closeModal }) => {
+const AddCusine = ({ isClicked, closeModal, updateCuisines  }) => {
   const token = localStorage.getItem("adminToken");
   const formikValues = useFormik({
     initialValues: {
@@ -28,6 +28,7 @@ const AddCusine = ({ isClicked, closeModal }) => {
         );
         if (response.status === 200) {
           closeModal();
+          updateCuisines(response.data.result)
         }
       } catch (err) {
         if (err.response && err.response.status === 400) {
