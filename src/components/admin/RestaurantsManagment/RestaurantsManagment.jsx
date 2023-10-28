@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../AdminSideBar";
 import AdminHeader from "../AdminHeader";
-import Axios from "../../../services/axios";
+import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 
 export const RestaurantsManagment = () => {
   const [restaurants, setRestaurants] = useState([]);
-  const token = localStorage.getItem("adminToken");
 
   const handleAction = async (action, id) => {
     try {
       if (action === "unlist") {
-        const response = await Axios.put(
-          "/admin/unlistRestaurant",
-          { id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await adminAxios.put("/admin/unlistRestaurant", {
+          id,
+        });
         if (response.status === 200) {
           const updateRestaurant = restaurants.map((restaurant) => {
             if (restaurant._id === id) {
@@ -29,15 +22,7 @@ export const RestaurantsManagment = () => {
           setRestaurants(updateRestaurant);
         }
       } else if (action === "list") {
-        const response = await Axios.put(
-          "/admin/listRestaurant",
-          { id },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await adminAxios.put("/admin/listRestaurant", { id });
         if (response.status === 200) {
           const updateRestaurant = restaurants.map((restaurant) => {
             if (restaurant._id === id) {
@@ -55,11 +40,7 @@ export const RestaurantsManagment = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await Axios.get("/admin/getAllRestaurants", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await adminAxios.get("/admin/getAllRestaurants");
         if (response.status === 200) {
           setRestaurants(response.data);
         }

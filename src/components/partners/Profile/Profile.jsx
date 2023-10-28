@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
-import Axios from "../../../services/axios";
+import { partnerAxios } from "../../../services/Axios/partnerAxios";
 
 const Profile = () => {
   const [data, setdata] = useState();
-  const partnerToken = localStorage.getItem("partnerToken");
   useEffect(() => {
     const fetchPartner = async () => {
       try {
-        const response = await Axios.get("/partner/getDetails", {
-          headers: {
-            Authorization: `Bearer ${partnerToken}`,
-          },
-        });
+        const response = await partnerAxios.get("/partner/getDetails");
         if (response.status === 200) {
           setdata(response.data.partner);
         }

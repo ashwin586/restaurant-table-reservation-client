@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Formik, Form, input, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Axios from "../../../services/axios";
+import { partnerAxios } from "../../../services/Axios/partnerAxios";
 
 function AddRestaurantModal({ isOpen, closeModal }) {
-  const token = localStorage.getItem("partnerToken");
   const [name, setName] = useState("");
   const [cuisine, setCuisine] = useState("");
   const [openson, setOpensOn] = useState("");
@@ -27,14 +26,9 @@ function AddRestaurantModal({ isOpen, closeModal }) {
     e.preventDefault();
     try {
       const restaurantData = { name, cuisine, openson, closeson, address };
-      const response = await Axios.post(
+      const response = await partnerAxios.post(
         "/partner/addRestaurant",
-        restaurantData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        restaurantData
       );
       if (response.status === 200) {
         closeModal();

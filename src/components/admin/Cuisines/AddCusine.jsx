@@ -2,10 +2,9 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import Axios from "../../../services/axios";
+import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 
-const AddCusine = ({ isClicked, closeModal, updateCuisines  }) => {
-  const token = localStorage.getItem("adminToken");
+const AddCusine = ({ isClicked, closeModal, updateCuisines }) => {
   const formikValues = useFormik({
     initialValues: {
       cuisine: "",
@@ -17,18 +16,10 @@ const AddCusine = ({ isClicked, closeModal, updateCuisines  }) => {
     }),
     onSubmit: async (values) => {
       try {
-        const response = await Axios.post(
-          "/admin/addcusines",
-          { values },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await adminAxios.post("/admin/addcusines", { values });
         if (response.status === 200) {
           closeModal();
-          updateCuisines(response.data.result)
+          updateCuisines(response.data.result);
         }
       } catch (err) {
         if (err.response && err.response.status === 400) {

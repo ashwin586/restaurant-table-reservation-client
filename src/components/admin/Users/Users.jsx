@@ -1,26 +1,16 @@
 import React, { useEffect, useState } from "react";
 import AdminHeader from "../AdminHeader";
 import AdminSideBar from "../AdminSideBar";
-import Axios from "../../../services/axios";
+import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 import { toast } from "react-toastify";
 
 const Users = () => {
   const [usersData, setUsersData] = useState([]);
 
-  const adminToken = localStorage.getItem("adminToken");
-
   const handleAction = async (action, id) => {
     try {
       if (action === "block") {
-        const response = await Axios.put(
-          "/admin/blockUser",
-          { id },
-          {
-            headers: {
-              Authorization: `Bearer ${adminToken}`,
-            },
-          }
-        );
+        const response = await adminAxios.put("/admin/blockUser", { id });
         if (response.status === 200) {
           const updatedUser = usersData.map((user) => {
             if (user._id === id) {
@@ -42,15 +32,7 @@ const Users = () => {
           });
         }
       } else if (action === "unBlock") {
-        const response = await Axios.put(
-          "/admin/unBlockUser",
-          { id },
-          {
-            headers: {
-              Authorization: `Bearer ${adminToken}`,
-            },
-          }
-        );
+        const response = await adminAxios.put("/admin/unBlockUser", { id });
         if (response.status === 200) {
           const updatedUser = usersData.map((user) => {
             if (user._id === id) {
@@ -78,11 +60,7 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await Axios.get("/admin/getUserData", {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        });
+        const response = await adminAxios.get("/admin/getUserData");
         setUsersData(response.data);
       } catch (err) {
         console.log(err);

@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import AdminSideBar from "../AdminSideBar";
 import AdminHeader from "../AdminHeader";
 import AddCusine from "./AddCusine";
-import Axios from "../../../services/axios";
+import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 import { toast } from "react-toastify";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 const Cuisines = () => {
-  const token = localStorage.getItem("adminToken");
   const [isClicked, setIsClicked] = useState(false);
   const [cuisines, setCuisines] = useState([]);
 
@@ -17,13 +16,10 @@ const Cuisines = () => {
 
   const deleteCusine = async (id) => {
     try {
-      const response = await Axios.delete("/admin/deleteCuisine", {
+      const response = await adminAxios.delete("/admin/deleteCuisine", {
         data: { id },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
-      if(response.status === 200) {
+      if (response.status === 200) {
         toast.success(`${response.data.result.cuisine} has been Deleted`, {
           position: "top-right",
           autoClose: 1000,
@@ -35,7 +31,9 @@ const Cuisines = () => {
             color: "green",
           },
         });
-        const updatedCuisines = cuisines.filter((cuisine) => cuisine._id !== id);
+        const updatedCuisines = cuisines.filter(
+          (cuisine) => cuisine._id !== id
+        );
         setCuisines(updatedCuisines);
       }
     } catch (err) {
@@ -46,11 +44,7 @@ const Cuisines = () => {
   useEffect(() => {
     const fetchCuisines = async () => {
       try {
-        const response = await Axios.get("/admin/getAllCusinies", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await adminAxios.get("/admin/getAllCusinies");
         if (response.status === 200) {
           setCuisines(response.data.result);
         }

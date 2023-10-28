@@ -1,25 +1,16 @@
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../AdminSideBar";
 import AdminHeader from "../AdminHeader";
-import Axios from "../../../services/axios";
+import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 import { toast } from "react-toastify";
 
 const PartnersManagment = () => {
   const [partnerData, setPartnerData] = useState([]);
-  const partnerToken = localStorage.getItem("partnerToken");
 
   const handleAction = async (action, id) => {
     try {
       if (action === "block") {
-        const response = await Axios.put(
-          "/admin/blockPartner",
-          { id },
-          {
-            headers: {
-              Authorization: `Bearer ${partnerToken}`,
-            },
-          }
-        );
+        const response = await adminAxios.put("/admin/blockPartner", { id });
         if (response.status === 200) {
           const updatedPartner = partnerData.map((partner) => {
             if (partner._id === id) {
@@ -41,15 +32,7 @@ const PartnersManagment = () => {
           });
         }
       } else if (action === "unBlock") {
-        const response = await Axios.put(
-          "/admin/unBlockPartner",
-          { id },
-          {
-            headers: {
-              Authorization: `Bearer ${partnerToken}`,
-            },
-          }
-        );
+        const response = await adminAxios.put("/admin/unBlockPartner", { id });
         if (response.status === 200) {
           const updatedPartner = partnerData.map((partner) => {
             if (partner._id === id) {
@@ -92,11 +75,7 @@ const PartnersManagment = () => {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const response = await Axios.get("/admin/getPartnersData", {
-          headers: {
-            Authorization: `Bearer ${partnerToken}`,
-          },
-        });
+        const response = await adminAxios.get("/admin/getPartnersData");
         setPartnerData(response.data);
       } catch (err) {
         console.log(err);
