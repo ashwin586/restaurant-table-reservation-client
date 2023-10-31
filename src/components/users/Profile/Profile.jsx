@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Axios from "../../../services/axios";
 import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
-import { uploadImage } from "../../../services/firebase/storage";
+import { uploadUserProfile } from "../../../services/firebase/storage";
 import { Spinner } from "@chakra-ui/react";
 import { userLogout } from "../../../redux/slice/userSlice";
 import { useDispatch } from "react-redux";
@@ -32,7 +32,7 @@ const Profile = () => {
     if (selecedImage) {
       try {
         setIsLoading(true);
-        const imageURL = await uploadImage(selecedImage, user._id);
+        const imageURL = await uploadUserProfile(selecedImage, user._id);
         const response = await Axios.post("/uploadProfilePicture", {
           userId: user._id,
           imageURL,

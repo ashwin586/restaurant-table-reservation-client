@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
-import { partnerAxios } from "../../../services/Axios/partnerAxios";
+import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 
 const Profile = () => {
   const [data, setdata] = useState();

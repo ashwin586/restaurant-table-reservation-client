@@ -19,10 +19,16 @@ const Restaurants = () => {
         >
           Add new Restaurant
         </button>
-        <AddRestaurantModal
-          isOpen={isModalOpen}
-          closeModal={() => setIsModalOpen(false)}
-        />
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg">
+              <AddRestaurantModal
+                isOpen={isModalOpen}
+                closeModal={() => setIsModalOpen(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
