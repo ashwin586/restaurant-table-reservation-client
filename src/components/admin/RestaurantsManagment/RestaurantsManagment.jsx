@@ -3,6 +3,7 @@ import AdminSideBar from "../AdminSideBar";
 import AdminHeader from "../AdminHeader";
 import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 import PendingRestaurantModal from "./PendingRestaurantModal";
+import moment from "moment";
 
 export const RestaurantsManagment = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -101,14 +102,20 @@ export const RestaurantsManagment = () => {
                 key={restaurant?._id}
               >
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold">
-                    Restaurant Name: {restaurant?.name}
+                  <h3>
+                    <span className="text-lg font-bold">Restaurant Name: </span>
+                    {restaurant?.name}
                   </h3>
-                  <p className="text-lg font-medium">
-                    Partner Name: {restaurant?.partner.name}{" "}
+                  <p>
+                    <span className="text-lg font-bold">Partner Name: </span>
+                    {restaurant?.partner.name}{" "}
+                  </p>
+                  <p>
+                    <span className="text-lg font-bold">Partner Contact: </span>
+                    {restaurant?.partner.phoneNumber}
                   </p>
                   <p className="text-md text-gray-800">
-                    Cuisine Types:{" "}
+                    <span className="text-lg font-bold">Cuisine Types: </span>
                     {restaurant?.cuisine.map((cuisine, index) => (
                       <span key={index}>
                         {cuisine.cuisine}
@@ -117,12 +124,16 @@ export const RestaurantsManagment = () => {
                     ))}{" "}
                   </p>
                   <p className="text-sm text-gray-800">
-                    Opens: {restaurant?.openTime} - closes:{" "}
-                    {restaurant?.closeTime}
+                    <span className="text-lg font-bold">Opens: </span>
+                    {moment(restaurant?.openTime).format("h:mmA")} -{" "}
+                    <span className="text-lg font-bold">closes: </span>
+                    {moment(restaurant?.closeTime).format("h:mmA")}
                   </p>
                   <p className="text-sm text-gray-800">
                     {" "}
-                    Address: {restaurant?.address}
+                    <span className="text-lg font-bold">Address: </span>
+                    {restaurant?.address}, {restaurant?.pinCode},{" "}
+                    {restaurant?.city}
                   </p>
                 </div>
                 {!restaurant?.isBlocked ? (
