@@ -1,17 +1,18 @@
 import React from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import {partnerLogout} from '../../redux/slice/partnerSlice'
+import { partnerLogout } from "../../redux/slice/partnerSlice";
 import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const logout = () =>{
-        dispatch(partnerLogout());
-        localStorage.removeItem('partnerToken');
-        navigate('/partner/login');
-    }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const logout = () => {
+    dispatch(partnerLogout());
+    localStorage.removeItem("partnerToken");
+    navigate("/partner/login");
+  };
 
   return (
     <>
@@ -60,11 +61,15 @@ const Sidebar = () => {
           <ul className="space-y-2 font-medium">
             <li>
               <Link
-                to='/partner/dashboard'
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/partner/dashboard"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  location.pathname === "/partner/dashboard"
+                    ? "bg-gray-700"
+                    : "dark:hover:bg-gray-700"
+                }`}
               >
                 <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className={`w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -78,8 +83,12 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to='/partner/restaurants'
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/partner/restaurants"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  location.pathname === "/partner/restaurants"
+                    ? "bg-gray-700"
+                    : "dark:hover:bg-gray-700"
+                }`}
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -91,13 +100,19 @@ const Sidebar = () => {
                   <path d="M224,160H176V48H144V160H96V48H64V172c0,45.505,34.655,83.393,80,90.715V472h32V262.715c45.345-7.322,80-45.21,80-90.715V48H224Zm-64,72c-27.811,0-51.524-16.722-60.33-40H220.33C211.524,215.278,187.811,232,160,232Z" />
                   <path d="M413.567,40.187A138.648,138.648,0,0,0,296,177.224V344H400V472h32V37.351ZM400,312H328V177.224A105.986,105.986,0,0,1,400,76.313Z" />
                 </svg>
-                <span className="flex-1 ml-3 whitespace-nowrap">Restaurants</span>
+                <span className="flex-1 ml-3 whitespace-nowrap">
+                  Restaurants
+                </span>
               </Link>
             </li>
             <li>
               <Link
-                to='/partner/profile'
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                to="/partner/profile"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  location.pathname === "/partner/profile"
+                    ? "bg-gray-700"
+                    : "dark:hover:bg-gray-700"
+                }`}
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"

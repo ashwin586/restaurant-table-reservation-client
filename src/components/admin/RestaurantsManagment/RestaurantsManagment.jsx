@@ -95,79 +95,85 @@ export const RestaurantsManagment = () => {
         )}
 
         {!pendingTab &&
-          restaurants.map((restaurant) =>
-            restaurant?.isApproved === "Approved" ? (
-              <div
-                className="my-6 p-4 ms-20 bg-white shadow-lg rounded-lg w-4/5 h-48 flex"
-                key={restaurant?._id}
-              >
-                <div className="flex-1">
-                  <h3>
-                    <span className="text-lg font-bold">Restaurant Name: </span>
-                    {restaurant?.name}
-                  </h3>
-                  <p>
-                    <span className="text-lg font-bold">Partner Name: </span>
-                    {restaurant?.partner.name}{" "}
-                  </p>
-                  <p>
-                    <span className="text-lg font-bold">Partner Contact: </span>
-                    {restaurant?.partner.phoneNumber}
-                  </p>
-                  <p className="text-md text-gray-800">
-                    <span className="text-lg font-bold">Cuisine Types: </span>
-                    {restaurant?.cuisine.map((cuisine, index) => (
-                      <span key={index}>
-                        {cuisine.cuisine}
-                        {index < restaurant.cuisine.length - 1 ? ", " : ""}
+          restaurants.map(
+            (restaurant) =>
+              restaurant?.isApproved === "Approved" && (
+                <div
+                  className="my-6 p-4 ms-20 bg-white shadow-lg rounded-lg w-4/5 h-48 flex"
+                  key={restaurant?._id}
+                >
+                  <div className="flex-1">
+                    <h3>
+                      <span className="text-lg font-bold">
+                        Restaurant Name:{" "}
                       </span>
-                    ))}{" "}
-                  </p>
-                  <p className="text-sm text-gray-800">
-                    <span className="text-lg font-bold">Opens: </span>
-                    {moment(restaurant?.openTime).format("h:mmA")} -{" "}
-                    <span className="text-lg font-bold">closes: </span>
-                    {moment(restaurant?.closeTime).format("h:mmA")}
-                  </p>
-                  <p className="text-sm text-gray-800">
-                    {" "}
-                    <span className="text-lg font-bold">Address: </span>
-                    {restaurant?.address}, {restaurant?.pinCode},{" "}
-                    {restaurant?.city}
-                  </p>
+                      {restaurant?.name}
+                    </h3>
+                    <p>
+                      <span className="text-lg font-bold">Partner Name: </span>
+                      {restaurant?.partner.name}{" "}
+                    </p>
+                    <p>
+                      <span className="text-lg font-bold">
+                        Partner Contact:{" "}
+                      </span>
+                      {restaurant?.partner.phoneNumber}
+                    </p>
+                    <p className="text-md text-gray-800">
+                      <span className="text-lg font-bold">Cuisine Types: </span>
+                      {restaurant?.cuisine.map((cuisine, index) => (
+                        <span key={index}>
+                          {cuisine.cuisine}
+                          {index < restaurant.cuisine.length - 1 ? ", " : ""}
+                        </span>
+                      ))}{" "}
+                    </p>
+                    <p className="text-sm text-gray-800">
+                      <span className="text-lg font-bold">Opens: </span>
+                      {moment(restaurant?.openTime).format("h:mmA")} -{" "}
+                      <span className="text-lg font-bold">closes: </span>
+                      {moment(restaurant?.closeTime).format("h:mmA")}
+                    </p>
+                    <p className="text-sm text-gray-800">
+                      {" "}
+                      <span className="text-lg font-bold">Address: </span>
+                      {restaurant?.address}, {restaurant?.pinCode},{" "}
+                      {restaurant?.city}
+                    </p>
+                  </div>
+                  {!restaurant?.isBlocked ? (
+                    <button
+                      className="bg-red-500 text-white h-16 w-36 rounded-lg hover:bg-red-600"
+                      value="unlist"
+                      onClick={(e) =>
+                        handleAction(e.target.value, restaurant._id)
+                      }
+                    >
+                      Unlist
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-green-500 text-white h-16 w-36 rounded-lg hover:bg-green-600"
+                      value="list"
+                      onClick={(e) =>
+                        handleAction(e.target.value, restaurant._id)
+                      }
+                    >
+                      list
+                    </button>
+                  )}
                 </div>
-                {!restaurant?.isBlocked ? (
-                  <button
-                    className="bg-red-500 text-white h-16 w-36 rounded-lg hover:bg-red-600"
-                    value="unlist"
-                    onClick={(e) =>
-                      handleAction(e.target.value, restaurant._id)
-                    }
-                  >
-                    Unlist
-                  </button>
-                ) : (
-                  <button
-                    className="bg-green-500 text-white h-16 w-36 rounded-lg hover:bg-green-600"
-                    value="list"
-                    onClick={(e) =>
-                      handleAction(e.target.value, restaurant._id)
-                    }
-                  >
-                    list
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="flex justify-center items-center mt-20">
-                <img
-                  style={{ height: "417px", width: "626px" }}
-                  src="/assets/no-data-concept-illustration_114360-2506.jpg"
-                  alt="noRestaurant"
-                />
-              </div>
-            )
+              )
           )}
+        {restaurants.length === 0 && (
+          <div className="flex justify-center items-center mt-20">
+            <img
+              style={{ height: "417px", width: "626px" }}
+              src="/assets/no-data-concept-illustration_114360-2506.jpg"
+              alt="noRestaurant"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

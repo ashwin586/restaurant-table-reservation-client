@@ -1,20 +1,30 @@
-import {storage} from './firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from "./firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+export const uploadUserProfile = async (image, id) => {
+  const storageRef = ref(storage, `userprofile/${id}`);
 
-
-export const uploadUserProfile = async (image, id) =>{
-    const storageRef = ref(storage, `userprofile/${id}`);
- try{
+  try {
     const result = await uploadBytes(storageRef, image);
     const downloadURL = await getDownloadURL(result.ref);
     return downloadURL;
- }catch(err){
+  } catch (err) {
     console.log(err);
- }
-}
+  }
+};
 
+export const uploadRestaurantImage = async (images) => {
+  const downloadUrls = [];
+  for (const image of images) {
+    const storageRef = ref(storage, `RestaurantImages/${image.name}`);
+    try {
+      const result = await uploadBytes(storageRef, image);
+      const downloadUrl = await getDownloadURL(result.ref);
+      downloadUrls.push(downloadUrl);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-export const uploadRestaurantImage = async (image, id) =>{
-   const storageRef = ref(storage, ``)
-}
+  return downloadUrls;
+};

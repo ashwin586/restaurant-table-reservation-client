@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar";
 import moment from "moment";
 import AddRestaurantModal from "./AddRestaurantModal";
+import RestaurantDetailsModal from "./RestaurantDetailsModal";
+import MenuModal from "./MenuModal";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 
 const Restaurants = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRestaurantDetailsModal, setIsRestauarantDetailsModal] =
+    useState(false);
   const [restaurants, setRestaurants] = useState([]);
+  const [selectedRestaurant, setSelectedRestaurant] = useState([]);
+  const [isMenu, setIsMenu] = useState(false);
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -44,12 +50,44 @@ const Restaurants = () => {
             </div>
           </div>
         )}
+
+        {isRestaurantDetailsModal && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg">
+              <RestaurantDetailsModal
+                isOpen={isRestaurantDetailsModal}
+                isSelected={selectedRestaurant}
+                closeModal={() => setIsRestauarantDetailsModal(false)}
+              />
+            </div>
+          </div>
+        )}
         {restaurants.map((restaurant) => (
           <div
-            className="my-6 p-4 ms-20 bg-white shadow-lg rounded-lg w-4/5 h-48 flex cursor-pointer transform transition-transform hover:scale-105 font-serif"
+            className="my-6 p-4 ms-20 bg-white shadow-lg rounded-lg w-4/5 h-48 flex transform transition-transform hover:scale-105 font-serif"
             key={restaurant?._id}
           >
-            <div className="flex-1">
+            {restaurant.images.length > 0 && (
+              <div className="">
+                <img
+                  src={restaurant.images[0]}
+                  alt="restaurantImage"
+                  className="h-40 w-40 cursor-pointer"
+                  onClick={() => {
+                    setIsRestauarantDetailsModal(true);
+                    setSelectedRestaurant(restaurant);
+                  }}
+                />
+              </div>
+            )}
+
+            <div
+              className="flex-1 ms-4 cursor-pointer"
+              onClick={() => {
+                setIsRestauarantDetailsModal(true);
+                setSelectedRestaurant(restaurant);
+              }}
+            >
               <h3>
                 <span className="text-lg font-bold">Restaurant Name: </span>
                 {restaurant?.name}
@@ -75,15 +113,26 @@ const Restaurants = () => {
                 {restaurant?.address}, {restaurant?.pinCode}, {restaurant?.city}
               </p>
             </div>
-            <div>
-              <span className="font-serif">Status: {""}</span>
-              {restaurant.isApproved === "Pending" ? (
-                <span className="text-yellow-500 font-bold">Pending</span>
-              ) : restaurant.isApproved === "Approved" ? (
-                <span className="text-green-500 font-bold">Online</span>
-              ) : (
-                <span className="text-red-500 font-bold">Rejected</span>
-              )}
+
+            <div className="flex-col space-y-5">
+              <div>
+                <span className="font-serif">Status: {""}</span>
+                {restaurant.isApproved === "Pending" ? (
+                  <span className="text-yellow-500 font-bold">Pending</span>
+                ) : restaurant.isApproved === "Approved" ? (
+                  <span className="text-green-500 font-bold">Online</span>
+                ) : (
+                  <span className="text-red-500 font-bold">Rejected</span>
+                )}
+              </div>
+              <div>
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer"
+                  onClick={() => setIsMenu(true)}
+                >
+                  Menu
+                </button>
+              </div>
             </div>
           </div>
         ))}

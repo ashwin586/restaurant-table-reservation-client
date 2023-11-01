@@ -41,7 +41,6 @@ function AddRestaurantModal({ isOpen, closeModal }) {
       try {
         const response = await partnerAxios.post('/partner/addRestaurant', values);
         if(response.status === 200){
-          console.log(response.status);
           closeModal();
         }
       } catch (err) {
@@ -130,7 +129,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
               <TimePicker
                 name="openTime"
                 className="w-full border border-gray-300 rounded p-2 mb-2 me-2"
-                onChange={formik.handleChange}
+                onChange={(time) => formik.setFieldValue('openTime', time)}
                 value={formik.values.openTime}
               />
               {formik.touched.openTime && formik.errors.openTime && (
@@ -139,7 +138,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
               <TimePicker
                 name="closeTime"
                 className="w-full border border-gray-300 rounded p-2 mb-2 ms-2"
-                onChange={formik.handleChange}
+                onChange={(time) => formik.setFieldValue('closeTime', time )}
                 value={formik.values.closeTime}
               />
               {formik.touched.closeTime && formik.errors.closeTime && (
