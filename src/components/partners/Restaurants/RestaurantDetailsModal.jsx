@@ -133,7 +133,12 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                   <h1 className="text-xl">Restaurant Images: </h1>
                   <div className="flex">
                     {isSelected.images.map((image, index) => (
-                      <img key={index} src={image} alt="images" className="w-48 h-48 m-3" />
+                      <img
+                        key={index}
+                        src={image}
+                        alt="images"
+                        className="w-48 h-48 m-3"
+                      />
                     ))}
                   </div>
                 </div>
@@ -173,7 +178,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                 </div>
               )}
 
-              {isEdit && (
+              {isSelected.isApproved === "Approved" && isEdit && (
                 <div className="flex justify-end mt-4">
                   <button
                     type="submit"
@@ -194,13 +199,15 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
             </form>
             {!isEdit && (
               <div className="flex justify-end mt-4">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded-md mr-2"
-                  onClick={() => setIsEdit(true)}
-                >
-                  Edit
-                </button>
+                {isSelected.isApproved === "Approved" && (
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white hover:bg-blue-700 px-4 py-2 rounded-md mr-2"
+                    onClick={() => setIsEdit(true)}
+                  >
+                    Edit
+                  </button>
+                )}
 
                 <button
                   onClick={closeModal}

@@ -28,3 +28,14 @@ export const uploadRestaurantImage = async (images) => {
 
   return downloadUrls;
 };
+
+export const uploadFoodImage = async (image) => {
+  try {
+    const storageRef = ref(storage, `FoodImages/${image.name}`);
+    const result = await uploadBytes(storageRef, image);
+    const downloadURL = await getDownloadURL(result.ref);
+    return downloadURL;
+  } catch (err) {
+    console.log(err);
+  }
+};

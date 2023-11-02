@@ -40,6 +40,7 @@ const Restaurants = () => {
         >
           Add new Restaurant
         </button>
+
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg">
@@ -62,13 +63,26 @@ const Restaurants = () => {
             </div>
           </div>
         )}
+
+        {isMenu && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-30 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg">
+              <MenuModal
+                isOpen={isMenu}
+                closeModal={() => setIsMenu(false)}
+                isId={selectedRestaurant}
+              />
+            </div>
+          </div>
+        )}
+
         {restaurants.map((restaurant) => (
           <div
             className="my-6 p-4 ms-20 bg-white shadow-lg rounded-lg w-4/5 h-48 flex transform transition-transform hover:scale-105 font-serif"
             key={restaurant?._id}
           >
             {restaurant.images.length > 0 && (
-              <div className="">
+              <div>
                 <img
                   src={restaurant.images[0]}
                   alt="restaurantImage"
@@ -126,12 +140,17 @@ const Restaurants = () => {
                 )}
               </div>
               <div>
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer"
-                  onClick={() => setIsMenu(true)}
-                >
-                  Menu
-                </button>
+                {restaurant.isApproved === "Approved" && (
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-green-800"
+                    onClick={() => {
+                      setIsMenu(true);
+                      setSelectedRestaurant(restaurant._id);
+                    }}
+                  >
+                    Menu
+                  </button>
+                )}
               </div>
             </div>
           </div>

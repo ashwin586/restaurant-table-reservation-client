@@ -8,6 +8,7 @@ import AdminLoginPage from "../../pages/admin/AdminLoginPage";
 import AdminPartnerManagementPage from "../../pages/admin/AdminPartnerManagmentPage";
 import AdminRestaurantManagmentPage from "../../pages/admin/AdminRestaurantManagmentPage";
 import AdminCuisinesPage from "../../pages/admin/AdminCuisinesPage";
+import AdminCategoryManagment from "../../pages/admin/AdminCategoryManagment";
 
 const AdminRouter = () => {
   const admin = useSelector((state) => state.admin.isLogged);
@@ -56,6 +57,12 @@ const AdminRouter = () => {
           path="cuisines"
           element={
             !admin ? <Navigate to="/admin/login" /> : <AdminCuisinesPage />
+          }
+        />
+        <Route
+          path="categoryManagment"
+          element={
+            !admin ? <Navigate to="/admin/login" /> : <AdminCategoryManagment />
           }
         />
       </Routes>

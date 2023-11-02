@@ -12,7 +12,12 @@ const AddCusine = ({ isClicked, closeModal, updateCuisines }) => {
     validationSchema: Yup.object({
       cuisine: Yup.string()
         .min(3, "Minimum length must be 3 character")
-        .required("The field cannot be empty"),
+        .required("The field cannot be empty")
+        .test("is-uppercase", "First letter must be uppercase", (value) => {
+          if (!value) return true;
+          const firstLetter = value[0];
+          return firstLetter === firstLetter.toUpperCase();
+        }),
     }),
     onSubmit: async (values) => {
       try {
