@@ -9,6 +9,7 @@ import Otp from "../../components/users/Recover/Otp";
 import NewPassword from "../../components/users/Recover/NewPassword";
 import ProfilePage from "../../pages/users/Profile/ProfilePage";
 import RestaurantDetailsPage from "../../pages/users/RestaurantDetailsPage";
+import OtpPage from "../../pages/users/Authentication/OtpPage";
 
 const UserRouter = () => {
   const user = useSelector((state) => state.user.isLogged);
@@ -17,6 +18,7 @@ const UserRouter = () => {
       <Routes>
         <Route path="/login" element={user ? <Navigate to={'/'}/> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to={'/'}/> : <SignupPage />} />
+        {/* <Route path="/sendOtp" element={<OtpPage />}/> */}
         <Route
           path="/"
           element={<HomePage />}

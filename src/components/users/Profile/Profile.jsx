@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Axios from "../../../services/axios";
+import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
 import { uploadUserProfile } from "../../../services/firebase/storage";
@@ -14,7 +14,7 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const userlogout = () => {
-    localStorage.removeItem('userToken');
+    localStorage.removeItem("userToken");
     dispatch(userLogout());
     navigate("/");
   };
@@ -33,7 +33,7 @@ const Profile = () => {
       try {
         setIsLoading(true);
         const imageURL = await uploadUserProfile(selecedImage, user._id);
-        const response = await Axios.post("/uploadProfilePicture", {
+        const response = await userAxios.post("/uploadProfilePicture", {
           userId: user._id,
           imageURL,
         });
@@ -49,13 +49,8 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const userToken = localStorage.getItem("userToken");
       try {
-        const response = await Axios.get("/getuserprofile", {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
+        const response = await userAxios.get("/getuserprofile");
         if (response.status === 200) {
           setUser(response.data.userData);
         }

@@ -11,10 +11,20 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
   const selectImage = () => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "image/*";
+    input.accept = ".jpg, .jpeg, .png,";
     input.click();
     input.onchange = (e) => {
       const file = e.target.files[0];
+      if (file.length === 0) return;
+      const imageExtensions = [".jpg", ".jpeg", ".png"];
+      const imageFiles = Array.from(file).filter((file) =>
+        imageExtensions.includes("." + file.name.split(".").pop().toLowerCase())
+      );
+
+      if (imageFiles.length === 0) {
+        alert("No valid image files selected.");
+        return;
+      }
       setImage(file);
     };
   };
@@ -44,8 +54,11 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
       try {
         const imageURL = await uploadFoodImage(image);
         values.imageURL = imageURL;
-        const response = await partnerAxios.post("/partner/addFood", {values, isId});
-        if(response.status === 200){
+        const response = await partnerAxios.post("/partner/addFood", {
+          values,
+          isId,
+        });
+        if (response.status === 200) {
           closeModal();
         }
       } catch (err) {

@@ -6,6 +6,7 @@ import Axios from "../../../services/axios";
 const RestaurantDetails = () => {
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
+  const [minDate, setMinDate] = useState("");
   const [menus, setMenus] = useState([]);
 
   const openTime = new Date(restaurant?.openTime).toLocaleTimeString([], {
@@ -18,6 +19,8 @@ const RestaurantDetails = () => {
   });
 
   useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setMinDate(today);
     const fetchRestaurant = async () => {
       try {
         const response = await Axios.get("/getRestaurantDetails", {
@@ -26,7 +29,6 @@ const RestaurantDetails = () => {
           },
         });
         if (response.status === 200) {
-          console.log(response.data)
           setRestaurant(response.data.restaurant);
           setMenus(response.data.menus);
         }
@@ -41,8 +43,8 @@ const RestaurantDetails = () => {
     <>
       <div className="bg-adminDashboard h-fit">
         <NavBar />
-        <div className="flex justify-center h-screen mt-4">
-          <div className="bg-white w-3/5 h-3/4 grid grid-cols-10">
+        <div className="flex justify-center mt-4">
+          <div className="bg-white w-3/5 h-screen grid grid-cols-10">
             <div className="col-span-7 overflow-auto">
               <div
                 id="controls-carousel"
@@ -121,6 +123,12 @@ const RestaurantDetails = () => {
                   </h1>
                 </div>
                 <div>
+                  {restaurant?.cuisine &&
+                    restaurant?.cuisine.map((cuisine) => (
+                      <span>{cuisine.cuisine} </span>
+                    ))}
+                </div>
+                <div>
                   <p>
                     <span>{restaurant?.address}</span>,
                     <span>{restaurant?.city}</span>,
@@ -163,12 +171,12 @@ const RestaurantDetails = () => {
                               </span>
                               {menu?.foodCategory.category}
                             </h3>
-                            <h3>
+                            {/* <h3>
                               <span className="text-lg font-bold">
                                 Food Quantity:{" "}
                               </span>
                               {menu?.quantity}
-                            </h3>
+                            </h3> */}
                             <h3>
                               <span className="text-lg font-bold">
                                 Food Price:{" "}
@@ -182,7 +190,36 @@ const RestaurantDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-red-300 col-span-3"> broo</div>
+            <div className=" col-span-3">
+              <div className="flex justify-evenly mt-4">
+                <div>
+                  <input
+                    type="date"
+                    name="date"
+                    className="w-40 h-12 bg-white rounded-xl border border-gray-700"
+                    placeholder="DD/MM/YYYY"
+                    min={minDate}
+                  />
+                </div>
+                <div>
+                  <select
+                    name=""
+                    id=""
+                    className="w-40 h-12 bg-white rounded-xl cursor-pointer border border-gray-700"
+                  >
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5">5 Guests</option>
+                    <option value="6">6 Guests</option>
+                    <option value="7">7 Guests</option>
+                    <option value="8">8 Guests</option>
+                    <option value="9">9 Guests</option>
+                    <option value="10">10 Guests</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
