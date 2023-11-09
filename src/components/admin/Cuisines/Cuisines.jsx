@@ -109,7 +109,7 @@ const Cuisines = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody role="rowgroup" className="px-4">
+                <tbody className="px-4">
                   {cuisines.map((cuisine) => (
                     <tr role="row" key={cuisine?._id}>
                       <td className="py-3 text-sm" role="cell">

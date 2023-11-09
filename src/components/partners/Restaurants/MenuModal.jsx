@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AddMenuModal from "./AddMenuModal";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import MenuDetailsModal from "./MenuDetailsModal";
 
 const MenuModal = ({ isOpen, closeModal, isId }) => {
   const [addMenu, setAddMenu] = useState(false);
   const [menus, setMenus] = useState([]);
+  const [menuDetailsModal, setMenuDetailsModal] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState("");
 
   useEffect(() => {
     const fetchMenus = async () => {
@@ -36,6 +39,16 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
         </div>
       )}
 
+      {menuDetailsModal && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
+          <MenuDetailsModal
+            isOpen={menuDetailsModal}
+            closeModal={() => setMenuDetailsModal(false)}
+            isSelected={selectedMenu}
+          />
+        </div>
+      )}
+
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-30 font-serif">
           <div className="bg-slate-300 p-4 rounded-lg shadow-lg w-3/6 h-4/6 overflow-y-auto relative">
@@ -57,6 +70,10 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
             {menus.map((menu) => (
               <div
                 className="my-6 p-4 ms-20 bg-slate-100 shadow-lg rounded-lg w-4/5 h-40 flex transform transition-transform hover:scale-105 font-serif"
+                onClick={() => {
+                  setMenuDetailsModal(true);
+                  setSelectedMenu(menu);
+                }}
                 key={menu?._id}
               >
                 <div>
@@ -80,7 +97,8 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
                     {menu?.quantity}
                   </h3>
                   <h3>
-                    <span className="text-lg font-bold">Food Price: </span>₹ {menu?.price}
+                    <span className="text-lg font-bold">Food Price: </span>₹{" "}
+                    {menu?.price}
                   </h3>
                 </div>
               </div>

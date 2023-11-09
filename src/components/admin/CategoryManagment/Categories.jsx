@@ -3,6 +3,7 @@ import AdminHeader from "../AdminHeader";
 import AdminSidebar from "../AdminSideBar";
 import AddCategory from "./AddCategory";
 import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const Categories = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -25,6 +26,22 @@ const Categories = () => {
     };
     fetchCategories();
   }, []);
+
+  const deleteCategory = async (id) => {
+    try {
+      const response = await adminAxios.delete("/admin/deleteCategory", {
+        data: { id },
+      });
+      if (response.status === 200) {
+        const newCategories = categories.filter(
+          (category) => category._id !== id
+        );
+        setCategories(newCategories);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -55,10 +72,18 @@ const Categories = () => {
             <div className="my-4 flex flex-col items-center justify-center">
               {categories.map((category, index) => (
                 <div
-                  className="bg-slate-200 shadow-md rounded-md w-3/4 h-1/4 p-4 trasnform transition-transform hover:scale-105 mb-4"
+                  className="bg-slate-200 shadow-md rounded-md w-3/4 h-1/4 p-4 mb-4"
                   key={index}
                 >
-                  <h1 className="text-xl">{category?.category}</h1>
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-xl">{category?.category}</h1>
+                    <div
+                      className="cursor-pointer trasnform transition-transform hover:scale-150"
+                      onClick={() => deleteCategory(category?._id)}
+                    >
+                      <DeleteIcon />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
