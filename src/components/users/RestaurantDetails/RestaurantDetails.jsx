@@ -2,12 +2,40 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../Navbar";
 import { useParams } from "react-router-dom";
 import Axios from "../../../services/axios";
+import { add, format } from "date-fns";
+import ReactCalender from "react-calendar";
 
 const RestaurantDetails = () => {
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
-  const [minDate, setMinDate] = useState("");
   const [menus, setMenus] = useState([]);
+  const [date, setDate] = useState({
+    justDate: null,
+    dateTime: null,
+  });
+  const [cart, setCart] = useState([]);
+
+  // const initialQuantities = Array.from({ length: menus.length }, () => 1);
+  const initialQuantities = Array(menus.length).fill(1);
+  const [quantities, setQuantities] = useState(initialQuantities);
+  const updateQuantity = (index, newQuantity) => {
+    setQuantities((prev) => {
+      const newQuantities = [...prev];
+      newQuantities[index] = newQuantity;
+      return newQuantities;
+    });
+  };
+
+  const addTOCart = (menu, quantity, total) => {
+    setCart((prevCart) => [
+      ...prevCart,
+      {
+        menu: menu,
+        quantity: quantity,
+        total: total,
+      },
+    ]);
+  };
 
   const openTime = new Date(restaurant?.openTime).toLocaleTimeString([], {
     hour: "2-digit",
@@ -18,9 +46,22 @@ const RestaurantDetails = () => {
     minute: "2-digit",
   });
 
+  const timeSlots = () => {
+    const { justDate } = date;
+    const extractedOpenHour = parseInt(openTime.split(":")[0]);
+    const extractedCloseHour = parseInt(closeTime.split(":")[0]);
+    const beginning = add(justDate, { hours: extractedOpenHour });
+    const end = add(justDate, { hours: 18 });
+    const interval = { hours: 1 };
+    const times = [];
+    for (let i = beginning; i <= end; i = add(i, interval)) {
+      times.push(i);
+    }
+    return times;
+  };
+  const times = timeSlots();
+
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    setMinDate(today);
     const fetchRestaurant = async () => {
       try {
         const response = await Axios.get("/getRestaurantDetails", {
@@ -55,7 +96,7 @@ const RestaurantDetails = () => {
                   {restaurant?.images &&
                     restaurant.images.map((image, index) => (
                       <div
-                        key={index}
+                        key={`image-${index}`}
                         className="duration-700 ease-in-out"
                         data-carousel-item
                       >
@@ -124,8 +165,8 @@ const RestaurantDetails = () => {
                 </div>
                 <div>
                   {restaurant?.cuisine &&
-                    restaurant?.cuisine.map((cuisine) => (
-                      <span>{cuisine.cuisine} </span>
+                    restaurant?.cuisine.map((cuisine, index) => (
+                      <span key={index}>{cuisine.cuisine} </span>
                     ))}
                 </div>
                 <div>
@@ -144,45 +185,111 @@ const RestaurantDetails = () => {
               <div className="p-3">
                 <h1 className="text-2xl font-semibold ">Menus</h1>
                 <div>
-                  <div>
+                  <div className="relative">
                     {menus &&
-                      menus.map((menu) => (
+                      menus.map((menu, index) => (
                         <div
                           className="my-6 p-4 ms-20 bg-slate-100 shadow-lg rounded-lg w-4/5 h-40 flex transform transition-transform hover:scale-105 font-serif"
                           key={menu?._id}
                         >
-                          <div>
-                            <img
-                              src={menu?.imageURL}
-                              alt="FoodImage"
-                              className="h-32 w-32 cursor-pointer"
-                            />
-                          </div>
-                          <div className="flex-1 ms-4 cursor-pointer">
-                            <h3>
-                              <span className="text-lg font-bold">
-                                Food Name:{" "}
-                              </span>
-                              {menu?.name}
-                            </h3>
-                            <h3>
-                              <span className="text-lg font-bold">
-                                Food Type:{" "}
-                              </span>
-                              {menu?.foodCategory.category}
-                            </h3>
-                            {/* <h3>
+                          <div className="flex">
+                            <div>
+                              <img
+                                src={menu?.imageURL}
+                                alt="FoodImage"
+                                className="h-32 w-32 cursor-pointer"
+                              />
+                            </div>
+                            <div className="flex-1 ms-4 cursor-pointer">
+                              <h3>
+                                <span className="text-lg font-bold">
+                                  Food Name:{" "}
+                                </span>
+                                {menu?.name}
+                              </h3>
+                              <h3>
+                                <span className="text-lg font-bold">
+                                  Food Type:{" "}
+                                </span>
+                                {menu?.foodCategory.category}
+                              </h3>
+                              {/* <h3>
                               <span className="text-lg font-bold">
                                 Food Quantity:{" "}
                               </span>
                               {menu?.quantity}
                             </h3> */}
-                            <h3>
-                              <span className="text-lg font-bold">
-                                Food Price:{" "}
+                              <h3>
+                                <span className="text-lg font-bold">
+                                  Food Price:{" "}
+                                </span>
+                                ₹ {menu?.price}
+                              </h3>
+                            </div>
+                          </div>
+                          <div className="absolute bottom-3 right-2">
+                            <div className="flex items-center space-x-2 justify-center mb-2">
+                              <button
+                                className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
+                                onClick={() =>
+                                  updateQuantity(
+                                    index,
+                                    isNaN(quantities[index]) ||
+                                      quantities[index] <= 1
+                                      ? 1
+                                      : quantities[index] - 1
+                                  )
+                                }
+                              >
+                                -
+                              </button>
+                              <span className="text-lg">
+                                {isNaN(quantities[index])
+                                  ? 1
+                                  : quantities[index]}
                               </span>
-                              ₹ {menu?.price}
-                            </h3>
+                              <button
+                                className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
+                                onClick={() =>
+                                  updateQuantity(
+                                    index,
+                                    isNaN(quantities[index])
+                                      ? 1
+                                      : quantities[index] + 1
+                                  )
+                                }
+                              >
+                                +
+                              </button>
+                            </div>
+                            <button
+                              className="bg-button text-gray-800 px-4 py-2 rounded-md flex items-center"
+                              type="button"
+                              onClick={() => {
+                                console.log(quantities[index]);
+                                addTOCart(
+                                  menu?.name,
+                                  quantities[index],
+                                  quantities[index] * menu?.price
+                                );
+                              }}
+                            >
+                              <svg
+                                className="w-4 h-4 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                />
+                              </svg>
+                              Add Item
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -191,21 +298,23 @@ const RestaurantDetails = () => {
               </div>
             </div>
             <div className=" col-span-3">
-              <div className="flex justify-evenly mt-4">
+              <div className="">
                 <div>
-                  <input
-                    type="date"
-                    name="date"
-                    className="w-40 h-12 bg-white rounded-xl border border-gray-700"
-                    placeholder="DD/MM/YYYY"
-                    min={minDate}
+                  <ReactCalender
+                    className="border rounded p-4"
+                    activeStartDate={new Date()}
+                    minDate={new Date()}
+                    view="month"
+                    onClickDay={(date) =>
+                      setDate((prev) => ({ ...prev, justDate: date }))
+                    }
                   />
                 </div>
                 <div>
                   <select
                     name=""
                     id=""
-                    className="w-40 h-12 bg-white rounded-xl cursor-pointer border border-gray-700"
+                    className="w-72 h-10 mx-4 my-2 bg-white rounded-xl cursor-pointer border border-gray-700"
                   >
                     <option value="2">2 Guests</option>
                     <option value="3">3 Guests</option>
@@ -218,6 +327,53 @@ const RestaurantDetails = () => {
                     <option value="10">10 Guests</option>
                   </select>
                 </div>
+              </div>
+              <div className="my-4 ms-2 flex overflow-x-auto">
+                {times?.map((time, index) => (
+                  <div
+                    onClick={() => console.log(time)}
+                    className="border border-green-500 text-green-500 w-28 h-10 mx-2 flex-shrink-0 whitespace-no-wrap text-center cursor-pointer font-semibold"
+                    key={`time-${index}`}
+                  >
+                    {format(time, "hh:mm a")}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <hr className="border-t border-gray-800 my-4 mx-2" />
+              </div>
+              <div>
+                {cart.length > 0 && (
+                  <div>
+                    <h1 className="font-bold text-lg text-center">
+                      Items Added
+                    </h1>
+                    <div>
+                      <table className="w-full">
+                        <thead>
+                          <tr>
+                            <th className="border px-4 py-2">Menu</th>
+                            <th className="border px-4 py-2">Quantity</th>
+                            <th className="border px-4 py-2">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {cart.map((item, index) => (
+                            <tr key={index} className="border">
+                              <td className="border px-4 py-2">{item.menu}</td>
+                              <td className="border px-4 py-2">
+                                {item.quantity}
+                              </td>
+                              <td className="border px-4 py-2">
+                                ₹ {item.total}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
