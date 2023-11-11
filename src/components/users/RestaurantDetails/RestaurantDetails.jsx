@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import NavBar from "../Navbar";
 import { useParams } from "react-router-dom";
 import Axios from "../../../services/axios";
 import { add, format } from "date-fns";
 import ReactCalender from "react-calendar";
+import Calender from "./Calender.css";
 
 const RestaurantDetails = () => {
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState(2);
   const [date, setDate] = useState({
     justDate: null,
     dateTime: null,
   });
   const [cart, setCart] = useState([]);
 
-  // const initialQuantities = Array.from({ length: menus.length }, () => 1);
   const initialQuantities = Array(menus.length).fill(1);
   const [quantities, setQuantities] = useState(initialQuantities);
   const updateQuantity = (index, newQuantity) => {
@@ -26,15 +28,28 @@ const RestaurantDetails = () => {
     });
   };
 
-  const addTOCart = (menu, quantity, total) => {
-    setCart((prevCart) => [
-      ...prevCart,
-      {
-        menu: menu,
-        quantity: quantity,
-        total: total,
-      },
-    ]);
+  const addToCart = (id, menu, quantity, total) => {
+    setCart((prevCart) => {
+      const existingItemIndex = prevCart.findIndex(
+        (item) => item.menu === menu
+      );
+
+      if (existingItemIndex !== -1) {
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex].quantity = quantity;
+        updatedCart[existingItemIndex].total = total;
+        return updatedCart;
+      }
+      return [
+        ...prevCart,
+        {
+          id: id,
+          menu: menu,
+          quantity: quantity,
+          total: total,
+        },
+      ];
+    });
   };
 
   const openTime = new Date(restaurant?.openTime).toLocaleTimeString([], {
@@ -79,6 +94,22 @@ const RestaurantDetails = () => {
     };
     fetchRestaurant();
   }, []);
+
+  const handlebooking = async () => {
+    // console.log(cart);
+    console.log(date);
+    // console.log(restaurantId);
+    // console.log(selectedSeats);
+    const response = await userAxios.post("/bookingTable", {
+      cart: cart,
+      date: date,
+      restaurantId: restaurantId,
+      selectedSeats: selectedSeats,
+    });
+    if (response.status === 200) {
+      console.log("success brooo");
+    }
+  };
 
   return (
     <>
@@ -213,12 +244,6 @@ const RestaurantDetails = () => {
                                 </span>
                                 {menu?.foodCategory.category}
                               </h3>
-                              {/* <h3>
-                              <span className="text-lg font-bold">
-                                Food Quantity:{" "}
-                              </span>
-                              {menu?.quantity}
-                            </h3> */}
                               <h3>
                                 <span className="text-lg font-bold">
                                   Food Price:{" "}
@@ -231,13 +256,19 @@ const RestaurantDetails = () => {
                             <div className="flex items-center space-x-2 justify-center mb-2">
                               <button
                                 className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
+                                // onClick={() =>
+                                //   updateQuantity(
+                                //     index,
+                                //     isNaN(quantities[index]) ||
+                                //       quantities[index] <= 1
+                                //       ? 1
+                                //       : quantities[index] - 1
+                                //   )
+                                // }
                                 onClick={() =>
                                   updateQuantity(
                                     index,
-                                    isNaN(quantities[index]) ||
-                                      quantities[index] <= 1
-                                      ? 1
-                                      : quantities[index] - 1
+                                    Math.max(1, quantities[index] - 1)
                                   )
                                 }
                               >
@@ -250,12 +281,18 @@ const RestaurantDetails = () => {
                               </span>
                               <button
                                 className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
+                                // onClick={() =>
+                                //   updateQuantity(
+                                //     index,
+                                //     isNaN(quantities[index])
+                                //       ? 1
+                                //       : quantities[index] + 1
+                                //   )
+                                // }
                                 onClick={() =>
                                   updateQuantity(
                                     index,
-                                    isNaN(quantities[index])
-                                      ? 1
-                                      : quantities[index] + 1
+                                    (quantities[index] || 0) + 1
                                   )
                                 }
                               >
@@ -266,8 +303,8 @@ const RestaurantDetails = () => {
                               className="bg-button text-gray-800 px-4 py-2 rounded-md flex items-center"
                               type="button"
                               onClick={() => {
-                                console.log(quantities[index]);
-                                addTOCart(
+                                addToCart(
+                                  menu?._id,
                                   menu?.name,
                                   quantities[index],
                                   quantities[index] * menu?.price
@@ -297,16 +334,15 @@ const RestaurantDetails = () => {
                 </div>
               </div>
             </div>
-            <div className=" col-span-3">
+            <div className=" col-span-3 ">
               <div className="">
-                <div>
+                <div className="h-fit flex justify-center mt-3">
                   <ReactCalender
-                    className="border rounded p-4"
-                    activeStartDate={new Date()}
+                    className="REACT-CALENDER p-2"
                     minDate={new Date()}
                     view="month"
                     onClickDay={(date) =>
-                      setDate((prev) => ({ ...prev, justDate: date }))
+                      setDate((prev) => ({ ...prev, justDate: new Date(date)}))
                     }
                   />
                 </div>
@@ -314,7 +350,8 @@ const RestaurantDetails = () => {
                   <select
                     name=""
                     id=""
-                    className="w-72 h-10 mx-4 my-2 bg-white rounded-xl cursor-pointer border border-gray-700"
+                    className="w-11/12 h-10 mx-4 my-2 bg-white rounded-xl cursor-pointer border border-gray-500"
+                    onClick={(e) => setSelectedSeats(e.target.value)}
                   >
                     <option value="2">2 Guests</option>
                     <option value="3">3 Guests</option>
@@ -331,7 +368,9 @@ const RestaurantDetails = () => {
               <div className="my-4 ms-2 flex overflow-x-auto">
                 {times?.map((time, index) => (
                   <div
-                    onClick={() => console.log(time)}
+                    onClick={() =>
+                      setDate((prev) => ({ ...prev, dateTime: time }))
+                    }
                     className="border border-green-500 text-green-500 w-28 h-10 mx-2 flex-shrink-0 whitespace-no-wrap text-center cursor-pointer font-semibold"
                     key={`time-${index}`}
                   >
@@ -348,30 +387,64 @@ const RestaurantDetails = () => {
                     <h1 className="font-bold text-lg text-center">
                       Items Added
                     </h1>
-                    <div>
-                      <table className="w-full">
+                    <div className="flex justify-center">
+                      <table className="w-11/12">
                         <thead>
                           <tr>
-                            <th className="border px-4 py-2">Menu</th>
-                            <th className="border px-4 py-2">Quantity</th>
-                            <th className="border px-4 py-2">Total</th>
+                            <th className="border border-gray-500 px-4 py-2">
+                              Menu
+                            </th>
+                            <th className="border border-gray-500 px-4 py-2">
+                              Quantity
+                            </th>
+                            <th className="border border-gray-500 px-4 py-2">
+                              Total
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           {cart.map((item, index) => (
-                            <tr key={index} className="border">
-                              <td className="border px-4 py-2">{item.menu}</td>
-                              <td className="border px-4 py-2">
+                            <tr key={index} className="border border-gray-500">
+                              <td className="border border-gray-500 px-4 py-2">
+                                {item.menu}
+                              </td>
+                              <td className="border border-gray-500 px-4 py-2">
                                 {item.quantity}
                               </td>
-                              <td className="border px-4 py-2">
+                              <td className="border border-gray-500 px-4 py-2">
                                 ₹ {item.total}
                               </td>
                             </tr>
                           ))}
                         </tbody>
+                        <tfoot>
+                          <tr>
+                            <td
+                              className="border border-gray-500 px-4 py-2 font-bold"
+                              colSpan="2"
+                            >
+                              Grand Total
+                            </td>
+                            <td className="border border-gray-500 px-4 py-2">
+                              ₹{" "}
+                              {cart.reduce((acc, item) => acc + item.total, 0)}
+                            </td>
+                          </tr>
+                        </tfoot>
                       </table>
                     </div>
+                  </div>
+                )}
+                {cart.length > 0 && (
+                  <div className="w-full flex justify-center mt-4">
+                    <button
+                      className="bg-button text-gray-800 px-4 py-2 rounded-md flex items-center"
+                      type="submit"
+                      onClick={handlebooking}
+                    >
+                      {" "}
+                      Book a table
+                    </button>
                   </div>
                 )}
               </div>
