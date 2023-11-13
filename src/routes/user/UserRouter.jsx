@@ -10,24 +10,38 @@ import NewPassword from "../../components/users/Recover/NewPassword";
 import ProfilePage from "../../pages/users/Profile/ProfilePage";
 import RestaurantDetailsPage from "../../pages/users/RestaurantDetailsPage";
 import OtpPage from "../../pages/users/Authentication/OtpPage";
+import BookingsPage from "../../pages/users/Profile/BookingsPage";
 
 const UserRouter = () => {
   const user = useSelector((state) => state.user.isLogged);
   return (
     <>
       <Routes>
-        <Route path="/login" element={user ? <Navigate to={'/'}/> : <LoginPage />} />
-        <Route path="/register" element={user ? <Navigate to={'/'}/> : <SignupPage />} />
-        {/* <Route path="/sendOtp" element={<OtpPage />}/> */}
         <Route
-          path="/"
-          element={<HomePage />}
+          path="/login"
+          element={user ? <Navigate to={"/"} /> : <LoginPage />}
         />
+        <Route
+          path="/register"
+          element={user ? <Navigate to={"/"} /> : <SignupPage />}
+        />
+        {/* <Route path="/sendOtp" element={<OtpPage />}/> */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         <Route path="/otpverify" element={<Otp />} />
         <Route path="/newPassword" element={<NewPassword />} />
-        <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to={'/'}/>}/>
-        <Route path="/restaurantDetails/:restaurantId" element={<RestaurantDetailsPage />}/>
+        <Route
+          path="/profile"
+          element={user ? <ProfilePage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/restaurantDetails/:restaurantId"
+          element={<RestaurantDetailsPage />}
+        />
+        <Route
+          path="/bookings"
+          element={user ? <BookingsPage /> : <Navigate to={"/"} />}
+        />
       </Routes>
     </>
   );

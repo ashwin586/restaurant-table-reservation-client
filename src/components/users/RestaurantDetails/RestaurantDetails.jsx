@@ -3,15 +3,17 @@ import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import NavBar from "../Navbar";
 import { useParams } from "react-router-dom";
 import Axios from "../../../services/axios";
-import { add, format } from "date-fns";
+import { add, format, isBefore, isSameDay } from "date-fns";
 import ReactCalender from "react-calendar";
-import Calender from "./Calender.css";
+import { razorPay } from "../../../utils/razorPayConfig";
+import "./Calender.css";
 
 const RestaurantDetails = () => {
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState(2);
+  // const [errors, setError] = useState({});
   const [date, setDate] = useState({
     justDate: null,
     dateTime: null,
@@ -40,6 +42,7 @@ const RestaurantDetails = () => {
         updatedCart[existingItemIndex].total = total;
         return updatedCart;
       }
+
       return [
         ...prevCart,
         {
@@ -63,16 +66,29 @@ const RestaurantDetails = () => {
 
   const timeSlots = () => {
     const { justDate } = date;
+    const currentHour = new Date().getHours();
     const extractedOpenHour = parseInt(openTime.split(":")[0]);
     const extractedCloseHour = parseInt(closeTime.split(":")[0]);
-    const beginning = add(justDate, { hours: extractedOpenHour });
-    const end = add(justDate, { hours: 18 });
+
+    let beginning;
+    if (isSameDay(justDate, add(new Date(), { days: 1 }))) {
+      beginning = add(justDate, { hours: extractedOpenHour });
+    } else {
+      beginning = isBefore(currentHour, extractedOpenHour)
+        ? add(justDate, { hours: extractedOpenHour })
+        : add(justDate, { hours: currentHour });
+    }
+
+    const end = add(justDate, { hours: extractedCloseHour });
     const interval = { hours: 1 };
     const times = [];
-    for (let i = beginning; i <= end; i = add(i, interval)) {
+
+    for (let i = beginning; isBefore(i, end); i = add(i, interval)) {
       times.push(i);
     }
+
     return times;
+
   };
   const times = timeSlots();
 
@@ -96,18 +112,18 @@ const RestaurantDetails = () => {
   }, []);
 
   const handlebooking = async () => {
-    // console.log(cart);
-    console.log(date);
-    // console.log(restaurantId);
-    // console.log(selectedSeats);
-    const response = await userAxios.post("/bookingTable", {
-      cart: cart,
-      date: date,
-      restaurantId: restaurantId,
-      selectedSeats: selectedSeats,
-    });
-    if (response.status === 200) {
-      console.log("success brooo");
+    const amount = cart.reduce((total, item) => total + item.total, 0);
+    const paymentId = await razorPay(amount);
+    if (paymentId) {
+      const response = await userAxios.post("/bookingTable", {
+        cart: cart,
+        date: date,
+        restaurantId: restaurantId,
+        selectedSeats: selectedSeats,
+      });
+      if (response.status === 200) {
+        console.log("success brooo");
+      }
     }
   };
 
@@ -256,15 +272,6 @@ const RestaurantDetails = () => {
                             <div className="flex items-center space-x-2 justify-center mb-2">
                               <button
                                 className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
-                                // onClick={() =>
-                                //   updateQuantity(
-                                //     index,
-                                //     isNaN(quantities[index]) ||
-                                //       quantities[index] <= 1
-                                //       ? 1
-                                //       : quantities[index] - 1
-                                //   )
-                                // }
                                 onClick={() =>
                                   updateQuantity(
                                     index,
@@ -281,14 +288,6 @@ const RestaurantDetails = () => {
                               </span>
                               <button
                                 className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
-                                // onClick={() =>
-                                //   updateQuantity(
-                                //     index,
-                                //     isNaN(quantities[index])
-                                //       ? 1
-                                //       : quantities[index] + 1
-                                //   )
-                                // }
                                 onClick={() =>
                                   updateQuantity(
                                     index,
@@ -342,7 +341,7 @@ const RestaurantDetails = () => {
                     minDate={new Date()}
                     view="month"
                     onClickDay={(date) =>
-                      setDate((prev) => ({ ...prev, justDate: new Date(date)}))
+                      setDate((prev) => ({ ...prev, justDate: new Date(date) }))
                     }
                   />
                 </div>

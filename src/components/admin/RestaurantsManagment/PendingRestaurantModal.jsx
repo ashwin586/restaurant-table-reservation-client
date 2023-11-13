@@ -82,7 +82,7 @@ const PendingRestaurantModal = ({ pendingTab, restaurants }) => {
               </div>
             )
         )}
-      {!updateRestaurant.length && (
+      {/* {!updateRestaurant.length && (
         <div className="flex justify-center items-center mt-20">
           <img
             style={{ height: "417px", width: "626px" }}
@@ -90,7 +90,7 @@ const PendingRestaurantModal = ({ pendingTab, restaurants }) => {
             alt="noRestaurant"
           />
         </div>
-      )}
+      )} */}
     </>
   );
 };

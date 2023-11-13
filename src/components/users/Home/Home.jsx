@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <div className="h-auto bg-adminDashboard">
+      <div className="">
         <div>
           <img
             className="w-full h-1/2"

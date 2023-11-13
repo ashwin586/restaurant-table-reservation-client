@@ -15,6 +15,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
       selectedCuisines: [],
       openTime: "10:00",
       closeTime: "5:00",
+      seats: "",
       address: "",
       city: "",
       pinCode: "",
@@ -27,6 +28,9 @@ function AddRestaurantModal({ isOpen, closeModal }) {
       selectedCuisines: Yup.array()
         .min(1, "At least one cuisine must be selected")
         .required("At least one cuisine must be selected"),
+      seats: Yup.number()
+        .typeError("Please enter numbers")
+        .required("Number of seat on restaurant"),
       address: Yup.string()
         .min(10, "Minimum 10 character address")
         .required("The field cannot be empty"),
@@ -39,8 +43,11 @@ function AddRestaurantModal({ isOpen, closeModal }) {
     }),
     onSubmit: async (values) => {
       try {
-        const response = await partnerAxios.post('/partner/addRestaurant', values);
-        if(response.status === 200){
+        const response = await partnerAxios.post(
+          "/partner/addRestaurant",
+          values
+        );
+        if (response.status === 200) {
           closeModal();
         }
       } catch (err) {
@@ -129,7 +136,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
               <TimePicker
                 name="openTime"
                 className="w-full border border-gray-300 rounded p-2 mb-2 me-2"
-                onChange={(time) => formik.setFieldValue('openTime', time)}
+                onChange={(time) => formik.setFieldValue("openTime", time)}
                 value={formik.values.openTime}
               />
               {formik.touched.openTime && formik.errors.openTime && (
@@ -138,13 +145,25 @@ function AddRestaurantModal({ isOpen, closeModal }) {
               <TimePicker
                 name="closeTime"
                 className="w-full border border-gray-300 rounded p-2 mb-2 ms-2"
-                onChange={(time) => formik.setFieldValue('closeTime', time )}
+                onChange={(time) => formik.setFieldValue("closeTime", time)}
                 value={formik.values.closeTime}
               />
               {formik.touched.closeTime && formik.errors.closeTime && (
                 <p className="error text-red-600 ">{formik.errors.closeTime}</p>
               )}
             </div>
+            <h1 className="font-bold pb-2">Restaurant Seats </h1>
+            <input
+              placeHolder="No of Seats"
+              type="text"
+              name="seats"
+              className="w-full border border-gray-300 rounded p-2 mb-2"
+              value={formik.values.seats}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.seats && formik.errors.seats && (
+              <p className="error text-red-600 ">{formik.errors.seats}</p>
+            )}
             <h1 className="font-bold pb-2">Address</h1>
             <input
               placeholder="Street Address"

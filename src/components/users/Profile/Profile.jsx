@@ -6,6 +6,7 @@ import { uploadUserProfile } from "../../../services/firebase/storage";
 import { Spinner } from "@chakra-ui/react";
 import { userLogout } from "../../../redux/slice/userSlice";
 import { useDispatch } from "react-redux";
+import ProfileSideBar from "./ProfileSideBar";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -70,7 +71,7 @@ const Profile = () => {
       <Navbar />
       <div className="flex justify-center mt-10">
         <div className="w-3/4 rounded-xl shadow-2xl">
-          <div className="bg-yellow-400 p-4 text-white rounded-t-xl">
+          <div className="bg-yellow-300 p-4 text-white rounded-t-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="relative">
@@ -98,24 +99,7 @@ const Profile = () => {
 
           <div className="container mx-auto mt-8 p-4">
             <div className="flex">
-              <div className="w-1/4 border-r border-yellow-400 pr-4">
-                <ul className="space-y-4">
-                  <li>
-                    <button className="text-black text-lg w-full py-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white">
-                      Bookings
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="text-black text-lg w-full py-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white"
-                      onClick={userlogout}
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              </div>
-
+              <ProfileSideBar />
               <div className="container flex justify-center ">
                 <div className="w-3/4 ml-4 ">
                   <h2 className="text-2xl font-semibold mb-4">My Profile</h2>

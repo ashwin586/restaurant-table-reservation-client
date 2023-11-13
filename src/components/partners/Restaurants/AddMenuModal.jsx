@@ -8,6 +8,11 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState("");
 
+  const isImageFile = (data) => {
+    const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
+    return base64HeaderRegex.test(data);
+  };
+
   const selectImage = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -15,17 +20,22 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
     input.click();
     input.onchange = (e) => {
       const file = e.target.files[0];
-      if (file.length === 0) return;
-      const imageExtensions = [".jpg", ".jpeg", ".png"];
-      const imageFiles = Array.from(file).filter((file) =>
-        imageExtensions.includes("." + file.name.split(".").pop().toLowerCase())
-      );
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Check if the file type is an image
+          if (isImageFile(reader.result)) {
+            // Set your image state here
+            setImage(file);
+          } else {
+            alert("Please select a valid image file (JPEG or PNG)");
+          }
+        };
 
-      if (imageFiles.length === 0) {
-        alert("No valid image files selected.");
-        return;
+        reader.readAsDataURL(file);
       }
-      setImage(file);
+
+      // setImage(file);
     };
   };
 
