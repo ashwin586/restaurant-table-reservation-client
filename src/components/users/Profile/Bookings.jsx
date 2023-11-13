@@ -6,14 +6,11 @@ import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
 
-  // Output: "Sun, 12 Nov"
-
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await userAxios.get("/getBookings");
         if (response.status === 200) {
-          console.log(response.data);
           setBookings(response.data);
         }
       } catch (err) {
