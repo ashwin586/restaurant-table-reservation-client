@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
@@ -19,29 +20,65 @@ const Home = () => {
     };
     fetchRestaurants();
   }, []);
+
+  const filteredRestaurant = restaurants.filter((restaurant) =>
+    restaurant.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <>
       <Navbar />
-      <div className="">
+      <div className="bg-gray-100 min-h-screen">
         <div>
           <img
-            className="w-full h-1/2"
-            src="/assets/wepik-export-20231103074229zt1g.png"
+            className="w-full"
+            style={{ height: "550px" }}
+            src="/assets/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-banner.jpg"
             alt="bannerImage"
           />
         </div>
+        <div className="absolute top-80 left-52  p-8 ">
+          <h1 className="text-6xl font-bold mb-4 text-white">
+            Pick your favourite <br /> Restaurant
+          </h1>
+          <div className="relative">
+            <svg
+              className="w-4 h-4 dark:text-black absolute top-3 left-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+            <input
+              type="text"
+              className="pl-10 w-full border p-2 rounded-md outline-none"
+              placeholder="Search for Restaurants"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
         <div className="flex justify-center">
-          <div className="w-2/3 h-96">
+          <div className="w-2/3 h-full">
             <div>
               <h1 className="text-2xl font-bold p-5">Restaurants Near By</h1>
             </div>
 
             <div className="grid grid-cols-4">
-              {restaurants.map((restaurant) => (
+              {filteredRestaurant.map((restaurant) => (
                 <div
-                  className="w-72 h-60 bg-white shadow-md shadow-right shadow-bottom rounded-xl m-4 p-4 hover:cursor-pointer transform transition-transform hover:scale-102"
+                  className="w-72 h-60 bg-white shadow-lg shadow-right shadow-bottom rounded-xl m-4 p-4 hover:cursor-pointer transform transition-transform hover:scale-102"
                   key={restaurant?._id}
-                  onClick={() => navigate(`/restaurantDetails/${restaurant?._id}`)}
+                  onClick={() =>
+                    navigate(`/restaurantDetails/${restaurant?._id}`)
+                  }
                 >
                   <div className="h-3/5 relative">
                     <img

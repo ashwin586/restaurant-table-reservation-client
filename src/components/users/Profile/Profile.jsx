@@ -4,21 +4,12 @@ import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
 import { uploadUserProfile } from "../../../services/firebase/storage";
 import { Spinner } from "@chakra-ui/react";
-import { userLogout } from "../../../redux/slice/userSlice";
-import { useDispatch } from "react-redux";
 import ProfileSideBar from "./ProfileSideBar";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const userlogout = () => {
-    localStorage.removeItem("userToken");
-    dispatch(userLogout());
-    navigate("/");
-  };
 
   const handleImageUpload = () => {
     const input = document.createElement("input");

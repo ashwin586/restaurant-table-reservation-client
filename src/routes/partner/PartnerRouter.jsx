@@ -7,6 +7,7 @@ import PartnerRegisterPage from "../../pages/partners/Authentication/PartnerRegi
 import DashboardPage from "../../pages/partners/Home/DashboardPage";
 import ProfilePage from "../../pages/partners/Home/ProfilePage";
 import RestaurantPage from "../../pages/partners/Home/RestaurantPage";
+import OrdersPage from "../../pages/partners/Home/OrdersPage";
 
 const PartnerRouter = () => {
   const partner = useSelector((state) => state.partner.isLogged);
@@ -40,6 +41,10 @@ const PartnerRouter = () => {
           element={
             partner ? <RestaurantPage /> : <Navigate to="/partner/login" />
           }
+        />
+        <Route
+          path="orders"
+          element={partner ? <OrdersPage /> : <Navigate to="/partner/login" />}
         />
       </Routes>
     </>

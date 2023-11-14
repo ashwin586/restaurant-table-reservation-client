@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import NavBar from "../Navbar";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Axios from "../../../services/axios";
-import { add, format, isBefore, isSameDay } from "date-fns";
+import { useSelector } from "react-redux";
+import { add, format, isBefore, isSameDay, parse, isToday } from "date-fns";
 import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
 import "./Calender.css";
 
 const RestaurantDetails = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.isLogged);
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
@@ -67,8 +70,10 @@ const RestaurantDetails = () => {
   const timeSlots = () => {
     const { justDate } = date;
     const currentHour = new Date().getHours();
-    const extractedOpenHour = parseInt(openTime.split(":")[0]);
-    const extractedCloseHour = parseInt(closeTime.split(":")[0]);
+    const openHour = parse(openTime, "h:mm aa", new Date());
+    const extractedOpenHour = openHour.getHours();
+    const CloseHour = parse(closeTime, "h:mm aa", new Date());
+    const extractedCloseHour = CloseHour.getHours();
 
     let beginning;
     if (isSameDay(justDate, add(new Date(), { days: 1 }))) {
@@ -78,6 +83,15 @@ const RestaurantDetails = () => {
         ? add(justDate, { hours: extractedOpenHour })
         : add(justDate, { hours: currentHour });
     }
+    // if (isToday(justDate)) {
+    //   // The date is today or in the future
+    //   beginning = add(justDate, { hours: extractedOpenHour });
+    // } else {
+    //   // The date is in the past
+    //   beginning = isBefore(currentHour, extractedOpenHour)
+    //     ? add(justDate, { hours: extractedOpenHour })
+    //     : add(justDate, { hours: currentHour });
+    // }
 
     const end = add(justDate, { hours: extractedCloseHour });
     const interval = { hours: 1 };
@@ -88,7 +102,6 @@ const RestaurantDetails = () => {
     }
 
     return times;
-
   };
   const times = timeSlots();
 
@@ -113,17 +126,22 @@ const RestaurantDetails = () => {
 
   const handlebooking = async () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
-    const paymentId = await razorPay(amount);
-    if (paymentId) {
-      const response = await userAxios.post("/bookingTable", {
-        cart: cart,
-        date: date,
-        restaurantId: restaurantId,
-        selectedSeats: selectedSeats,
-      });
-      if (response.status === 200) {
-        console.log("success brooo");
+    if (user) {
+      const paymentId = await razorPay(amount);
+      if (paymentId) {
+        const response = await userAxios.post("/bookingTable", {
+          cart: cart,
+          date: date,
+          restaurantId: restaurantId,
+          selectedSeats: selectedSeats,
+        });
+        if (response.status === 200) {
+          console.log("success brooo");
+          navigate("/");
+        }
       }
+    } else {
+      return navigate("/login");
     }
   };
 

@@ -55,7 +55,7 @@ const Sidebar = () => {
               alt="Flowbite Logo"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Logo
+              RESERVETABLE
             </span>
           </a>
           <ul className="space-y-2 font-medium">
@@ -91,18 +91,50 @@ const Sidebar = () => {
                 }`}
               >
                 <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                 >
-                  <path d="M224,160H176V48H144V160H96V48H64V172c0,45.505,34.655,83.393,80,90.715V472h32V262.715c45.345-7.322,80-45.21,80-90.715V48H224Zm-64,72c-27.811,0-51.524-16.722-60.33-40H220.33C211.524,215.278,187.811,232,160,232Z" />
-                  <path d="M413.567,40.187A138.648,138.648,0,0,0,296,177.224V344H400V472h32V37.351ZM400,312H328V177.224A105.986,105.986,0,0,1,400,76.313Z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 21h18v-1a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v1zM9 8V6a3 3 0 0 1 6 0v2m1 8H8a3.002 3.002 0 0 1-2.83-2H17a3.002 3.002 0 0 1-2.83 2zM1 3v12h6v6h14v-6h6V3H1z"
+                  ></path>
                 </svg>
+
                 <span className="flex-1 ml-3 whitespace-nowrap">
                   Restaurants
                 </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/partner/orders"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  location.pathname === "/partner/orders"
+                    ? "bg-gray-700"
+                    : "dark:hover:bg-gray-700"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
+                  ></path>
+                </svg>
+
+                <span className="flex-1 ml-3 whitespace-nowrap">Orders</span>
               </Link>
             </li>
             <li>

@@ -83,7 +83,7 @@ const Bookings = () => {
                               </span>
                             </h2>
                             <h2>
-                              <span>{formatDate(booking?.bookedDate)}</span>{" "}
+                              <span>{formatDate(booking?.bookedDate)}</span> at {" "}
                               <span>{formatTime(booking?.bookedTime)}</span> for{" "}
                               <span>{booking?.numberOfSeats} guests </span>
                             </h2>
