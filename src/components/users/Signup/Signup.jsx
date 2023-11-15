@@ -54,9 +54,17 @@ const Signup = () => {
       }
     },
   });
+
+  const resendOTP = async() => {
+    try{
+      await Axios.post('/sendOtp', {email:formik.values.email})
+    }catch(err){
+      console.log(err)
+    }
+  }
   return (
     <>
-      <div>{open && <OTPComponent isOpen={open} data={formik.values} />}</div>
+      <div>{open && <OTPComponent isOpen={open} data={formik.values} resendOTP={resendOTP} />}</div>
       <div className="flex items-center justify-center h-screen">
         <div className="flex justify-center rounded-2xl shadow-xl shadow-stone-500">
           <div className="m-8">

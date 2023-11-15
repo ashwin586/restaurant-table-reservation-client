@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import Axios from "../../../services/axios";
 
-const OTPComponent = ({ isOpen, data }) => {
+const OTPComponent = ({ isOpen, data, resendOTP }) => {
+  const [otpTimer, setOtpTimer] = useState(20);
+
+  useEffect(() => {
+    let timer;
+    if (otpTimer > 0) {
+      timer = setTimeout(() => {
+        setOtpTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [otpTimer]);
+
+  const handleOTP = () => {
+    setOtpTimer(20);
+    resendOTP();
+  };
+
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -24,7 +41,7 @@ const OTPComponent = ({ isOpen, data }) => {
         if (response.status === 200) {
           const response = await Axios.post("/registeruser", data);
           if (response.status === 200) {
-            navigate('/login')
+            navigate("/login");
           }
         }
       } catch (err) {
@@ -67,13 +84,26 @@ const OTPComponent = ({ isOpen, data }) => {
                       onChange={formik.handleChange}
                     />
                   </div>
-                  <div className="flex justify-center">
+                  <div className="flex justify-center items-center flex-col">
                     <button
                       type="submit"
-                      className="text-white bg-button p-3 rounded-xl"
+                      className="text-white bg-button p-3 rounded-xl w-40"
                     >
                       Verify OTP
                     </button>
+                    <div className="mt-2">
+                      {otpTimer > 0 ? (
+                        <p className="text-slate-400">{otpTimer}</p>
+                      ) : (
+                        <button
+                          type="button"
+                          className="text-white bg-blue-500 p-3 rounded-xl w-40"
+                          onClick={handleOTP}
+                        >
+                          Resend OTP
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </form>
               </div>
