@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import moment from "moment";
 import AddRestaurantModal from "./AddRestaurantModal";
@@ -7,6 +8,7 @@ import MenuModal from "./MenuModal";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 
 const Restaurants = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRestaurantDetailsModal, setIsRestauarantDetailsModal] =
     useState(false);
@@ -141,15 +143,22 @@ const Restaurants = () => {
               </div>
               <div>
                 {restaurant.isApproved === "Approved" && (
-                  <button
-                    className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-green-800"
-                    onClick={() => {
-                      setIsMenu(true);
-                      setSelectedRestaurant(restaurant._id);
-                    }}
-                  >
-                    Menu
-                  </button>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-green-800"
+                      onClick={() => {
+                        setIsMenu(true);
+                        setSelectedRestaurant(restaurant._id);
+                      }}
+                    >
+                      Menu
+                    </button>
+                    <button className="bg-yellow-300 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-yellow-500" onClick={() => {
+                      navigate(`/partner/${restaurant?._id}/orders`)
+                    }}>
+                      Orders
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

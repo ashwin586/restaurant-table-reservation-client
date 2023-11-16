@@ -43,7 +43,7 @@ const PartnerRouter = () => {
           }
         />
         <Route
-          path="orders"
+          path=":id/orders"
           element={partner ? <OrdersPage /> : <Navigate to="/partner/login" />}
         />
       </Routes>
