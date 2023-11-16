@@ -12,6 +12,17 @@ export const uploadUserProfile = async (image, id) => {
   }
 };
 
+export const uploadPartnerProfileImage = async (image, id) => {
+  try {
+    const storageRef = ref(storage, `partnerProfile/${id}`);
+    const result = await uploadBytes(storageRef, image);
+    const downloadURL = await getDownloadURL(result.ref);
+    return downloadURL;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const uploadRestaurantImage = async (images) => {
   const downloadUrls = [];
   for (const image of images) {
