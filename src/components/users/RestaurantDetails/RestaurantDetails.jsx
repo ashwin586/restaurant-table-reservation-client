@@ -16,7 +16,6 @@ const RestaurantDetails = () => {
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState(2);
-  // const [errors, setError] = useState({});
   const [date, setDate] = useState({
     justDate: null,
     dateTime: null,
@@ -127,18 +126,15 @@ const RestaurantDetails = () => {
   const handlebooking = async () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
-      const paymentId = await razorPay(amount);
-      if (paymentId) {
-        const response = await userAxios.post("/bookingTable", {
-          cart: cart,
-          date: date,
-          restaurantId: restaurantId,
-          selectedSeats: selectedSeats,
-        });
-        if (response.status === 200) {
-          console.log("success brooo");
-          navigate("/");
-        }
+      await razorPay(amount);
+      const response = await userAxios.post("/bookingTable", {
+        cart: cart,
+        date: date,
+        restaurantId: restaurantId,
+        selectedSeats: selectedSeats,
+      });
+      if (response.status === 200) {
+        navigate("/");
       }
     } else {
       return navigate("/login");

@@ -62,7 +62,7 @@ const Profile = () => {
       <Navbar />
       <div className="flex justify-center mt-10">
         <div className="w-3/4 rounded-xl shadow-2xl">
-          <div className="bg-yellow-300 p-4 text-white rounded-t-xl">
+          <div className="bg-yellow-300 p-4 text-white rounded-t-xl relative">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="relative">
@@ -84,6 +84,10 @@ const Profile = () => {
                 <h1 className="ml-4 text-2xl text-black font-bold">
                   {user?.name}
                 </h1>
+              </div>
+              <div className="absolute right-5 text-black w-36 h-28 rounded-lg bg-blue-300 flex flex-col items-center justify-evenly">
+                <h1 className="text-xl font-serif">Wallet Balance:</h1>
+                <h1 className="text-xl font-mono">₹{user?.wallet.balance}</h1>
               </div>
             </div>
           </div>

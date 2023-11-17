@@ -20,6 +20,16 @@ const Bookings = () => {
     fetchBookings();
   }, []);
 
+  const handleCancel = async (id) => {
+    try {
+      const response = await userAxios.put("/bookingCancel", { id });
+      if (response.status === 200) {
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   function formatDate(date) {
     const originalBookedDate = new Date(date);
     const options = {
@@ -47,6 +57,20 @@ const Bookings = () => {
     return formattedTime;
   }
 
+  const bookedDateTime = (bookedDate, bookedTime) => {
+    const date = new Date(bookedDate);
+    const time = new Date(bookedTime);
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      time.getSeconds()
+    );
+  };
+  const currentTime = new Date();
+
   return (
     <>
       <Navbar />
@@ -61,7 +85,7 @@ const Bookings = () => {
                   {bookings &&
                     bookings?.map((booking, index) => (
                       <div key={index}>
-                        <div className="flex" >
+                        <div className="flex">
                           <div>
                             <img
                               src={booking?.restaurantDetails.images[0]}
@@ -83,17 +107,40 @@ const Bookings = () => {
                               </span>
                             </h2>
                             <h2>
-                              <span>{formatDate(booking?.bookedDate)}</span> at {" "}
+                              <span>{formatDate(booking?.bookedDate)}</span> at{" "}
                               <span>{formatTime(booking?.bookedTime)}</span> for{" "}
                               <span>{booking?.numberOfSeats} guests </span>
                             </h2>
                           </div>
                           <div className="flex-2 me-2 text-center">
+                            {booking.orderStatus === "Cancelled" && (
+                              <h1 className="text-red-500 text-sm">
+                                {booking?.orderStatus.toUpperCase()}
+                              </h1>
+                            )}
+
                             <h1 className="text-lg font-bold">Paid:</h1>
                             <h1>₹ {booking?.grandTotal}</h1>
+                            {currentTime <
+                              bookedDateTime(
+                                booking?.bookedDate,
+                                booking?.bookedTime
+                              ) &&
+                              booking.orderStatus !== "Cancelled" && (
+                                <div>
+                                  <button
+                                    className="w-auto p-2 bg-red-500 text-slate-200 rounded-lg hover:bg-red-700 hover:text-white"
+                                    onClick={() => {
+                                      handleCancel(booking._id);
+                                    }}
+                                  >
+                                    Cancel Booking
+                                  </button>
+                                </div>
+                              )}
                           </div>
                         </div>
-                        <div className="border-b border-dashed border-black h-1 my-2" ></div>
+                        <div className="border-b border-dashed border-black h-1 my-2"></div>
                       </div>
                     ))}
                 </div>
