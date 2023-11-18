@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import ProfileSideBar from "./ProfileSideBar";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
+import ReviewComponent from "./ReviewComponent";
+import { EditIcon } from "@chakra-ui/icons";
 
 const Bookings = () => {
+  const [isReview, setIsReview] = useState(false);
+  const [restaurantId, setRestaurantId] = useState("");
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
@@ -73,6 +77,15 @@ const Bookings = () => {
 
   return (
     <>
+      {isReview && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
+          <ReviewComponent
+            open={isReview}
+            close={() => setIsReview(false)}
+            id={restaurantId}
+          />
+        </div>
+      )}
       <Navbar />
       <div className="flex justify-center mt-10">
         <div className="w-3/4 rounded-xl shadow-2xl">
@@ -136,6 +149,24 @@ const Bookings = () => {
                                   >
                                     Cancel Booking
                                   </button>
+                                </div>
+                              )}
+                            {currentTime >
+                              bookedDateTime(
+                                booking?.bookedDate,
+                                booking?.bookedTime
+                              ) &&
+                              booking.orderStatus !== "Cancelled" && (
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() => {
+                                    setIsReview(true);
+                                    setRestaurantId(booking?.restaurant);
+                                  }}
+                                >
+                                  <p className="text-slate-500">
+                                    Write a review <EditIcon boxSize={4} />
+                                  </p>
                                 </div>
                               )}
                           </div>
