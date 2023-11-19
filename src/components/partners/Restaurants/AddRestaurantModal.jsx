@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function AddRestaurantModal({ isOpen, closeModal }) {
   const [cuisines, setCuisines] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
+  const mapContainerRef = useRef(null);
+  const map = useRef(null);
+  const markerRef = useRef(new mapboxgl.Marker());
+
   // const [image, setImage] = useState(null);
   // const [imageURL, setImageURL] = useState("");
 
@@ -19,6 +26,8 @@ function AddRestaurantModal({ isOpen, closeModal }) {
       address: "",
       city: "",
       pinCode: "",
+      latitude: userLocation ? userLocation.latitude : 0,
+      longitude: userLocation ? userLocation.longitude : 0,
       // imageUrl: "",
     },
     validationSchema: Yup.object({
@@ -70,6 +79,52 @@ function AddRestaurantModal({ isOpen, closeModal }) {
     fetchCuisines();
   }, []);
 
+  // For Map Box
+  useEffect(() => {
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOXTOKEN;
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      setUserLocation({ latitude, longitude });
+
+      formik.setValues({
+        ...formik.values,
+        latitude,
+        longitude,
+      });
+
+      map.current = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [longitude, latitude],
+        zoom: 8,
+      });
+
+      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+
+      map.current.on("load", () => {
+        map.current.resize();
+        markerRef.current.setLngLat([longitude, latitude]).addTo(map.current);
+      });
+
+      map.current.on("click", (e) => {
+        const { lng, lat } = e.lngLat;
+        formik.setValues((prevValues) => ({
+          ...prevValues,
+          latitude: lat,
+          longitude: lng,
+        }));
+        markerRef.current.setLngLat([lng, lat]);
+      });
+    });
+
+    return () => {
+      if (map.current) {
+        map.current.remove();
+      }
+    };
+  }, []);
+
   // const handleImageChange = (e) => {
   //   const selectedImages = e.target.files[0];
   //   setImage(selectedImages);
@@ -78,7 +133,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
   return (
     isOpen && (
       <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white p-4 rounded-lg shadow-lg w-96 max-h-96 overflow-y-auto">
+        <div className="bg-white p-4 rounded-lg shadow-lg h-5/6 w-2/4 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Add New Restaurant</h2>
           <form onSubmit={formik.handleSubmit}>
             <input
@@ -154,7 +209,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
             </div>
             <h1 className="font-bold pb-2">Restaurant Seats </h1>
             <input
-              placeHolder="No of Seats"
+              placeholder="No of Seats"
               type="text"
               name="seats"
               className="w-full border border-gray-300 rounded p-2 mb-2"
@@ -205,6 +260,13 @@ function AddRestaurantModal({ isOpen, closeModal }) {
                 )}
               </div>
             </div>
+            <div className="flex justify-center">
+              <div
+                className="map-container mt-4 h-56 w-11/12 mx-auto"
+                ref={mapContainerRef}
+              />
+            </div>
+
             {/* <div className="flex">
               <input
                 name="image"

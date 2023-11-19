@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useFormik } from "formik";
 import { uploadRestaurantImage } from "../../../services/firebase/storage";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [images, setImages] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
+  const mapContainerRef = useRef(null);
+  const map = useRef(null);
+  const markerRef = useRef(new mapboxgl.Marker());
 
   const selectImage = () => {
     const input = document.createElement("input");
@@ -32,6 +37,8 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
       pinCode: isSelected.pinCode,
       city: isSelected.city,
       imageURl: isSelected.images,
+      latitude: isSelected.latitude,
+      longitude: isSelected.longitude,
     },
 
     onSubmit: async (values) => {
@@ -53,6 +60,30 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
       }
     },
   });
+
+  useEffect(() => {
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOXTOKEN;
+    map.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [formik.values.longitude, formik.values.latitude],
+      zoom: 8,
+    });
+
+    map.current.on("load", () => {
+      map.current.resize();
+      markerRef.current
+        .setLngLat([formik.values.longitude, formik.values.latitude])
+        .addTo(map.current);
+    });
+
+    return () => {
+      if (map.current) {
+        map.current.remove();
+      }
+    };
+  }, []);
+
   return (
     <>
       {isOpen && (
@@ -127,6 +158,10 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                   />
                 </div>
               </div>
+              <div
+                className="map-container mt-4 h-56 w-11/12 mx-auto"
+                ref={mapContainerRef}
+              />
 
               {isSelected.images.length > 0 && (
                 <div>
@@ -145,7 +180,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
               )}
 
               {isEdit && (
-                <div>
+                <div className="mt-4">
                   {images &&
                     images.map((image, index) => (
                       <img
