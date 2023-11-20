@@ -3,12 +3,14 @@ import { useFormik } from "formik";
 import { uploadRestaurantImage } from "../../../services/firebase/storage";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import mapboxgl from "mapbox-gl";
+import { Spinner } from "@chakra-ui/react";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [images, setImages] = useState([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const markerRef = useRef(new mapboxgl.Marker());
@@ -44,6 +46,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
     onSubmit: async (values) => {
       try {
         if (isSaving) {
+          setIsLoading(true);
           if (images.length > 0) {
             const imageUrl = await uploadRestaurantImage(images);
             values.imageURl = imageUrl;
@@ -54,6 +57,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
           if (response.status === 200) {
             closeModal();
           }
+          setIsLoading(false);
         }
       } catch (err) {
         console.log(err);
@@ -253,6 +257,11 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
               </div>
             )}
           </div>
+        </div>
+      )}
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
         </div>
       )}
     </>

@@ -4,7 +4,7 @@ import NavBar from "../Navbar";
 import { useParams, useNavigate } from "react-router-dom";
 import Axios from "../../../services/axios";
 import { useSelector } from "react-redux";
-import { add, format, isBefore, isSameDay, isAfter, parse, isToday } from "date-fns";
+import { add, format, isBefore, isAfter, parse, isToday } from "date-fns";
 import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
 import mapboxgl from "mapbox-gl";
@@ -14,16 +14,13 @@ import "./Calender.css";
 
 const RestaurantDetails = () => {
   const mapContainerRef = useRef(null);
-  // const map = useRef(null);
-  const markerRef = useRef(new mapboxgl.Marker());
-
   const [startLat, setStartLat] = useState(null);
   const [startLong, setStartLong] = useState(null);
   const [endLat, setEndLat] = useState(null);
   const [endLong, setEndLong] = useState(null);
   const [map, setMap] = useState(null);
 
-  const [userLocation, setUserLocation] = useState(null);
+
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.isLogged);
   const { restaurantId } = useParams();
@@ -91,7 +88,7 @@ const RestaurantDetails = () => {
     let beginning;
   
     if (isToday(justDate) && isAfter(currentHour, extractedOpenHour)) {
-      beginning = add(justDate, { hours: currentHour + 1 }); // Start from the next hour
+      beginning = add(justDate, { hours: currentHour + 1 }); 
     } else {
       beginning = add(justDate, { hours: extractedOpenHour });
     }
@@ -129,98 +126,6 @@ const RestaurantDetails = () => {
     fetchRestaurant();
   }, []);
 
-  // useEffect(() => {
-  //   mapboxgl.accessToken = process.env.REACT_APP_MAPBOXTOKEN;
-  //   let sourceCounter = 0;
-  //   const generateUniqueSourceId = () => {
-  //     const baseName = "source"; // Replace with your desired base name
-  //     const timestamp = new Date().getTime();
-  //     const uniqueId = `${baseName}-${timestamp}-${sourceCounter}`;
-  //     sourceCounter += 1;
-  //     return uniqueId;
-  //   };
-  //   const mapsetUp = () => {
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //       const { latitude, longitude } = position.coords;
-  //       setUserLocation({ latitude, longitude });
-  //       const sourceId = generateUniqueSourceId();
-  //       const geojsonData = {
-  //         type: "FeatureCollection",
-  //         features: [
-  //           {
-  //             type: "Feature",
-  //             geometry: {
-  //               type: "Point",
-  //               coordinates: [restaurant?.longitude, restaurant?.latitude],
-  //             },
-  //             properties: {
-  //               name: "Restaurant Location",
-  //             },
-  //           },
-  //           // Add more features as needed
-  //         ],
-  //       };
-  //       map.current = new mapboxgl.Map({
-  //         container: mapContainerRef.current,
-  //         style: "mapbox://styles/mapbox/streets-v11",
-  //         center: [longitude, latitude],
-  //         zoom: 10,
-  //       });
-
-  //       map.current.on("load", () => {
-  //         map.current.resize();
-  //         markerRef.current = new mapboxgl.Marker()
-  //           .setLngLat([restaurant?.longitude, restaurant?.latitude])
-  //           .addTo(map.current);
-
-  //         const directions = new MapboxDirections({
-  //           accessToken: mapboxgl.accessToken,
-  //           unit: "metric",
-  //           profile: "mapbox/driving-traffic",
-  //           controls: {
-  //             inputs: false,
-  //             instructions: false,
-  //           },
-  //           route: true,
-  //         });
-
-  //         map.current.addControl(directions, "top-left");
-
-  //         directions.setOrigin([longitude, latitude]);
-  //         directions.setDestination([
-  //           restaurant?.longitude,
-  //           restaurant?.latitude,
-  //         ]);
-  //         if (map.current.getSource(sourceId)) {
-  //           map.current.removeSource(sourceId);
-  //           map.current.removeLayer(`${sourceId}-layer`);
-  //         }
-  //         map.current.addSource(sourceId, {
-  //           type: "geojson",
-  //           data: geojsonData,
-  //         });
-  //         map.current.addLayer({
-  //           id: `${sourceId}-layer`,
-  //           type: "circle",
-  //           source: sourceId,
-  //           paint: {
-  //             "circle-radius": 6,
-  //             "circle-color": "#B42222",
-  //           },
-  //         });
-  //       });
-  //     });
-  //   };
-  //   if (restaurant?.longitude && restaurant?.latitude) {
-  //     mapsetUp();
-  //   }
-  //   return () => {
-  //     if (map.current) {
-  //       console.log(map.current)
-  //       map.current.remove();
-  //     }
-  //   };
-  // }, [restaurant])
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {

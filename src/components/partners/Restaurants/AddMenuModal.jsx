@@ -3,10 +3,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import { uploadFoodImage } from "../../../services/firebase/storage";
+import { Spinner } from "@chakra-ui/react";
 
 const AddMenuModal = ({ isOpen, closeModal, isId }) => {
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isImageFile = (data) => {
     const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
@@ -62,6 +64,7 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
     }),
     onSubmit: async (values) => {
       try {
+        setIsLoading(true)
         const imageURL = await uploadFoodImage(image);
         values.imageURL = imageURL;
         const response = await partnerAxios.post("/partner/addFood", {
@@ -71,6 +74,7 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
         if (response.status === 200) {
           closeModal();
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -207,6 +211,11 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
               </form>
             </div>
           </div>
+        </div>
+      )}
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
         </div>
       )}
     </>

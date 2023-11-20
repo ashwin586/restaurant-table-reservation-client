@@ -5,6 +5,7 @@ import TimePicker from "react-time-picker";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { Spinner } from "@chakra-ui/react";
 
 function AddRestaurantModal({ isOpen, closeModal }) {
   const [cuisines, setCuisines] = useState([]);
@@ -12,7 +13,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const markerRef = useRef(new mapboxgl.Marker());
-
+  const [isLoading, setIsLoading] = useState(false);
   // const [image, setImage] = useState(null);
   // const [imageURL, setImageURL] = useState("");
 
@@ -131,7 +132,8 @@ function AddRestaurantModal({ isOpen, closeModal }) {
   // };
 
   return (
-    isOpen && (
+    <>
+      isOpen && (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="bg-white p-4 rounded-lg shadow-lg h-5/6 w-2/4 overflow-y-auto">
           <h2 className="text-xl font-bold mb-4">Add New Restaurant</h2>
@@ -304,7 +306,13 @@ function AddRestaurantModal({ isOpen, closeModal }) {
           </form>
         </div>
       </div>
-    )
+      )
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      )}
+    </>
   );
 }
 
