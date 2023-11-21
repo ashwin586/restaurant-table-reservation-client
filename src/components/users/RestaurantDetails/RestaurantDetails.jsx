@@ -34,39 +34,25 @@ const RestaurantDetails = () => {
   });
   const [cart, setCart] = useState([]);
 
-  const initialQuantities = Array(menus.length).fill(1);
-  const [quantities, setQuantities] = useState(initialQuantities);
-  const updateQuantity = (index, newQuantity) => {
-    setQuantities((prev) => {
-      const newQuantities = [...prev];
-      newQuantities[index] = newQuantity;
-      return newQuantities;
-    });
-  };
+  const addToCart = (id, menu, newQuantity, total) => {
+    const existingItemIndex = cart.findIndex((item) => item.menu === menu);
 
-  const addToCart = (id, menu, quantity, total) => {
-    setCart((prevCart) => {
-      const existingItemIndex = prevCart.findIndex(
-        (item) => item.menu === menu
-      );
-
-      if (existingItemIndex !== -1) {
-        const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity = quantity;
-        updatedCart[existingItemIndex].total = total;
-        return updatedCart;
-      }
-
-      return [
+    if (existingItemIndex !== -1) {
+      const updatedCart = [...cart];
+      updatedCart[existingItemIndex].quantity = Math.max(1, newQuantity);
+      updatedCart[existingItemIndex].total = Math.max(1, newQuantity) * total;
+      setCart(updatedCart);
+    } else {
+      setCart((prevCart) => [
         ...prevCart,
         {
           id: id,
           menu: menu,
-          quantity: quantity,
-          total: total,
+          quantity: Math.max(1, newQuantity),
+          total: Math.max(1, newQuantity) * total,
         },
-      ];
-    });
+      ]);
+    }
   };
 
   const openTime = new Date(restaurant?.openTime).toLocaleTimeString([], {
@@ -173,7 +159,7 @@ const RestaurantDetails = () => {
   const handlebooking = async () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
-      // await razorPay(amount);
+      await razorPay(amount);
       const response = await userAxios.post("/bookingTable", {
         cart: cart,
         date: date,
@@ -357,25 +343,32 @@ const RestaurantDetails = () => {
                               <button
                                 className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
                                 onClick={() =>
-                                  updateQuantity(
-                                    index,
-                                    Math.max(1, quantities[index] - 1)
+                                  addToCart(
+                                    menu?._id,
+                                    menu?.name,
+                                    (cart.find(
+                                      (item) => item.menu === menu?.name
+                                    )?.quantity || 1) - 1,
+                                    menu?.price
                                   )
                                 }
                               >
                                 -
                               </button>
                               <span className="text-lg">
-                                {isNaN(quantities[index])
-                                  ? 1
-                                  : quantities[index]}
+                                {cart.find((item) => item.menu === menu?.name)
+                                  ?.quantity || 1}
                               </span>
                               <button
                                 className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
                                 onClick={() =>
-                                  updateQuantity(
-                                    index,
-                                    (quantities[index] || 0) + 1
+                                  addToCart(
+                                    menu?._id,
+                                    menu?.name,
+                                    (cart.find(
+                                      (item) => item.menu === menu?.name
+                                    )?.quantity || 0) + 1,
+                                    menu?.price
                                   )
                                 }
                               >
@@ -386,11 +379,15 @@ const RestaurantDetails = () => {
                               className="bg-button text-gray-800 px-4 py-2 rounded-md flex items-center"
                               type="button"
                               onClick={() => {
+                                const quantity =
+                                  cart.find((item) => item.menu === menu?.name)
+                                    ?.quantity || 1;
+                                const total = quantity * menu?.price;
                                 addToCart(
                                   menu?._id,
                                   menu?.name,
-                                  quantities[index],
-                                  quantities[index] * menu?.price
+                                  quantity,
+                                  total
                                 );
                               }}
                             >

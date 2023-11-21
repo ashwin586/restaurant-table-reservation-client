@@ -7,7 +7,11 @@ module.exports = {
         'button': "#FFA52C",
         "signupBg": "#FFDDD3",
         "adminDashboard": "#E4E7F1",
-        "user" : '#E7E7E7'
+        "user" : '#E7E7E7',
+        "firstBox" : '#321fdb',
+        "secondBox" : '#3299fe',
+        "thirdBox" : '#f9b017',
+        "fourthBox" : '#e45252'
       },
     },
   },

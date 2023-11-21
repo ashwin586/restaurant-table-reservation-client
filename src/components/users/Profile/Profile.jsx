@@ -10,7 +10,6 @@ import ProfileSideBar from "./ProfileSideBar";
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
-  // const [originalUser, setOriginalUser] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
 
@@ -49,7 +48,6 @@ const Profile = () => {
         const response = await userAxios.get("/getuserprofile");
         if (response.status === 200) {
           setUser(response.data.userData);
-          // setOriginalUser(response.data.userData);
         }
         setIsLoading(false);
       } catch (err) {
