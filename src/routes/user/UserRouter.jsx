@@ -9,8 +9,8 @@ import Otp from "../../components/users/Recover/Otp";
 import NewPassword from "../../components/users/Recover/NewPassword";
 import ProfilePage from "../../pages/users/Profile/ProfilePage";
 import RestaurantDetailsPage from "../../pages/users/RestaurantDetailsPage";
-import OtpPage from "../../pages/users/Authentication/OtpPage";
 import BookingsPage from "../../pages/users/Profile/BookingsPage";
+import ReviewsPage from "../../pages/users/Profile/ReviewsPage";
 
 const UserRouter = () => {
   const user = useSelector((state) => state.user.isLogged);
@@ -41,6 +41,10 @@ const UserRouter = () => {
         <Route
           path="/bookings"
           element={user ? <BookingsPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/reviews"
+          element={user ? <ReviewsPage /> : <Navigate to={"/"} />}
         />
       </Routes>
     </>

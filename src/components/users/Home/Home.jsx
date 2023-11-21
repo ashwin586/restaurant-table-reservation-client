@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import Axios from "../../../services/axios";
+import ReactStars from "react-stars";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -24,6 +25,15 @@ const Home = () => {
   const filteredRestaurant = restaurants.filter((restaurant) =>
     restaurant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const calculateAverageRating = (reviews) => {
+    if (reviews.length === 0) {
+      return 0;
+    }
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+    return Math.round(averageRating * 2) / 2;
+  };
   return (
     <>
       <Navbar />
@@ -94,6 +104,18 @@ const Home = () => {
                     <p className="text-sm text-gray-500">
                       {restaurant?.address}
                     </p>
+                    <div className="flex items-center">
+                      <span>
+                        <ReactStars
+                          value={calculateAverageRating(restaurant.reviews)}
+                          edit={false}
+                          size={30}
+                          color1="gray"
+                          color2={"#ffd700"}
+                        />
+                      </span>
+                      <span>({restaurant.reviews.length})</span>
+                    </div>
                   </div>
                 </div>
               ))}

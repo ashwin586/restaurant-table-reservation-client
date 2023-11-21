@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import AdminDashboardPage from "../../pages/admin/AdminDashboardPage";
 import AdminUserManagment from "../../pages/admin/AdminUserManagment";
 import AdminLoginPage from "../../pages/admin/AdminLoginPage";
+import AdminSignupPage from "../../pages/admin/AdminSignupPage";
 import AdminPartnerManagementPage from "../../pages/admin/AdminPartnerManagmentPage";
 import AdminRestaurantManagmentPage from "../../pages/admin/AdminRestaurantManagmentPage";
 import AdminCuisinesPage from "../../pages/admin/AdminCuisinesPage";
@@ -19,6 +20,12 @@ const AdminRouter = () => {
           path="/login"
           element={
             admin ? <Navigate to="/admin/dashboard" /> : <AdminLoginPage />
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            admin ? <Navigate to={"/admin/dashboard"} /> : <AdminSignupPage />
           }
         />
         <Route

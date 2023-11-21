@@ -38,6 +38,17 @@ const ProfileSideBar = () => {
               Bookings
             </button>
           </Link>
+          <Link to={"/reviews"}>
+            <button
+              className={`text-black text-lg w-full py-2 mb-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white ${
+                location.pathname === "/reviews"
+                  ? "bg-yellow-400 text-white"
+                  : "hover:text-white text-yellow-400 hover:bg-white"
+              }`}
+            >
+              Reviews
+            </button>
+          </Link>
           <li>
             <button
               className="text-black text-lg w-full py-2 mb-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white"

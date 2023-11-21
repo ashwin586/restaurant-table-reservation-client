@@ -9,6 +9,7 @@ import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
 import mapboxgl from "mapbox-gl";
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
+import ReactStars from "react-stars";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Calender.css";
 
@@ -20,12 +21,12 @@ const RestaurantDetails = () => {
   const [endLong, setEndLong] = useState(null);
   const [map, setMap] = useState(null);
 
-
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.isLogged);
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
+  const [review, setReviews] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState(2);
   const [date, setDate] = useState({
     justDate: null,
@@ -84,23 +85,23 @@ const RestaurantDetails = () => {
     const extractedOpenHour = openHour.getHours();
     const CloseHour = parse(closeTime, "h:mm aa", new Date());
     const extractedCloseHour = CloseHour.getHours();
-  
+
     let beginning;
-  
+
     if (isToday(justDate) && isAfter(currentHour, extractedOpenHour)) {
-      beginning = add(justDate, { hours: currentHour + 1 }); 
+      beginning = add(justDate, { hours: currentHour + 1 });
     } else {
       beginning = add(justDate, { hours: extractedOpenHour });
     }
-  
+
     const end = add(justDate, { hours: extractedCloseHour });
     const interval = { hours: 1 };
     const times = [];
-  
+
     for (let i = beginning; isBefore(i, end); i = add(i, interval)) {
       times.push(i);
     }
-  
+
     return times;
   };
   const times = timeSlots();
@@ -114,8 +115,9 @@ const RestaurantDetails = () => {
           },
         });
         if (response.status === 200) {
-          setRestaurant(response.data.restaurant);
-          setMenus(response.data.menus);
+          setRestaurant(response.data?.restaurant);
+          setMenus(response.data?.menus);
+          setReviews(response.data?.reviews);
           setEndLat(response.data?.restaurant.latitude);
           setEndLong(response.data?.restaurant.longitude);
         }
@@ -124,7 +126,7 @@ const RestaurantDetails = () => {
       }
     };
     fetchRestaurant();
-  }, []);
+  }, [restaurantId]);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -171,7 +173,7 @@ const RestaurantDetails = () => {
   const handlebooking = async () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
-      await razorPay(amount);
+      // await razorPay(amount);
       const response = await userAxios.post("/bookingTable", {
         cart: cart,
         date: date,
@@ -184,6 +186,15 @@ const RestaurantDetails = () => {
     } else {
       return navigate("/login");
     }
+  };
+
+  const calculateAverageRating = (reviews) => {
+    if (reviews.length === 0) {
+      return 0;
+    }
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+    return Math.round(averageRating * 2) / 2;
   };
 
   return (
@@ -286,6 +297,16 @@ const RestaurantDetails = () => {
                     <span>{closeTime}</span>
                   </p>
                 </div>
+              </div>
+              <div className="flex ms-4 items-center">
+                <ReactStars
+                  value={review ? calculateAverageRating(review) : 0}
+                  edit={false}
+                  size={30}
+                  color1="gray"
+                  color2={"#ffd700"}
+                />
+                <p className="ms-2 text-gray-500">({review?.length} Review)</p>
               </div>
               <div
                 className="map-container mt-4 h-56 w-11/12 mx-auto"
