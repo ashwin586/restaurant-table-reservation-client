@@ -32,6 +32,8 @@ const RestaurantDetails = () => {
     justDate: null,
     dateTime: null,
   });
+  const [dateTimeError, setDateTimeError] = useState(false);
+
   const [cart, setCart] = useState([]);
 
   const addToCart = (id, menu, newQuantity, total) => {
@@ -138,6 +140,9 @@ const RestaurantDetails = () => {
           controls: {
             inputs: false,
             instructions: false,
+            annotations: false,
+            showMapboxLogo: false,
+            showCredits: false,
           },
           route: true,
         });
@@ -157,6 +162,10 @@ const RestaurantDetails = () => {
   }, [endLat, endLong, startLat, startLong]);
 
   const handlebooking = async () => {
+    if (!date.justDate || !date.dateTime) {
+      setDateTimeError(true);
+      return;
+    }
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
       await razorPay(amount);
@@ -167,6 +176,7 @@ const RestaurantDetails = () => {
         selectedSeats: selectedSeats,
       });
       if (response.status === 200) {
+        setDateTimeError(false);
         navigate("/");
       }
     } else {
@@ -421,9 +431,13 @@ const RestaurantDetails = () => {
                     className="REACT-CALENDER p-2"
                     minDate={new Date()}
                     view="month"
-                    onClickDay={(date) =>
-                      setDate((prev) => ({ ...prev, justDate: new Date(date) }))
-                    }
+                    onClickDay={(date) => {
+                      setDate((prev) => ({
+                        ...prev,
+                        justDate: new Date(date),
+                      }));
+                      setDateTimeError(false);
+                    }}
                   />
                 </div>
                 <div>
@@ -451,13 +465,24 @@ const RestaurantDetails = () => {
                     onClick={() =>
                       setDate((prev) => ({ ...prev, dateTime: time }))
                     }
-                    className="border border-green-500 text-green-500 w-28 h-10 mx-2 flex-shrink-0 whitespace-no-wrap text-center cursor-pointer font-semibold"
+                    className={`${
+                      date &&
+                      date.dateTime &&
+                      date.dateTime.getTime() === time.getTime()
+                        ? "bg-green-500 text-white"
+                        : "border border-green-500 text-green-500"
+                    } border border-green-500 text-green-500 w-28 h-10 mx-2 flex-shrink-0 whitespace-no-wrap text-center cursor-pointer font-semibold`}
                     key={`time-${index}`}
                   >
                     {format(time, "hh:mm a")}
                   </div>
                 ))}
               </div>
+              {dateTimeError && (
+                <p className="text-red-500 mt-2 ms-4">
+                  Please select both date and time before booking.
+                </p>
+              )}
               <div>
                 <hr className="border-t border-gray-800 my-4 mx-2" />
               </div>

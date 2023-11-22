@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { auth } from "../../../../services/firebase/firebase";
@@ -8,10 +8,10 @@ import * as Yup from "yup";
 import Axios from "../../../../services/axios";
 
 const Register = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [otpPage, setOtpPage] = useState(false);
   const [confirm, setConfirmation] = useState(null);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(null);
   const [info, setInfo] = useState({});
   const generateRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
@@ -42,19 +42,18 @@ const Register = () => {
 
   const verifyOtp = async () => {
     try {
-      const result = await confirm.confirm(otp);
-      if (result) {
-        console.log("success");
-        await registerPartner();
-      }
+      await confirm.confirm(otp);
+      await registerPartner();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const registerPartner = async (values) => {
+  const registerPartner = async () => {
     try {
-      const response = await Axios.post("/partner/register", { values });
+      const data = formik.values;
+      console.log(data);
+      const response = await Axios.post("/partner/register", data);
       if (response.status === 200) {
         toast.success(response.data.message, {
           position: "top-right",
@@ -67,30 +66,42 @@ const Register = () => {
             color: "green",
           },
         });
-        navigate('/partner/login');
+        navigate("/partner/login");
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const registerSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(4, "Enter a valid Name")
-      .required("Please enter a name"),
-    phoneNumber: Yup.string()
-      .length(10, "Please enter a valid Phone Number")
-      .required("Please enter a Phone Number"),
-    email: Yup.string()
-      .email("Invalid email")
-      .required("Please provide an email"),
-    password1: Yup.string()
-      .matches(/^(?=.*[A-Z])/, "Must include One uppercase letter")
-      .matches(/^(?=.*\d)/, "Must include one digit")
-      .matches(/^(?=.*\d)/, "Must include one digit"),
-    password2: Yup.string()
-      .oneOf([Yup.ref("password1")], "Passwords must match")
-      .required("Password is required"),
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      phoneNumber: "",
+      password1: "",
+      password2: "",
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string()
+        .min(4, "Enter a valid Name")
+        .required("Please enter a name"),
+      phoneNumber: Yup.string()
+        .length(10, "Please enter a valid Phone Number")
+        .required("Please enter a Phone Number"),
+      email: Yup.string()
+        .email("Invalid email")
+        .required("Please provide an email"),
+      password1: Yup.string()
+        .matches(/^(?=.*[A-Z])/, "Must include One uppercase letter")
+        .matches(/^(?=.*\d)/, "Must include one digit")
+        .matches(/^(?=.*\d)/, "Must include one digit"),
+      password2: Yup.string()
+        .oneOf([Yup.ref("password1")], "Passwords must match")
+        .required("Password is required"),
+    }),
+    onSubmit: async (values) => {
+      await sendOtp(values.phoneNumber);
+    },
   });
 
   return (
@@ -102,98 +113,82 @@ const Register = () => {
               <h1 className="mb-8 text-2xl text-center">
                 Sign Up for Partner Program
               </h1>
-              <Formik
-                initialValues={{
-                  name: "",
-                  email: "",
-                  phoneNumber: "",
-                  password1: "",
-                  password2: "",
-                }}
-                validationSchema={registerSchema}
-                onSubmit={async (values) => {
-                  // const result = await sendOtp(values.phoneNumber);
-                  // setConfirmation(result);
-                  // setOtpPage(true);
-                  await registerPartner(values);
-                }}
-              >
-                <Form>
-                  <Field
-                    type="text"
-                    className="block border border-grey-light w-full p-3 rounded mb-4"
-                    name="name"
-                    placeholder="Full Name"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="p"
-                    className="error text-red-600 "
-                  />
+              <form onSubmit={formik.handleSubmit}>
+                <input
+                  type="text"
+                  className="block border border-grey-light w-full p-3 rounded mb-4"
+                  name="name"
+                  placeholder="Full Name"
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.name && formik.errors.name && (
+                  <p className="error text-red-600 ">{formik.errors.name}</p>
+                )}
 
-                  <Field
-                    type="text"
-                    className="block border border-grey-light w-full p-3 rounded mb-4"
-                    name="email"
-                    placeholder="Email"
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="p"
-                    className="error text-red-600 "
-                  />
+                <input
+                  type="text"
+                  className="block border border-grey-light w-full p-3 rounded mb-4"
+                  name="email"
+                  placeholder="Email"
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <p className="error text-red-600 ">{formik.errors.email}</p>
+                )}
 
-                  <Field
-                    type="text"
-                    className="block border border-grey-light w-full p-3 rounded mb-4"
-                    name="phoneNumber"
-                    placeholder="Phone Number"
-                  />
-                  <ErrorMessage
-                    name="phoneNumber"
-                    component="p"
-                    className="error text-red-600 "
-                  />
+                <input
+                  type="text"
+                  className="block border border-grey-light w-full p-3 rounded mb-4"
+                  name="phoneNumber"
+                  placeholder="Phone Number"
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                  <p className="error text-red-600 ">
+                    {formik.errors.phoneNumber}
+                  </p>
+                )}
 
-                  <Field
-                    type="password"
-                    className="block border border-grey-light w-full p-3 rounded mb-4"
-                    name="password1"
-                    placeholder="Password"
-                  />
-                  <ErrorMessage
-                    name="password1"
-                    component="p"
-                    className="error text-red-600 "
-                  />
+                <input
+                  type="password"
+                  className="block border border-grey-light w-full p-3 rounded mb-4"
+                  name="password1"
+                  placeholder="Password"
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.password1 && formik.errors.password1 && (
+                  <p className="error text-red-600 ">
+                    {formik.errors.password1}
+                  </p>
+                )}
 
-                  <Field
-                    type="password"
-                    className="block border border-grey-light w-full p-3 rounded mb-4"
-                    name="password2"
-                    placeholder="Re-enter Password"
-                  />
-                  <ErrorMessage
-                    name="password2"
-                    component="p"
-                    className="error text-red-600 "
-                  />
+                <input
+                  type="password"
+                  className="block border border-grey-light w-full p-3 rounded mb-4"
+                  name="password2"
+                  placeholder="Re-enter Password"
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.password2 && formik.errors.password2 && (
+                  <p className="error text-red-600 ">
+                    {formik.errors.password2}
+                  </p>
+                )}
 
-                  <button
-                    type="submit"
-                    className="w-full text-center py-3 rounded bg-green-500 text-white"
-                  >
-                    Create Account
-                  </button>
-                </Form>
-              </Formik>
+                <button
+                  type="submit"
+                  className="w-full text-center py-3 rounded bg-green-500 text-white"
+                >
+                  Create Account
+                </button>
+              </form>
             </div>
 
             <div className="text-grey-dark mt-6">
               Already a Partner?
               <button
                 className="no-underline border-b border-blue text-blue-600"
-                onClick={() => navigate('/partner/login')}
+                onClick={() => navigate("/partner/login")}
               >
                 Log in
               </button>
@@ -212,7 +207,7 @@ const Register = () => {
               <input
                 type="text"
                 className="block border border-grey-light w-full p-3 rounded mb-4"
-                name="name"
+                name="otp"
                 placeholder="OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}

@@ -88,7 +88,7 @@ const Login = () => {
           Want to sign up for partner program?
           <button
             className="no-underline border-b border-blue text-blue-600"
-            onClick={() => navigate("/partner")}
+            onClick={() => navigate("/partner/register")}
           >
             Sign up
           </button>
