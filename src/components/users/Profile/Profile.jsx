@@ -13,32 +13,45 @@ const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
 
-  const handleImageUpload = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image";
-    input.onchange = handleImageChange;
-    input.click();
+  const isImageFile = (data) => {
+    const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
+    return base64HeaderRegex.test(data);
   };
 
-  const handleImageChange = async (e) => {
-    const selecedImage = e.target.files[0];
-    if (selecedImage) {
-      try {
-        setIsLoading(true);
-        const imageURL = await uploadUserProfile(selecedImage, user._id);
-        const response = await userAxios.post("/uploadProfilePicture", {
-          userId: user._id,
-          imageURL,
-        });
-        if (response.status === 200) {
-          navigate(0);
-        }
-        setIsLoading(false);
-      } catch (err) {
-        console.log(err);
+  const handleImageUpload = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          if (isImageFile(reader.result)) {
+            try {
+              setIsLoading(true);
+              const imageURL = await uploadUserProfile(file, user._id);
+              const response = await userAxios.post("/uploadProfilePicture", {
+                userId: user._id,
+                imageURL,
+              });
+              if (response.status === 200) {
+                navigate(0);
+              }
+            } catch (err) {
+              console.log(err);
+            } finally {
+              setIsLoading(false);
+            }
+          } else {
+            alert("Please select a valid image file (JPEG or PNG)");
+          }
+        };
+        reader.readAsDataURL(file);
       }
-    }
+    };
+  
+    input.click();
   };
 
   useEffect(() => {

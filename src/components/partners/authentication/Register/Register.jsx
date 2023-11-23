@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { auth } from "../../../../services/firebase/firebase";
@@ -12,7 +12,7 @@ const Register = () => {
   const [otpPage, setOtpPage] = useState(false);
   const [confirm, setConfirmation] = useState(null);
   const [otp, setOtp] = useState(null);
-  const [info, setInfo] = useState({});
+  // const [info, setInfo] = useState({});
   const generateRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
       auth,
@@ -53,7 +53,7 @@ const Register = () => {
     try {
       const data = formik.values;
       console.log(data);
-      const response = await Axios.post("/partner/register", data);
+      const response = await Axios.post("/partner/register", { data });
       if (response.status === 200) {
         toast.success(response.data.message, {
           position: "top-right",
@@ -100,7 +100,12 @@ const Register = () => {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      await sendOtp(values.phoneNumber);
+      // await sendOtp(values.phoneNumber);
+      // setOtpPage(true);
+      // setConfirmation(true);
+      const result = await sendOtp(values.phoneNumber);
+      setConfirmation(result);
+      setOtpPage(true);
     },
   });
 

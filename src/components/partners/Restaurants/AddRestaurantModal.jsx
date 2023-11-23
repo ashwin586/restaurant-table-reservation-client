@@ -53,6 +53,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
     }),
     onSubmit: async (values) => {
       try {
+        setIsLoading(true);
         const response = await partnerAxios.post(
           "/partner/addRestaurant",
           values
@@ -60,6 +61,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
         if (response.status === 200) {
           closeModal();
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }

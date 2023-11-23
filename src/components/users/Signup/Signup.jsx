@@ -71,7 +71,16 @@ const Signup = () => {
         }
       }
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 400) {
+        toast.error(err.response.data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          theme: "dark",
+        });
+      }
     }
   };
 

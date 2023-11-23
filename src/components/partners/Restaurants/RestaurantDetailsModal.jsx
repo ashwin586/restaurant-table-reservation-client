@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import { uploadRestaurantImage } from "../../../services/firebase/storage";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import mapboxgl from "mapbox-gl";
+import * as Yup from "yup";
+import TimePicker from "react-time-picker";
 import { Spinner } from "@chakra-ui/react";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -14,6 +16,11 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const markerRef = useRef(new mapboxgl.Marker());
+  // console.log(isSelected);
+  const isImageFile = (data) => {
+    const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
+    return base64HeaderRegex.test(data);
+  };
 
   const selectImage = () => {
     const input = document.createElement("input");
@@ -23,12 +30,37 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
     input.onchange = (e) => {
       const file = e.target.files[0];
       if (file) {
-        setImages([...images, file]);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.readyState === FileReader.DONE) {
+            if (file.type.startsWith("image/") && isImageFile(reader.result)) {
+              setImages([...images, file]);
+            } else {
+              alert("Please select a valid image file (JPEG or PNG)");
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+        // setImages([...images, file]);
       }
     };
   };
 
+  function toHour(restaurantTimes) {
+    const toNormal = new Date(restaurantTimes);
+    return toNormal;
+  }
+
+  function toHourMin(time) {
+    const today = new Date();
+    const [hours, minutes] = time.split(":");
+    today.setHours(hours);
+    today.setMinutes(minutes);
+    return today.toISOString();
+  }
+
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       _id: isSelected._id,
       name: isSelected.name,
@@ -42,7 +74,26 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
       latitude: isSelected.latitude,
       longitude: isSelected.longitude,
     },
-
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .min(3, "Minimum length must be 3 character")
+        .required("The field cannot be empty"),
+      // selectedCuisines: Yup.array()
+      //   .min(1, "At least one cuisine must be selected")
+      //   .required("At least one cuisine must be selected"),
+      // seats: Yup.number()
+      //   .typeError("Please enter numbers")
+      //   .required("Number of seat on restaurant"),
+      streetAddress: Yup.string()
+        .min(10, "Minimum 10 character address")
+        .required("The field cannot be empty"),
+      city: Yup.string()
+        .min(2, "Minimum length must be 2 character")
+        .required("Please enter the city"),
+      pinCode: Yup.number()
+        .typeError("Please enter a valid pincode")
+        .required("Please provide pincode"),
+    }),
     onSubmit: async (values) => {
       try {
         if (isSaving) {
@@ -108,6 +159,9 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                   }`}
                   disabled={!isEdit}
                 />
+                {formik.touched.name && formik.errors.name && (
+                  <p className="error text-red-600 ">{formik.errors.name}</p>
+                )}
               </div>
               <div className="h-28 my-3">
                 <h1 className="text-xl">Restaurant Cuisines</h1>
@@ -123,18 +177,62 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                     {cuisine.cuisine}
                   </label>
                 ))}
+                {formik.touched.cuisine && formik.errors.cuisine && (
+                  <p className="error text-red-600 ">{formik.errors.cuisine}</p>
+                )}
+              </div>
+              <div className="flex">
+                <div className="w-full">
+                  <h1>
+                    Opening Time{" "}
+                    <span className="text-indigo-500">
+                      (Use the 24 Hr format:)
+                    </span>
+                  </h1>
+                  <TimePicker
+                    name="opens"
+                    className="w-full border border-gray-300 rounded p-2 mb-2 me-2"
+                    onChange={(time) => {
+                      formik.setFieldValue("opens", toHourMin(time));
+                    }}
+                    value={toHour(formik.values.opens)}
+                  />
+                </div>
+                <div className="w-full ">
+                  <h1>
+                    Closing Time{" "}
+                    <span className="text-indigo-500">
+                      (Use the 24 Hr format:)
+                    </span>{" "}
+                  </h1>
+                  <TimePicker
+                    name="closes"
+                    className="w-full border border-gray-300 rounded p-2 mb-2 ms-2"
+                    onChange={(time) => {
+                      formik.setFieldValue("closes", toHourMin(time));
+                    }}
+                    value={toHour(formik.values?.closes)}
+                  />
+                </div>
               </div>
               <div>
                 <h1 className="text-xl">Street Address:</h1>
                 <input
                   type="text"
-                  name="address"
+                  name="streetAddress"
                   value={formik.values.streetAddress}
                   className={`w-full border border-gray-600 rounded p-2 my-2 ${
                     !isEdit ? "bg-gray-400" : "bg-white"
                   }`}
+                  onChange={formik.handleChange}
                   disabled={!isEdit}
                 />
+                {formik.touched.streetAddress &&
+                  formik.errors.streetAddress && (
+                    <p className="error text-red-600 ">
+                      {formik.errors.streetAddress}
+                    </p>
+                  )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -143,11 +241,17 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                     type="text"
                     name="pinCode"
                     value={formik.values.pinCode}
+                    onChange={formik.handleChange}
                     className={`w-full border border-gray-600 rounded p-2 my-2 ${
                       !isEdit ? "bg-gray-400" : "bg-white"
                     }`}
                     disabled={!isEdit}
                   />
+                  {formik.touched.pinCode && formik.errors.pinCode && (
+                    <p className="error text-red-600 ">
+                      {formik.errors.pinCode}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <h1 className="text-xl">City:</h1>
@@ -155,11 +259,15 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                     type="text"
                     name="city"
                     value={formik.values.city}
+                    onChange={formik.handleChange}
                     className={`w-full border border-gray-600 rounded p-2 my-2 ${
                       !isEdit ? "bg-gray-400" : "bg-white"
                     }`}
                     disabled={!isEdit}
                   />
+                  {formik.touched.city && formik.errors.city && (
+                    <p className="error text-red-600 ">{formik.errors.city}</p>
+                  )}
                 </div>
               </div>
               <div

@@ -442,11 +442,12 @@ const RestaurantDetails = () => {
                 </div>
                 <div>
                   <select
-                    name=""
+                    name="seat"
                     id=""
                     className="w-11/12 h-10 mx-4 my-2 bg-white rounded-xl cursor-pointer border border-gray-500"
                     onClick={(e) => setSelectedSeats(e.target.value)}
                   >
+                    <option value="1">1 Guests</option>
                     <option value="2">2 Guests</option>
                     <option value="3">3 Guests</option>
                     <option value="4">4 Guests</option>

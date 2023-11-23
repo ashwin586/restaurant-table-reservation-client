@@ -25,18 +25,14 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          // Check if the file type is an image
           if (isImageFile(reader.result)) {
-            // Set your image state here
             setImage(file);
           } else {
             alert("Please select a valid image file (JPEG or PNG)");
           }
         };
-
         reader.readAsDataURL(file);
       }
-
       // setImage(file);
     };
   };
