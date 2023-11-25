@@ -42,6 +42,7 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
       name: "",
       foodType: categories.length > 0 ? categories[0]._id : "",
       quantity: "",
+      category: "",
       price: "",
       imageURL: "",
     },
@@ -55,14 +56,16 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
           return firstLetter === firstLetter.toUpperCase();
         }),
       foodType: Yup.string().required("Select a food type"),
-      quantity: Yup.number(),
+      category: Yup.string().required("Select a category"),
+      quantity: Yup.number().required("Cannot Be Empty"),
       price: Yup.number().required("Please enter a price"),
     }),
     onSubmit: async (values) => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         const imageURL = await uploadFoodImage(image);
         values.imageURL = imageURL;
+        console.log(values);
         const response = await partnerAxios.post("/partner/addFood", {
           values,
           isId,
@@ -131,6 +134,25 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
                   {formik.touched.foodType && formik.errors.foodType && (
                     <p className="error text-red-600 ">
                       {formik.errors.foodType}
+                    </p>
+                  )}
+                </label>
+                <label className="text-lg">
+                  Food Category
+                  <select
+                    name="category"
+                    className="w-full border border-gray-300 rounded p-2 mb-2"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.category}
+                  >
+                    <option value="">Select the food type</option>
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                  </select>
+                  {formik.touched.category && formik.errors.category && (
+                    <p className="error text-red-600 ">
+                      {formik.errors.category}
                     </p>
                   )}
                 </label>

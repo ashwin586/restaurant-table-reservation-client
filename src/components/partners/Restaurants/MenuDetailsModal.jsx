@@ -1,34 +1,70 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import { uploadFoodImage } from "../../../services/firebase/storage";
 
 const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
   const [categories, setCategories] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
+  const [image, setImage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const isImageFile = (data) => {
+    const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
+    return base64HeaderRegex.test(data);
+  };
+
+  const selectImage = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.click();
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (isImageFile(reader.result)) {
+            setImage(file);
+          } else {
+            alert("Please select a valid image file (JPEG or PNG)");
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  };
   const formik = useFormik({
     initialValues: {
       id: isSelected._id,
       name: isSelected.name || "",
-      category: isSelected.foodCategory._id || "",
+      foodCategory: isSelected.foodCategory._id || "",
+      category: isSelected.category || "",
       quantity: isSelected.quantity || 0,
       price: isSelected.price || 0,
-      imageURL: isSelected.imageURL
+      imageURL: isSelected.imageURL,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string()
         .min(3, "Min 3 character is required")
         .required("The field cannot be empty"),
-      category: Yup.string().required("Please select a food type"),
+      foodCategory: Yup.string().required("Please select a food type"),
       quantity: Yup.number(),
       price: Yup.number().required("The price field cannot be empty"),
     }),
     onSubmit: async (values) => {
       try {
+        setIsLoading(true);
+        if (image) {
+          const imageURL = await uploadFoodImage(image);
+          values.imageURL = imageURL;
+        }
         const response = await partnerAxios.put("/partner/editMenu", values);
         if (response.status === 200) {
           closeModal();
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -76,13 +112,13 @@ const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
                 <label className="text-lg">
                   Food Type
                   <select
-                    name="category"
+                    name="foodCategory"
                     className={`w-full border border-gray-300 rounded p-2 mb-2 ${
                       !isEdit ? "bg-gray-400" : "bg-white"
                     }`}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.category}
+                    value={formik.values.foodCategory}
                     disabled={!isEdit}
                   >
                     <option value="">Select the food type</option>
@@ -92,11 +128,28 @@ const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
                       </option>
                     ))}
                   </select>
-                  {formik.touched.category && formik.errors.category && (
-                    <p className="error text-red-600 ">
-                      {formik.errors.category}
-                    </p>
-                  )}
+                  {formik.touched.foodCategory &&
+                    formik.errors.foodCategory && (
+                      <p className="error text-red-600 ">
+                        {formik.errors.foodCategory}
+                      </p>
+                    )}
+                </label>
+                <label className="text-lg">
+                  Food Category
+                  <select
+                    name="category"
+                    className={`w-full border border-gray-300 rounded p-2 mb-2 ${
+                      !isEdit ? "bg-gray-400" : "bg-white"
+                    }`}
+                    onChange={formik.handleChange}
+                    value={formik.values.category}
+                    disabled={!isEdit}
+                  >
+                    <option value="">Select an option</option>
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                  </select>
                 </label>
                 <label className="text-lg">
                   Food Quantity (If any)
@@ -139,27 +192,40 @@ const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
                     className="w-48 h-48 m-3"
                   />
                 )}
-                {/* <button
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md flex items-center"
-                  type="button"
-                  onClick={selectImage}
-                >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  Add Image
-                </button> */}
+                {isEdit && (
+                  <div>
+                    {image && (
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt="foodimage"
+                        className="w-48 h-48 m-3"
+                      />
+                    )}
+
+                    <button
+                      className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md flex items-center"
+                      type="button"
+                      onClick={selectImage}
+                    >
+                      <svg
+                        className="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                      Add Image
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex justify-end mt-3">
                   {isEdit && (
                     <div>
@@ -202,6 +268,11 @@ const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
         </div>
       )}
     </>

@@ -16,7 +16,6 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const markerRef = useRef(new mapboxgl.Marker());
-  // console.log(isSelected);
   const isImageFile = (data) => {
     const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
     return base64HeaderRegex.test(data);
@@ -68,6 +67,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
       opens: isSelected.openTime,
       closes: isSelected.closeTime,
       streetAddress: isSelected.address,
+      seats: isSelected.seats,
       pinCode: isSelected.pinCode,
       city: isSelected.city,
       imageURl: isSelected.images,
@@ -84,6 +84,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
       // seats: Yup.number()
       //   .typeError("Please enter numbers")
       //   .required("Number of seat on restaurant"),
+      seats: Yup.number().required("Cannot be empty"),
       streetAddress: Yup.string()
         .min(10, "Minimum 10 character address")
         .required("The field cannot be empty"),
@@ -214,6 +215,21 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                     value={toHour(formik.values?.closes)}
                   />
                 </div>
+              </div>
+              <div>
+                <h1 className="text-xl">Total Seats:</h1>
+                <input
+                  type="text"
+                  name="seats"
+                  value={formik.values.seats}
+                  onChange={formik.handleChange}
+                  className={`w-full border border-gray-600 rounded p-2 my-2 ${
+                    !isEdit ? "bg-gray-400" : "bg-white"
+                  }`}
+                />
+                {formik.touched.seats && formik.errors.seats && (
+                  <p className="error text-red-600 ">{formik.errors.seats}</p>
+                )}
               </div>
               <div>
                 <h1 className="text-xl">Street Address:</h1>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import NavBar from "../Navbar";
+import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Axios from "../../../services/axios";
 import { useSelector } from "react-redux";
@@ -168,17 +169,62 @@ const RestaurantDetails = () => {
     }
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
-      await razorPay(amount);
-      const response = await userAxios.post("/bookingTable", {
-        cart: cart,
-        date: date,
-        restaurantId: restaurantId,
-        selectedSeats: selectedSeats,
-      });
-      if (response.status === 200) {
-        setDateTimeError(false);
-        navigate("/");
+      try {
+        const checkingSeatAvailablity = await userAxios.get(
+          "/seatAvailablity",
+          {
+            params: {
+              restaurantId: restaurantId,
+              selectedSeats: selectedSeats,
+              bookingDate: date.justDate,
+              bookingTime: date.dateTime,
+            },
+          }
+        );
+        if (checkingSeatAvailablity.status === 200) {
+          try {
+            await razorPay(amount);
+            const response = await userAxios.post("/bookingTable", {
+              cart: cart,
+              date: date,
+              restaurantId: restaurantId,
+              selectedSeats: selectedSeats,
+            });
+            if (response.status === 200) {
+              setDateTimeError(false);
+              navigate("/");
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      } catch (err) {
+        if (
+          err.response &&
+          err.response.status === 400
+        ) {
+          toast.error(err.response.data, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            theme: "dark",
+          });
+        }
       }
+
+      // await razorPay(amount);
+      // const response = await userAxios.post("/bookingTable", {
+      //   cart: cart,
+      //   date: date,
+      //   restaurantId: restaurantId,
+      //   selectedSeats: selectedSeats,
+      // });
+      // if (response.status === 200) {
+      //   setDateTimeError(false);
+      //   navigate("/");
+      // }
     } else {
       return navigate("/login");
     }

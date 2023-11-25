@@ -107,11 +107,11 @@ const Restaurants = () => {
                   }}
                 >
                   <h3>
-                    <span className="text-lg font-bold">Restaurant Name: </span>
+                    <span className="text-lg font-bold text-indigo-500">Restaurant Name: </span>
                     {restaurant?.name}
                   </h3>
                   <p className="text-md text-gray-800">
-                    <span className="text-lg font-bold">Cuisine Types: </span>
+                    <span className="text-lg font-bold text-indigo-500">Cuisine Types: </span>
                     {restaurant?.cuisine.map((cuisine, index) => (
                       <span key={index}>
                         {cuisine.cuisine}
@@ -120,14 +120,14 @@ const Restaurants = () => {
                     ))}{" "}
                   </p>
                   <p className="text-sm text-gray-800">
-                    <span className="text-lg font-bold">Opens: </span>
+                    <span className="text-lg font-bold text-indigo-500">Opens: </span>
                     {moment(restaurant?.openTime).format("h:mmA")} -{" "}
-                    <span className="text-lg font-bold">closes: </span>
+                    <span className="text-lg font-bold text-indigo-500">closes: </span>
                     {moment(restaurant?.closeTime).format("h:mmA")}
                   </p>
                   <p className="text-sm text-gray-800">
                     {" "}
-                    <span className="text-lg font-bold">Address: </span>
+                    <span className="text-lg font-bold text-indigo-500">Address: </span>
                     {restaurant?.address}, {restaurant?.pinCode},{" "}
                     {restaurant?.city}
                   </p>
