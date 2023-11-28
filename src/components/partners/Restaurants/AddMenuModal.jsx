@@ -5,7 +5,7 @@ import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import { uploadFoodImage } from "../../../services/firebase/storage";
 import { Spinner } from "@chakra-ui/react";
 
-const AddMenuModal = ({ isOpen, closeModal, isId }) => {
+const AddMenuModal = ({ isOpen, closeModal, isId, changedValues }) => {
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +71,7 @@ const AddMenuModal = ({ isOpen, closeModal, isId }) => {
           isId,
         });
         if (response.status === 200) {
+          changedValues(values);
           closeModal();
         }
         setIsLoading(false);

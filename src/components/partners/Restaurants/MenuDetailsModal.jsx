@@ -5,7 +5,7 @@ import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import { uploadFoodImage } from "../../../services/firebase/storage";
 
-const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
+const MenuDetailsModal = ({ isOpen, closeModal, isSelected, onEditSuccess  }) => {
   const [categories, setCategories] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [image, setImage] = useState("");
@@ -62,6 +62,7 @@ const MenuDetailsModal = ({ isOpen, closeModal, isSelected }) => {
         }
         const response = await partnerAxios.put("/partner/editMenu", values);
         if (response.status === 200) {
+          onEditSuccess(values);
           closeModal();
         }
         setIsLoading(false);

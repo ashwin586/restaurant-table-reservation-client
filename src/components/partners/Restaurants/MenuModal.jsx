@@ -27,6 +27,19 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
     fetchMenus();
   }, []);
 
+  const handleEditSuccess = (updatedMenu) => {
+    const updatedIndex = menus.findIndex((menu) => menu._id === updatedMenu.id);
+    setMenus((prevMenus) => {
+      const newMenus = [...prevMenus];
+      newMenus[updatedIndex] = updatedMenu;
+      return newMenus;
+    });
+  };
+
+  const handleAddSuccess = (newMenu) => { 
+    setMenus((prevMenus) => [...prevMenus, newMenu]);
+  };
+
   return (
     <>
       {addMenu && (
@@ -35,6 +48,7 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
             isOpen={addMenu}
             closeModal={() => setAddMenu(false)}
             isId={isId}
+            changedValues={handleAddSuccess} 
           />
         </div>
       )}
@@ -45,6 +59,7 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
             isOpen={menuDetailsModal}
             closeModal={() => setMenuDetailsModal(false)}
             isSelected={selectedMenu}
+            onEditSuccess={handleEditSuccess}
           />
         </div>
       )}
@@ -90,7 +105,11 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
                   </h3>
                   <h3>
                     <span className="text-lg font-bold">Food Type: </span>
-                    {menu?.foodCategory.category}
+                    {menu?.foodCategory?.category}
+                  </h3>
+                  <h3>
+                    <span className="text-lg font-bold">Food Category: </span>
+                    {menu?.category || "N/A"}
                   </h3>
                   <h3>
                     <span className="text-lg font-bold">Food Quantity: </span>

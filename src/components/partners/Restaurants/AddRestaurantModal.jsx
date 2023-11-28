@@ -7,7 +7,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Spinner } from "@chakra-ui/react";
 
-function AddRestaurantModal({ isOpen, closeModal }) {
+function AddRestaurantModal({ isOpen, closeModal, updatedValues }) {
   const [cuisines, setCuisines] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const mapContainerRef = useRef(null);
@@ -59,6 +59,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
           values
         );
         if (response.status === 200) {
+          // updatedValues(values)
           closeModal();
         }
         setIsLoading(false);
@@ -86,6 +87,8 @@ function AddRestaurantModal({ isOpen, closeModal }) {
   useEffect(() => {
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOXTOKEN;
 
+    let isMounted = true;
+
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       setUserLocation({ latitude, longitude });
@@ -96,32 +99,42 @@ function AddRestaurantModal({ isOpen, closeModal }) {
         longitude,
       });
 
-      map.current = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: "mapbox://styles/mapbox/streets-v11",
-        center: [longitude, latitude],
-        zoom: 8,
-      });
+      if (mapContainerRef.current && isMounted) {
+        map.current = new mapboxgl.Map({
+          container: mapContainerRef.current,
+          style: "mapbox://styles/mapbox/streets-v11",
+          center: [longitude, latitude],
+          zoom: 8,
+        });
 
-      map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+        map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-      map.current.on("load", () => {
-        map.current.resize();
-        markerRef.current.setLngLat([longitude, latitude]).addTo(map.current);
-      });
+        map.current.on("load", () => {
+          if (isMounted) {
+            map.current.resize();
+            markerRef.current
+              .setLngLat([longitude, latitude])
+              .addTo(map.current);
+          }
+        });
 
-      map.current.on("click", (e) => {
-        const { lng, lat } = e.lngLat;
-        formik.setValues((prevValues) => ({
-          ...prevValues,
-          latitude: lat,
-          longitude: lng,
-        }));
-        markerRef.current.setLngLat([lng, lat]);
-      });
+        map.current.on("click", (e) => {
+          if (isMounted) {
+            const { lng, lat } = e.lngLat;
+            formik.setValues((prevValues) => ({
+              ...prevValues,
+              latitude: lat,
+              longitude: lng,
+            }));
+            markerRef.current.setLngLat([lng, lat]);
+          }
+        });
+      }
     });
 
     return () => {
+      isMounted = false; // Update the flag to indicate component unmount
+
       if (map.current) {
         map.current.remove();
       }
