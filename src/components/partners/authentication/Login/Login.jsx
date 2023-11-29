@@ -2,7 +2,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Axios from "../../../../services/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { partnerLogin } from "../../../../redux/slice/partnerSlice";
 import * as Yup from "yup";
@@ -82,6 +82,7 @@ const Login = () => {
               </button>
             </Form>
           </Formik>
+          <Link to={"/partner/forgotpassword"} className="text-blue-500">Forgot Password ?</Link>
         </div>
 
         <div className="text-grey-dark mt-6">

@@ -3,7 +3,7 @@ import { Navigate, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PartnerLoginPage from "../../pages/partners/Authentication/PartnerLoginPage";
 import PartnerRegisterPage from "../../pages/partners/Authentication/PartnerRegisterPage";
-// import OTPVerify from '../../components/partners/authentication/OTP/OTPVerify';
+import PartnerForgotPasswordPage from "../../pages/partners/Authentication/PartnerForgotPasswordPage";
 import DashboardPage from "../../pages/partners/Home/DashboardPage";
 import ProfilePage from "../../pages/partners/Home/ProfilePage";
 import RestaurantPage from "../../pages/partners/Home/RestaurantPage";
@@ -15,7 +15,6 @@ const PartnerRouter = () => {
     <>
       <Routes>
         <Route path="register" element={<PartnerRegisterPage />} />
-        {/* <Route path='/otp' element={<OTPVerify />} /> */}
         <Route
           path="login"
           element={
@@ -26,6 +25,7 @@ const PartnerRouter = () => {
             )
           }
         />
+        <Route path="forgotpassword" element={<PartnerForgotPasswordPage />} />
         <Route
           path="dashboard"
           element={

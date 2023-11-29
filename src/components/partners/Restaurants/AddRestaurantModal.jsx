@@ -7,7 +7,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Spinner } from "@chakra-ui/react";
 
-function AddRestaurantModal({ isOpen, closeModal, updatedValues }) {
+function AddRestaurantModal({ isOpen, closeModal }) {
   const [cuisines, setCuisines] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const mapContainerRef = useRef(null);
@@ -59,7 +59,6 @@ function AddRestaurantModal({ isOpen, closeModal, updatedValues }) {
           values
         );
         if (response.status === 200) {
-          // updatedValues(values)
           closeModal();
         }
         setIsLoading(false);

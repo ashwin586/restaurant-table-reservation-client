@@ -32,21 +32,6 @@ const Restaurants = () => {
     fetchRestaurants();
   }, []);
 
-  // const handleAddModal = (newValues) => {
-  //   setRestaurants((prevValues) => [
-  //     ...prevValues,
-  //     {
-  //       name: newValues.name,
-  //       cuisine: newValues.selectedCuisines,
-  //       openTime: newValues.openTime,
-  //       closeTime: newValues.closeTime,
-  //       address: newValues.address,
-  //       city: newValues.city,
-  //       pinCode: newValues.pinCode,
-  //     },
-  //   ]);
-  // };
-
   return (
     <>
       <Sidebar />
@@ -66,7 +51,6 @@ const Restaurants = () => {
                   <AddRestaurantModal
                     isOpen={isModalOpen}
                     closeModal={() => setIsModalOpen(false)}
-                    // updatedValues={handleAddModal}
                   />
                 </div>
               </div>

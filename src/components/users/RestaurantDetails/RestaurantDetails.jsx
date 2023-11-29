@@ -14,11 +14,12 @@ import "./Calender.css";
 import Location from "./Location";
 import Menus from "./Menus";
 import Cart from "./Cart";
+import Reviews from "./Reviews";
 
 const RestaurantDetails = () => {
   const [endLat, setEndLat] = useState(null);
   const [endLong, setEndLong] = useState(null);
-
+  const [section, setSection] = useState("menus");
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.isLogged);
   const { restaurantId } = useParams();
@@ -287,7 +288,29 @@ const RestaurantDetails = () => {
                 <p className="ms-2 text-gray-500">({review?.length} Review)</p>
               </div>
               <Location endLat={endLat} endLong={endLong} />
-              <Menus menus={menus} addToCart={addToCart} cart={cart} />
+              <div>
+                <button
+                  className={`w-auto h-10 mx-5 px-8 py-2 my-2 rounded-3xl ${
+                    section === "menus" ? "bg-yellow-500" : "bg-slate-200"
+                  }  shadow-lg hover:bg-yellow-500 hover:text-white`}
+                  onClick={() => setSection("menus")}
+                >
+                  Menus
+                </button>
+                <button
+                  className={`w-auto h-10 mx-5  px-8 py-2 my-2 rounded-3xl ${
+                    section === "reviews" ? "bg-yellow-500" : "bg-slate-200"
+                  } shadow-lg hover:bg-yellow-500 hover:text-white`}
+                  onClick={() => setSection("reviews")}
+                >
+                  Reviews
+                </button>
+              </div>
+              {section === "menus" ? (
+                <Menus menus={menus} addToCart={addToCart} cart={cart} />
+              ) : (
+                <Reviews reviews={review}/>
+              )}
             </div>
             <div className=" col-span-3 ">
               <div className="">
@@ -352,7 +375,7 @@ const RestaurantDetails = () => {
               <div>
                 <hr className="border-t border-gray-800 my-4 mx-2" />
               </div>
-              <Cart cart={cart} handlebooking={handlebooking}/> 
+              <Cart cart={cart} handlebooking={handlebooking} />
             </div>
           </div>
         </div>

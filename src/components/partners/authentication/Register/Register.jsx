@@ -12,7 +12,6 @@ const Register = () => {
   const [otpPage, setOtpPage] = useState(false);
   const [confirm, setConfirmation] = useState(null);
   const [otp, setOtp] = useState(null);
-  // const [info, setInfo] = useState({});
   const generateRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
       auth,
@@ -52,7 +51,6 @@ const Register = () => {
   const registerPartner = async () => {
     try {
       const data = formik.values;
-      console.log(data);
       const response = await Axios.post("/partner/register", { data });
       if (response.status === 200) {
         toast.success(response.data.message, {
@@ -100,9 +98,6 @@ const Register = () => {
         .required("Password is required"),
     }),
     onSubmit: async (values) => {
-      // await sendOtp(values.phoneNumber);
-      // setOtpPage(true);
-      // setConfirmation(true);
       const result = await sendOtp(values.phoneNumber);
       setConfirmation(result);
       setOtpPage(true);
@@ -197,7 +192,6 @@ const Register = () => {
               >
                 Log in
               </button>
-              .
             </div>
           </div>
           <div id="recaptcha-container"></div>

@@ -33,7 +33,6 @@ const AddMenuModal = ({ isOpen, closeModal, isId, changedValues }) => {
         };
         reader.readAsDataURL(file);
       }
-      // setImage(file);
     };
   };
 
