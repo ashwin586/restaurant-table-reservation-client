@@ -78,10 +78,12 @@ const ForgotPassword = () => {
   const handleSubmit = async () => {
     try {
       const phoneNumber = formik.values.phoneNumber;
-      const response = await Axios.post("/partner/recover", phoneNumber);
+      const response = await Axios.post("/partner/recover", { phoneNumber });
       if (response.status === 200) {
+        console.log("yes");
         dispatch(partnerLogin());
         localStorage.setItem("partnerToken", response.data.partnerToken);
+        navigate("/partner/dashboard");
       }
     } catch (err) {
       console.log(err);
