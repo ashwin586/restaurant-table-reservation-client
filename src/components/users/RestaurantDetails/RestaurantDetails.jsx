@@ -287,7 +287,9 @@ const RestaurantDetails = () => {
                 />
                 <p className="ms-2 text-gray-500">({review?.length} Review)</p>
               </div>
-              <Location endLat={endLat} endLong={endLong} />
+              {endLat !== null && endLong !== null && (
+                <Location endLat={endLat} endLong={endLong} />
+              )}
               <div>
                 <button
                   className={`w-auto h-10 mx-5 px-8 py-2 my-2 rounded-3xl ${
@@ -309,7 +311,7 @@ const RestaurantDetails = () => {
               {section === "menus" ? (
                 <Menus menus={menus} addToCart={addToCart} cart={cart} />
               ) : (
-                <Reviews reviews={review}/>
+                <Reviews reviews={review} />
               )}
             </div>
             <div className=" col-span-3 ">

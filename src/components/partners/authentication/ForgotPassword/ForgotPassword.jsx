@@ -11,9 +11,7 @@ import Axios from "../../../../services/axios";
 
 const ForgotPassword = () => {
   const [otpPage, setOtpPage] = useState(false);
-  // const [newPassowrd, setNewPassword] = useState(false);
   const [confirm, setConfirmation] = useState(null);
-  const [otp, setOtp] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -43,16 +41,6 @@ const ForgotPassword = () => {
       console.log(err);
     }
   };
-
-  // const verifyOtp = async () => {
-  //   try {
-  //     await confirm.confirm(otp);
-  //     await handleSubmit();
-  //     // if (result) setNewPassword(true);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   const formik = useFormik({
     initialValues: {
@@ -106,48 +94,6 @@ const ForgotPassword = () => {
       }
     },
   });
-
-  // const passFormik = useFormik({
-  //   initialValues: {
-  //     passone: "",
-  //     passtwo: "",
-  //   },
-  //   validationSchema: Yup.object().shape({
-  //     passone: Yup.string()
-  //       .matches(/^(?=.*[A-Z])/, "Must include One uppercase letter")
-  //       .matches(/^(?=.*\d)/, "Must include one digit")
-  //       .matches(/^(?=.*\d)/, "Must include one digit"),
-  //     passtwo: Yup.string()
-  //       .oneOf([Yup.ref("passone")], "Passwords must match")
-  //       .required("Password is required"),
-  //   }),
-  //   onSubmit: async (values) => {
-  //     try {
-  //       const phoneNumber = formik.values.phoneNumber;
-  //       const pass = values.passone;
-  //       const response = await Axios.put("/partner/newPassword", {
-  //         phoneNumber,
-  //         pass,
-  //       });
-  //       if (response.status === 200) {
-  //         toast.success(`${response.data.message}`, {
-  //           position: "top-right",
-  //           autoClose: 1000,
-  //           hideProgressBar: false,
-  //           closeOnClick: true,
-  //           pauseOnHover: false,
-  //           style: {
-  //             background: "#EEEEFF",
-  //             color: "green",
-  //           },
-  //         });
-  //         navigate("/partner/login");
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   },
-  // });
 
   return (
     <>
@@ -208,48 +154,6 @@ const ForgotPassword = () => {
           </div>
         </div>
       )}
-      {/* {newPassowrd && (
-        <div className="bg-adminDashboard min-h-screen flex flex-col">
-          <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-            <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-              <h1 className="mb-8 text-2xl text-center">Enter new password</h1>
-              <input
-                type="password"
-                className="block border border-grey-light w-full p-3 rounded mb-4"
-                name="passone"
-                placeholder="Password"
-                value={passFormik.values.passone}
-                onChange={formik.handleChange}
-              />
-              {passFormik.touched.passone && passFormik.errors.passone && (
-                <p className="error text-red-600 ">
-                  {passFormik.errors.passone}
-                </p>
-              )}
-              <input
-                type="password"
-                className="block border border-grey-light w-full p-3 rounded mb-4"
-                name="passtwo"
-                placeholder="Re-enter Password"
-                value={passFormik.values.passtwo}
-                onChange={formik.handleChange}
-              />
-              {passFormik.touched.passtwo && passFormik.errors.passtwo && (
-                <p className="error text-red-600 ">
-                  {passFormik.errors.passtwo}
-                </p>
-              )}
-              <button
-                type="submit"
-                className="w-full text-center py-3 rounded bg-green-500 text-white"
-                onClick={passFormik.handleSubmit}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </>
   );
 };
