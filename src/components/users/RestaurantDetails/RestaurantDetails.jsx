@@ -9,7 +9,7 @@ import { add, format, isBefore, isAfter, parse, isToday } from "date-fns";
 import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
 import ReactStars from "react-stars";
-import "mapbox-gl/dist/mapbox-gl.css";
+
 import "./Calender.css";
 import Location from "./Location";
 import Menus from "./Menus";

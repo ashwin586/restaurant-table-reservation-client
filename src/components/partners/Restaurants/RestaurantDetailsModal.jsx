@@ -1,8 +1,9 @@
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import mapboxgl from "!mapbox-gl";
 import React, { useEffect, useState, useRef } from "react";
 import { useFormik } from "formik";
 import { uploadRestaurantImage } from "../../../services/firebase/storage";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
-import mapboxgl from "mapbox-gl";
 import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import { Spinner } from "@chakra-ui/react";

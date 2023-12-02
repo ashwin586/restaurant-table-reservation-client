@@ -1,6 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
+import React, { useRef, useState, useEffect } from "react";
+import "mapbox-gl/dist/mapbox-gl.css";
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 const Location = ({ endLat, endLong }) => {
   const mapContainerRef = useRef(null);
