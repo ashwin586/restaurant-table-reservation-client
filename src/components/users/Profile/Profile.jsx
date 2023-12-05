@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { uploadUserProfile } from "../../../services/firebase/storage";
 import { Spinner } from "@chakra-ui/react";
+import { toast } from "react-toastify";
 import ProfileSideBar from "./ProfileSideBar";
 
 const Profile = () => {
@@ -30,6 +31,7 @@ const Profile = () => {
           if (isImageFile(reader.result)) {
             try {
               setIsLoading(true);
+              await userAxios.get("/checkuser");
               const imageURL = await uploadUserProfile(file, user._id);
               const response = await userAxios.post("/uploadProfilePicture", {
                 userId: user._id,
@@ -39,7 +41,16 @@ const Profile = () => {
                 navigate(0);
               }
             } catch (err) {
-              console.log(err);
+              if (err.response.status === 400) {
+                toast.error(err.response.data, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  theme: "dark",
+                });
+              }
             } finally {
               setIsLoading(false);
             }
@@ -50,7 +61,7 @@ const Profile = () => {
         reader.readAsDataURL(file);
       }
     };
-  
+
     input.click();
   };
 
@@ -80,13 +91,25 @@ const Profile = () => {
     onSubmit: async (values) => {
       try {
         setIsLoading(true);
+        await userAxios.get("/checkuser");
         const response = await userAxios.put("/editUser", values);
         if (response.status === 200) {
           setIsEdit(false);
         }
         setIsLoading(false);
       } catch (err) {
-        console.log(err);
+        if (err.response.status === 400) {
+          toast.error(err.response.data, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            theme: "dark",
+          });
+        }
+      } finally{
+        setIsLoading(false);
       }
     },
   });

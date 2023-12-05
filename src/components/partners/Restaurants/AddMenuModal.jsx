@@ -49,6 +49,7 @@ const AddMenuModal = ({ isOpen, closeModal, isId, changedValues }) => {
       name: Yup.string()
         .min(3, "Minimum length must be 3 characters")
         .required("The field cannot be empty")
+        .matches(/^\S.*$/, "Cannot start with whitespace")
         .test("is-uppercase", "First letter must be uppercase", (value) => {
           if (!value) return true;
           const firstLetter = value[0];
@@ -56,8 +57,12 @@ const AddMenuModal = ({ isOpen, closeModal, isId, changedValues }) => {
         }),
       foodType: Yup.string().required("Select a food type"),
       category: Yup.string().required("Select a category"),
-      quantity: Yup.number().required("Cannot Be Empty"),
-      price: Yup.number().required("Please enter a price"),
+      quantity: Yup.number()
+        .required("Cannot Be Empty")
+        .positive("Quantity must be a positive number"),
+      price: Yup.number()
+        .required("Please enter a price")
+        .positive("Quantity must be a positive number"),
     }),
     onSubmit: async (values) => {
       try {

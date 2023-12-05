@@ -7,8 +7,10 @@ import TimePicker from "react-time-picker";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Spinner } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 function AddRestaurantModal({ isOpen, closeModal }) {
+  const navigate = useNavigate()
   const [cuisines, setCuisines] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const mapContainerRef = useRef(null);
@@ -35,21 +37,32 @@ function AddRestaurantModal({ isOpen, closeModal }) {
     validationSchema: Yup.object({
       name: Yup.string()
         .min(3, "Minimum length must be 3 character")
-        .required("The field cannot be empty"),
+        .required("The field cannot be empty")
+        .matches(/^\S.*$/, "Cannot start with whitespace")
+        .test("is-uppercase", "First letter must be uppercase", (value) => {
+          if (!value) return true;
+          const firstLetter = value[0];
+          return firstLetter === firstLetter.toUpperCase();
+        }),
       selectedCuisines: Yup.array()
         .min(1, "At least one cuisine must be selected")
         .required("At least one cuisine must be selected"),
       seats: Yup.number()
         .typeError("Please enter numbers")
+        .positive("Seats must be a positive number")
         .required("Number of seat on restaurant"),
       address: Yup.string()
         .min(10, "Minimum 10 character address")
+        .matches(/^\S.*$/, "Cannot start with whitespace")
         .required("The field cannot be empty"),
       city: Yup.string()
         .min(2, "Minimum length must be 2 character")
+        .matches(/^\S.*$/, "Cannot start with whitespace")
         .required("Please enter the city"),
       pinCode: Yup.number()
+        .min(6, "Invalid Pincode")
         .typeError("Please enter a valid pincode")
+        .positive("Incorrect pincode")
         .required("Please provide pincode"),
     }),
     onSubmit: async (values) => {
@@ -60,7 +73,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
           values
         );
         if (response.status === 200) {
-          closeModal();
+          navigate(0);
         }
         setIsLoading(false);
       } catch (err) {

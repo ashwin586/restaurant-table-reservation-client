@@ -122,6 +122,7 @@ const RestaurantDetails = () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
       try {
+        await userAxios.get('/checkuser');
         const checkingSeatAvailablity = await userAxios.get(
           "/seatAvailablity",
           {

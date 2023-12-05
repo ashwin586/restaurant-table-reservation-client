@@ -22,6 +22,7 @@ const Signup = () => {
     validationSchema: Yup.object().shape({
       name: Yup.string()
         .min(4, "Enter a valid Name")
+        .matches(/^\S.*$/, "Cannot start with whitespace")
         .required("Please enter a name"),
       phoneNumber: Yup.string()
         .length(10, "Please enter a valid Phone Number")
