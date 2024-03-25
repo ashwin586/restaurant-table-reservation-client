@@ -47,7 +47,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className="flex justify-center items-center h-screen bg-login bg-center bg-no-repeat bg-cover">
+      <div className="flex justify-center items-center h-screen bg-login bg-no-repeat bg-cover">
         <div className="flex justify-center rounded-lg shadow-lg shadow-stone-400 bg-white px-10">
           <div className="mx-5 my-10">
             <div className="flex justify-center font-bold text-2xl text-gray-900">
@@ -125,7 +125,7 @@ const Login = () => {
                     <button className="px-28 py-2 rounded-lg bg-yellow-400 text-white">
                       Login
                     </button>
-                    <p className="text-sm">
+                    <p className="text-sm mt-2">
                       Create a new Account{" "}
                       <Link
                         className="text-blue-400 underline"

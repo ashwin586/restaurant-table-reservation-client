@@ -11,12 +11,16 @@ module.exports = {
         "firstBox" : '#321fdb',
         "secondBox" : '#3299fe',
         "thirdBox" : '#f9b017',
-        "fourthBox" : '#e45252'
+        "fourthBox" : '#e45252',
+        "signupFormBg" : '#fec800',
+        "signupBorderColor": '#395a65',
+        "signupBtn" : '#1b2e35',
       },
       backgroundImage: {
-        'login': "url('/public/assets/food-frame-with-asian-dish.jpg')"
+        'login': "url('/public/assets/abstract-blur-coffee-shop_1203-8297.jpg')",
+        'signup': "url('/public/assets/abstract-blurred-people-night-festival-city-park-bokeh-background-vintage-tone.jpg')",
       }
     },
   },
-  plugins: [],
+  plugins: [], 
 };

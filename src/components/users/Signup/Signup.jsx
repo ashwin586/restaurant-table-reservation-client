@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Axios from "../../../services/axios";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { auth, googleProvider } from "../../../services/firebase/firebase";
 import { signInWithPopup } from "firebase/auth";
@@ -103,41 +103,49 @@ const Signup = () => {
           />
         )}
       </div>
-      <div className="flex items-center justify-center h-screen">
-        <div className="flex justify-center rounded-2xl shadow-xl shadow-stone-500">
-          <div className="m-8">
+      <div className="flex items-center justify-center h-screen bg-signup bg-cover bg-no-repeat">
+        <div className="flex justify-center rounded-2xl shadow-xl shadow-stone-500 bg-white">
+          <div className="m-10">
             <img
-              style={{ width: "350px", height: "350px" }}
-              src="/assets/20827570_Cartoon character filling in form in survey or checklist.jpg"
+              style={{ width: "500px", height: "350px" }}
+              src="/assets/10088619.jpg"
               alt="registerImage"
             />
           </div>
-          <div className="bg-signupBg flex rounded-2xl shadow-xl flex-col items-center">
+          <div className="bg-signupFormBg flex rounded-2xl shadow-xl flex-col items-center">
             <div className="m-5">
               <h1 className="font-bold text-2xl text-gray-800">Register</h1>
             </div>
             <div className="flex-column justify-center">
               <form onSubmit={formik.handleSubmit}>
-                <div className="mx-8">
+                <div className="mx-8 mb-2">
                   <input
                     type="text"
                     name="name"
                     value={formik.values.name}
                     onChange={formik.handleChange}
-                    className="outline-none border-b w-full p-2 rounded-md text-gray-800"
+                    className={`${
+                      formik.errors.name
+                        ? "border-2 border-red-500 outline-none w-full p-2 rounded-md"
+                        : "outline-none w-full p-2 rounded-md text-gray-800 border-2 border-signupBorderColor"
+                    }`}
                     placeholder="Full Name"
                   />
                   {formik.touched.name && formik.errors.name && (
                     <p className="error text-red-600 ">{formik.errors.name}</p>
                   )}
                 </div>
-                <div className="mx-8">
+                <div className="mx-8 mb-2">
                   <input
                     type="text"
                     name="phoneNumber"
                     value={formik.values.phoneNumber}
                     onChange={formik.handleChange}
-                    className="outline-none border-b w-full p-2 mt-2 rounded-md text-gray-800"
+                    className={`${
+                      formik.errors.phoneNumber
+                        ? "border-2 border-red-500 outline-none w-full p-2 rounded-md"
+                        : "outline-none w-full p-2 rounded-md text-gray-800 border-2 border-signupBorderColor"
+                    }`}
                     placeholder="Phone Number"
                   />
                   {formik.touched.phoneNumber && formik.errors.phoneNumber && (
@@ -146,50 +154,56 @@ const Signup = () => {
                     </p>
                   )}
                 </div>
-                <div className="mx-8">
+                <div className="mx-8 mb-2">
                   <input
                     type="email"
                     name="email"
                     value={formik.values.email}
                     onChange={formik.handleChange}
-                    className="outline-none border-b w-full p-2 mt-2 rounded-md text-gray-800"
+                    className={`${
+                      formik.errors.email
+                        ? "border-2 border-red-500 outline-none w-full p-2 rounded-md"
+                        : "outline-none w-full p-2 rounded-md text-gray-800 border-2 border-signupBorderColor"
+                    }`}
                     placeholder="Email"
                   />
                   {formik.touched.email && formik.errors.email && (
                     <p className="error text-red-600 ">{formik.errors.email}</p>
                   )}
                 </div>
-                <div className="mx-8">
+                <div className="mx-8 mb-2">
                   <input
                     type="password"
                     name="password"
                     value={formik.values.password}
                     onChange={formik.handleChange}
-                    className="outline-none border-b w-full p-2 mt-2 rounded-md text-gray-800"
+                    className={`${
+                      formik.errors.password
+                        ? "border-2 border-red-500 outline-none w-full p-2 rounded-md"
+                        : "outline-none w-full p-2 rounded-md text-gray-800 border-2 border-signupBorderColor"
+                    }`}
                     placeholder="Password"
                   />
                   {formik.touched.password && formik.errors.password && (
-                    <p className="error text-red-600 ">
-                      {formik.errors.password}
-                    </p>
+                    <p className=" text-red-600 ">{formik.errors.password}</p>
                   )}
                 </div>
                 <div className="mt-5 flex justify-center">
                   <button
                     type="submit"
-                    className="px-2 py-1 rounded-xl bg-button text-white"
+                    className="px-20 py-2 rounded-lg bg-signupBtn text-white hover:bg-signupBorderColor"
                   >
-                    Sign up
+                    Sign Up
                   </button>
                 </div>
               </form>
               <div className="mt-2 flex justify-center">
                 <button
-                  className=" flex  px-2 py-1 rounded-xl bg-white text-black hover:bg-gray-200"
+                  className=" flex px-12 py-2 rounded-lg text-white hover:bg-blue-300 bg-blue-500"
                   onClick={signUpWithGoogle}
                 >
                   <span>Sign Up with </span>
-                  <span>
+                  <span className="px-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       x="0px"
@@ -218,16 +232,12 @@ const Signup = () => {
                   </span>
                 </button>
               </div>
-              <div className="px-5 mt-2">
-                <p>
+              <div className="px-5 mt-2 text-sm text-center">
+                <p className="text-signupBorderColor">
                   Already have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => navigate("/login")}
-                    className="text-gray-800"
-                  >
-                    Login{" "}
-                  </button>
+                  <Link className="text-white" to={"/login"}>
+                    Login
+                  </Link>
                 </p>
               </div>
             </div>
