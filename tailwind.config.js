@@ -13,6 +13,9 @@ module.exports = {
         "thirdBox" : '#f9b017',
         "fourthBox" : '#e45252'
       },
+      backgroundImage: {
+        'login': "url('/public/assets/food-frame-with-asian-dish.jpg')"
+      }
     },
   },
   plugins: [],

@@ -56,7 +56,7 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex items-center">
-                  <div>
+                  <div className="flex">
                     <img
                       src={
                         profile?.userImage ||
@@ -66,6 +66,7 @@ const Navbar = () => {
                       className="w-16 h-16 rounded-full cursor-pointer"
                       onClick={() => navigate("/profile")}
                     />
+                    <p>{profile?.name}</p>
                   </div>
                 </div>
               )}
