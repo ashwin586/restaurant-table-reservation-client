@@ -15,6 +15,9 @@ module.exports = {
         "signupFormBg" : '#fec800',
         "signupBorderColor": '#395a65',
         "signupBtn" : '#1b2e35',
+        "navbarBg" : '#ffba08',
+        "navbarBtns" : '#ff6700',
+        "navbarHoverBtn" : '#ff9500',
       },
       backgroundImage: {
         'login': "url('/public/assets/abstract-blur-coffee-shop_1203-8297.jpg')",

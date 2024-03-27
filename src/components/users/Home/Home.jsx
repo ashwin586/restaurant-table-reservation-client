@@ -84,7 +84,7 @@ const Home = () => {
             <div className="grid grid-cols-3">
               {filteredRestaurant.map((restaurant) => (
                 <div
-                  className="w-72 h-72 bg-white shadow-lg rounded-lg m-10 p-4 hover:cursor-pointer transform transition-transform hover:scale-102"
+                  className="w-96 h-80 bg-white shadow-lg rounded-lg m-10 p-4 hover:cursor-pointer transform transition-transform hover:scale-102"
                   key={restaurant?._id}
                   onClick={() =>
                     navigate(`/restaurantDetails/${restaurant?._id}`)

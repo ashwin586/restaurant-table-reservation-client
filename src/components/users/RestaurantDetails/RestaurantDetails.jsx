@@ -9,6 +9,8 @@ import { add, format, isBefore, isAfter, parse, isToday } from "date-fns";
 import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
 import ReactStars from "react-stars";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faClock, faLocationDot, faUtensils} from "@fortawesome/free-solid-svg-icons"
 
 import "./Calender.css";
 import Location from "./Location";
@@ -58,22 +60,31 @@ const RestaurantDetails = () => {
   const openTime = new Date(restaurant?.openTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: true,
   });
   const closeTime = new Date(restaurant?.closeTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: true,
   });
 
+  // Avaiable time slots
   const timeSlots = () => {
     const { justDate } = date;
+    const open = new Date(restaurant?.openTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const close = new Date(restaurant?.closeTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }); 
     const currentHour = new Date().getHours();
-    const openHour = parse(openTime, "h:mm aa", new Date());
-    const extractedOpenHour = openHour.getHours();
-    const CloseHour = parse(closeTime, "h:mm aa", new Date());
-    const extractedCloseHour = CloseHour.getHours();
-
+    const openingTime = parse(open, "HH:mm", new Date());
+    const closingTime = parse(close, "HH:mm", new Date()); 
+    const extractedOpenHour = openingTime.getHours();
+    const extractedCloseHour = closingTime.getHours();
     let beginning;
-
     if (isToday(justDate) && isAfter(currentHour, extractedOpenHour)) {
       beginning = add(justDate, { hours: currentHour + 1 });
     } else {
@@ -122,7 +133,7 @@ const RestaurantDetails = () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
       try {
-        await userAxios.get('/checkuser');
+        await userAxios.get("/checkuser");
         const checkingSeatAvailablity = await userAxios.get(
           "/seatAvailablity",
           {
@@ -258,22 +269,27 @@ const RestaurantDetails = () => {
                 <div>
                   <h1 className="text-2xl font-semibold ">
                     {restaurant?.name}
-                  </h1>
+                  </h1> 
                 </div>
                 <div>
+                  <span className="pe-2"><FontAwesomeIcon icon={faUtensils}/></span> 
                   {restaurant?.cuisine &&
                     restaurant?.cuisine.map((cuisine, index) => (
-                      <span key={index}>{cuisine.cuisine} </span>
+                      <span key={index}>{cuisine.cuisine}, </span>
                     ))}
                 </div>
                 <div>
-                  <p>
+                  <p> 
+                    <span className="pe-2"><FontAwesomeIcon icon={faLocationDot}/></span> 
                     <span>{restaurant?.address}</span>,
                     <span>{restaurant?.city}</span>,
                     <span>{restaurant?.pinCode}</span>
                   </p>
                   <p>
-                    Opens From : <span>{openTime}</span> -{" "}
+                    <span className="pe-2">
+                      <FontAwesomeIcon icon={faClock} />
+                    </span>
+                    Opens From : <span>{openTime}</span> -{" "} 
                     <span>{closeTime}</span>
                   </p>
                 </div>
@@ -371,7 +387,7 @@ const RestaurantDetails = () => {
                 ))}
               </div>
               {dateTimeError && (
-                <p className="text-red-500 mt-2 ms-4">
+                <p className="text-red-500 mt-2 ms-4 text-sm">
                   Please select both date and time before booking.
                 </p>
               )}
