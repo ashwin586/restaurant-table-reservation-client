@@ -28,9 +28,18 @@ const Navbar = () => {
         <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
           <div className="flex items-center">
             <Link to={"/"} className="flex items-center">
-              <span className="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
-                RESERVETABLE
-              </span>
+              <div className="flex justify-center items-center">
+                <span>
+                  <img
+                    src="assets/reserve.png"
+                    style={{ height: "48px" }}
+                    alt="Logo"
+                  />
+                </span>
+                <h1 className="ps-2 text-3xl font-extrabold whitespace-nowrap dark:text-white">
+                  RESERVETABLE
+                </h1>
+              </div>
             </Link>
           </div>
           <div className="hidden md:block">
@@ -59,10 +68,12 @@ const Navbar = () => {
                         "/assets/blank-profile-picture-973460_1920.png"
                       }
                       alt="Avatar"
-                      className="w-16 h-16 rounded-full cursor-pointer"
+                      className="w-16 h-16 rounded-xl cursor-pointer"
                       onClick={() => navigate("/profile")}
                     />
-                    <p>{profile?.name}</p>
+                    <p className="text-white font-semibold p-2 text-xl">
+                      {profile?.name}
+                    </p>
                   </div>
                 </div>
               )}

@@ -17,6 +17,7 @@ import Location from "./Location";
 import Menus from "./Menus";
 import Cart from "./Cart";
 import Reviews from "./Reviews";
+import Footer from "../Footer";
 
 const RestaurantDetails = () => {
   const [endLat, setEndLat] = useState(null);
@@ -190,7 +191,7 @@ const RestaurantDetails = () => {
 
   return (
     <>
-      <div className="bg-adminDashboard h-fit">
+      <div className="bg-homeBg h-fit flex flex-col min-h-[calc(83vh)]">
         <NavBar />
         <div className="flex justify-center mt-4">
           <div className="bg-white w-3/5 h-screen grid grid-cols-10">
@@ -398,6 +399,7 @@ const RestaurantDetails = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     </>
   );

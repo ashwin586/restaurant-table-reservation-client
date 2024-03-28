@@ -18,10 +18,12 @@ module.exports = {
         "navbarBg" : '#ffba08',
         "navbarBtns" : '#ff6700',
         "navbarHoverBtn" : '#ff9500',
+        "homeBg" : '#ebebeb'
       },
       backgroundImage: {
         'login': "url('/public/assets/abstract-blur-coffee-shop_1203-8297.jpg')",
         'signup': "url('/public/assets/abstract-blurred-people-night-festival-city-park-bokeh-background-vintage-tone.jpg')",
+        'logo' : "url('/public/assets/reserve.png')",
       }
     },
   },
