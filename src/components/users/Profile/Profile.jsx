@@ -126,9 +126,9 @@ const Profile = () => {
   }
   return (
     <>
-      <div className="bg-homeBg flex flex-col min-h-[calc(83vh)]">
+      <div className="bg-homeBg flex flex-col min-h-screen">
         {isLoading ? (
-          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center z-50">
+          <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
             <Spinner />
           </div>
         ) : null}
@@ -155,7 +155,7 @@ const Profile = () => {
                         Edit
                       </button>
                     </div>
-                    <h1 className="ml-4 text-2xl text-black font-bold">
+                    <h1 className="ml-4 text-2xl text-white font-extrabold">
                       {user?.name}
                     </h1>
                   </div>
@@ -167,7 +167,7 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-              <div className="container mx-auto mt-8 p-4 bg-white">
+              <div className="container mx-auto p-4 bg-white rounded-b-xl">
                 <div className="flex">
                   <ProfileSideBar />
                   <div className="container flex justify-center ">
@@ -227,30 +227,32 @@ const Profile = () => {
                             readOnly
                           />
                         </div>
-                        <div className="mb-4">
-                          <label
-                            htmlFor="password"
-                            className="block text-gray-600 font-medium"
-                          >
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            className="w-2/5 border rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-blue-400"
-                            value={formik.values.password}
-                            onChange={formik.handleChange}
-                            readOnly={!isEdit}
-                          />
-                        </div>
+                        {isEdit && (
+                          <div className="mb-4">
+                            <label
+                              htmlFor="password"
+                              className="block text-gray-600 font-medium"
+                            >
+                              Password
+                            </label>
+                            <input 
+                              type="password"
+                              id="password"
+                              name="password"
+                              className="w-2/5 border rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-blue-400"
+                              value={formik.values.password}
+                              onChange={formik.handleChange}
+                            />
+                          </div>
+                        )}
+
                         {isEdit && (
                           <div>
                             <button
                               type="submit"
                               className="bg-blue-500 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-600"
                             >
-                              Update
+                              Save Changes
                             </button>
                             <button
                               type="button"
@@ -279,8 +281,10 @@ const Profile = () => {
             </div>
           )}
         </div>
+        <div className="absolute bottom-0 w-full">
+          <Footer />
+        </div>
       </div>
-      <Footer />
     </>
   );
 };

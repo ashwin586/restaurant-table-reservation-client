@@ -3,6 +3,7 @@ import Navbar from "../Navbar";
 import ProfileSideBar from "./ProfileSideBar";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import ReviewComponent from "./ReviewComponent";
+import { Spinner } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import Footer from "../Footer";
 
@@ -10,14 +11,17 @@ const Bookings = () => {
   const [isReview, setIsReview] = useState(false);
   const [restaurantId, setRestaurantId] = useState("");
   const [bookings, setBookings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
+        setIsLoading(true)
         const response = await userAxios.get("/getBookings");
         if (response.status === 200) {
           setBookings(response.data);
         }
+        setIsLoading(false)
       } catch (err) {
         console.log(err);
       }
@@ -78,7 +82,13 @@ const Bookings = () => {
 
   return (
     <>
-      <div className="flex flex-col min-h-[calc(85vh)]">
+      {/* <div className="flex flex-col min-h-[calc(85vh)]"> */}
+      <div className="min-h-screen">
+        {isLoading ? (
+          <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+            <Spinner />
+          </div>
+        ) : null}
         {isReview && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
             <ReviewComponent
@@ -184,8 +194,10 @@ const Bookings = () => {
             </div>
           </div>
         </div>
+        <footer className="flex justify-center mt-10">
+          <Footer />
+        </footer>
       </div>
-      <Footer />
     </>
   );
 };

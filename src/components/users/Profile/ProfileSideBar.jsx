@@ -18,10 +18,10 @@ const ProfileSideBar = () => {
         <ul className="space-y-4">
           <Link to={"/profile"}>
             <button
-              className={`text-black text-lg w-full py-2 mb-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white ${
+              className={`text-black text-lg w-full py-2 mb-2 rounded-lg hover:bg-yellow-400 hover:text-white ${
                 location.pathname === "/profile"
                   ? "bg-yellow-400 text-white"
-                  : "hover:text-white text-yellow-400 hover:bg-white"
+                  : "hover:text-white text-yellow-900 hover:bg-white bg-yellow-100"
               }`}
             >
               Profile
@@ -29,10 +29,10 @@ const ProfileSideBar = () => {
           </Link>
           <Link to={"/bookings"}>
             <button
-              className={`text-black text-lg w-full py-2 mb-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white ${
+              className={`text-black text-lg w-full py-2 mb-2 rounded-lg hover:bg-yellow-400 hover:text-white ${
                 location.pathname === "/bookings"
                   ? "bg-yellow-400 text-white"
-                  : "hover:text-white text-yellow-400 hover:bg-white"
+                  : "hover:text-white text-yellow-900 hover:bg-white bg-yellow-100"
               }`}
             >
               Bookings
@@ -40,10 +40,10 @@ const ProfileSideBar = () => {
           </Link>
           <Link to={"/reviews"}>
             <button
-              className={`text-black text-lg w-full py-2 mb-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white ${
+              className={`text-black text-lg w-full py-2 mb-2 rounded-lg hover:bg-yellow-400 hover:text-white ${
                 location.pathname === "/reviews"
-                  ? "bg-yellow-400 text-white"
-                  : "hover:text-white text-yellow-400 hover:bg-white"
+                  ? "bg-yellow-400 text-black"
+                  : "hover:text-white text-yellow-900 hover:bg-white bg-yellow-100"
               }`}
             >
               Reviews
@@ -51,7 +51,7 @@ const ProfileSideBar = () => {
           </Link>
           <li>
             <button
-              className="text-black text-lg w-full py-2 mb-2 rounded-lg bg-transparent hover:bg-yellow-400 hover:text-white"
+              className="text-red-500 text-lg w-full py-2 mb-2 rounded-lg bg-red-100 hover:bg-red-500 hover:text-white"
               onClick={userlogout}
             >
               Logout
