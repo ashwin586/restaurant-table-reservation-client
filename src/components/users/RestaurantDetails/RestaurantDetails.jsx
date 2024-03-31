@@ -10,7 +10,12 @@ import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
 import ReactStars from "react-stars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faClock, faLocationDot, faUtensils} from "@fortawesome/free-solid-svg-icons"
+import { Spinner } from "@chakra-ui/react";
+import {
+  faClock,
+  faLocationDot,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
 
 import "./Calender.css";
 import Location from "./Location";
@@ -20,6 +25,7 @@ import Reviews from "./Reviews";
 import Footer from "../Footer";
 
 const RestaurantDetails = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [endLat, setEndLat] = useState(null);
   const [endLong, setEndLong] = useState(null);
   const [section, setSection] = useState("menus");
@@ -79,10 +85,10 @@ const RestaurantDetails = () => {
     const close = new Date(restaurant?.closeTime).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-    }); 
+    });
     const currentHour = new Date().getHours();
     const openingTime = parse(open, "HH:mm", new Date());
-    const closingTime = parse(close, "HH:mm", new Date()); 
+    const closingTime = parse(close, "HH:mm", new Date());
     const extractedOpenHour = openingTime.getHours();
     const extractedCloseHour = closingTime.getHours();
     let beginning;
@@ -107,6 +113,7 @@ const RestaurantDetails = () => {
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
+        setIsLoading(true);
         const response = await Axios.get("/getRestaurantDetails", {
           params: {
             id: restaurantId,
@@ -119,6 +126,7 @@ const RestaurantDetails = () => {
           setEndLat(response.data?.restaurant.latitude);
           setEndLong(response.data?.restaurant.longitude);
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -191,7 +199,12 @@ const RestaurantDetails = () => {
 
   return (
     <>
-      <div className="bg-homeBg h-fit flex flex-col min-h-[calc(83vh)]">
+      <div className="bg-homeBg  flex flex-col min-h-screen">
+        {isLoading ? (
+          <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+            <Spinner />
+          </div>
+        ) : null}
         <NavBar />
         <div className="flex justify-center mt-4">
           <div className="bg-white w-3/5 h-screen grid grid-cols-10">
@@ -270,18 +283,22 @@ const RestaurantDetails = () => {
                 <div>
                   <h1 className="text-2xl font-semibold ">
                     {restaurant?.name}
-                  </h1> 
+                  </h1>
                 </div>
                 <div>
-                  <span className="pe-2"><FontAwesomeIcon icon={faUtensils}/></span> 
+                  <span className="pe-2">
+                    <FontAwesomeIcon icon={faUtensils} />
+                  </span>
                   {restaurant?.cuisine &&
                     restaurant?.cuisine.map((cuisine, index) => (
                       <span key={index}>{cuisine.cuisine}, </span>
                     ))}
                 </div>
                 <div>
-                  <p> 
-                    <span className="pe-2"><FontAwesomeIcon icon={faLocationDot}/></span> 
+                  <p>
+                    <span className="pe-2">
+                      <FontAwesomeIcon icon={faLocationDot} />
+                    </span>
                     <span>{restaurant?.address}</span>,
                     <span>{restaurant?.city}</span>,
                     <span>{restaurant?.pinCode}</span>
@@ -290,7 +307,7 @@ const RestaurantDetails = () => {
                     <span className="pe-2">
                       <FontAwesomeIcon icon={faClock} />
                     </span>
-                    Opens From : <span>{openTime}</span> -{" "} 
+                    Opens From : <span>{openTime}</span> -{" "}
                     <span>{closeTime}</span>
                   </p>
                 </div>

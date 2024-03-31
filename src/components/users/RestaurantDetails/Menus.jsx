@@ -23,7 +23,7 @@ const Menus = ({ menus, addToCart, cart }) => {
             {menus &&
               filteredMenu.map((menu) => (
                 <div
-                  className="my-6 p-4 ms-20 bg-slate-100 shadow-lg rounded-lg w-4/5 h-40 flex transform transition-transform hover:scale-105 font-serif"
+                  className="my-6 p-4 ms-20 bg-yellow-200 shadow-lg rounded-lg w-4/5 h-40 flex transform transition-transform font-serif"
                   key={menu?._id}
                 >
                   <div className="flex">
@@ -52,7 +52,7 @@ const Menus = ({ menus, addToCart, cart }) => {
                   <div className="absolute bottom-3 right-2">
                     <div className="flex items-center space-x-2 justify-center mb-2">
                       <button
-                        className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
+                        className="bg-yellow-400 text-black px-3 py-1 rounded-lg focus:outline-none hover:bg-yellow-500"
                         onClick={() =>
                           addToCart(
                             menu?._id,
@@ -70,7 +70,7 @@ const Menus = ({ menus, addToCart, cart }) => {
                           ?.quantity || 1}
                       </span>
                       <button
-                        className="bg-slate-400 text-white px-2 py-1  focus:outline-none"
+                        className="bg-yellow-400 text-black px-3 py-1  focus:outline-none rounded-lg hover:bg-yellow-500"
                         onClick={() =>
                           addToCart(
                             menu?._id,
@@ -85,7 +85,7 @@ const Menus = ({ menus, addToCart, cart }) => {
                       </button>
                     </div>
                     <button
-                      className="bg-button text-gray-800 px-4 py-2 rounded-md flex items-center"
+                      className="bg-green-400 text-slate-900 px-4 py-2 rounded-md flex items-center hover:bg-green-700 hover:text-white"
                       type="button"
                       onClick={() => {
                         const quantity =

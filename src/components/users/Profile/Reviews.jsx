@@ -27,15 +27,18 @@ const Reviews = () => {
   }, []);
   return (
     <>
-      <div className="flex flex-col min-h-screen">
-      {isLoading ? (
+      <div className="flex flex-col min-h-screen bg-homeBg">
+        {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
             <Spinner />
           </div>
         ) : null}
         <Navbar />
         <div className="flex justify-center mt-10">
-          <div className="w-3/4 rounded-xl shadow-2xl">
+          <div className="bg-white w-3/4 rounded-xl shadow-2xl">
+            <div className="bg-yellow-300 p-4 text-white rounded-t-xl relative">
+              <h1 className="text-4xl font-extrabold p-5">Your Reviews</h1>
+            </div>
             <div className="container mx-auto mt-8 p-4">
               <div className="flex">
                 <ProfileSideBar />

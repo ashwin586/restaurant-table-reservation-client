@@ -188,7 +188,7 @@ const Profile = () => {
                             type="text"
                             id="name"
                             name="name"
-                            className="w-2/5 border rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-blue-400"
+                            className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                             value={formik.values.name}
                             onChange={formik.handleChange}
                             readOnly={!isEdit}
@@ -206,7 +206,7 @@ const Profile = () => {
                             id="phone"
                             name="phoneNumber"
                             onChange={formik.handleChange}
-                            className="w-2/5 border rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-blue-400"
+                            className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                             value={formik.values.phoneNumber}
                             readOnly={!isEdit}
                           />
@@ -222,7 +222,7 @@ const Profile = () => {
                             type="email"
                             id="email"
                             name="email"
-                            className="w-2/5 border rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-blue-400"
+                            className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                             value={user?.email}
                             readOnly
                           />
@@ -239,7 +239,7 @@ const Profile = () => {
                               type="password"
                               id="password"
                               name="password"
-                              className="w-2/5 border rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-blue-400"
+                              className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                               value={formik.values.password}
                               onChange={formik.handleChange}
                             />
@@ -267,7 +267,7 @@ const Profile = () => {
 
                       {!isEdit && (
                         <button
-                          className="bg-green-500 text-white font-medium px-4 py-2 rounded-md hover:bg-green-600"
+                          className="bg-green-400 text-white font-medium px-4 py-2 rounded-md hover:bg-green-700"
                           type="button"
                           onClick={() => setIsEdit(true)}
                         >
