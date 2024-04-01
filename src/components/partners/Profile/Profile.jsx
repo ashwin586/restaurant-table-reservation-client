@@ -13,10 +13,12 @@ const Profile = () => {
   useEffect(() => {
     const fetchPartner = async () => {
       try {
+        setIsLoading(true);
         const response = await partnerAxios.get("/partner/getDetails");
         if (response.status === 200) {
           setdata(response.data.partner);
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -83,13 +85,13 @@ const Profile = () => {
         const reader = new FileReader();
         reader.onloadend = async () => {
           if (isImageFile(reader.result)) {
-            setIsLoading(true)
+            setIsLoading(true);
             const imageURL = await uploadPartnerProfileImage(
               selectedImage,
               data._id
             );
             formik.setFieldValue("imageURL", imageURL);
-            setIsLoading(false)
+            setIsLoading(false);
           } else {
             alert("Please select a valid image file (JPEG or PNG)");
           }

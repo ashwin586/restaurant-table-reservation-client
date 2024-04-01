@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import ReactApexChart from "react-apexcharts";
+import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [totalRestaurant, setTotalRestaurant] = useState(null);
   const [totalIncome, setTotalIncome] = useState(null);
   const [totalReview, setTotalReview] = useState(null);
@@ -12,6 +14,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardDetails = async () => {
       try {
+        setIsLoading(true);
         const response = await partnerAxios.get("/partner/dashboard");
         if (response.status === 200) {
           setTotalRestaurant(response.data.totalRestaurants);
@@ -20,6 +23,7 @@ const Dashboard = () => {
           setTotalBooking(response.data.totalBookingCount);
           setChartData(response.data?.chartData);
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -58,6 +62,11 @@ const Dashboard = () => {
 
   return (
     <>
+      {isLoading ? (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      ) : null}
       <Sidebar />
       <div className="min-h-screen bg-adminDashboard">
         <div className="bg-adminDashboard h-screen p-4 sm:ml-64">

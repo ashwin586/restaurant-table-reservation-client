@@ -5,10 +5,12 @@ import moment from "moment";
 import AddRestaurantModal from "./AddRestaurantModal";
 import RestaurantDetailsModal from "./RestaurantDetailsModal";
 import MenuModal from "./MenuModal";
+import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 
 const Restaurants = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRestaurantDetailsModal, setIsRestauarantDetailsModal] =
     useState(false);
@@ -19,12 +21,14 @@ const Restaurants = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
+        setIsLoading(true)
         const response = await partnerAxios.get(
           "/partner/getPartnerRestaurant"
         );
         if (response.status === 200) {
           setRestaurants(response.data);
         }
+        setIsLoading(false)
       } catch (err) {
         console.log(err);
       }
@@ -34,6 +38,11 @@ const Restaurants = () => {
 
   return (
     <>
+      {isLoading ? (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      ) : null}
       <Sidebar />
       <div className="bg-adminDashboard min-h-screen">
         <div className="bg-adminDashboard h-fit p-4 sm:ml-64">
@@ -147,11 +156,17 @@ const Restaurants = () => {
                   <div>
                     <span className="font-serif">Status: {""}</span>
                     {restaurant.isApproved === "Pending" ? (
-                      <span className="text-yellow-500 font-bold text-xl">Pending</span>
+                      <span className="text-yellow-500 font-bold text-xl">
+                        Pending
+                      </span>
                     ) : restaurant.isApproved === "Approved" ? (
-                      <span className="text-green-500 font-bold text-xl">Online</span>
+                      <span className="text-green-500 font-bold text-xl">
+                        Online
+                      </span>
                     ) : (
-                      <span className="text-red-500 font-bold text-xl">Rejected</span>
+                      <span className="text-red-500 font-bold text-xl">
+                        Rejected
+                      </span>
                     )}
                   </div>
                   <div>

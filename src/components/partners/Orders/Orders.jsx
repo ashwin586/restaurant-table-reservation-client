@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import { Spinner } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import SideBar from "../Sidebar";
 import OrdersModal from "./OrdersModal";
 
 const Orders = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const [listOrder, setListOrder] = useState([]);
   const [userName, setUserName] = useState("");
@@ -14,6 +16,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setIsLoading(true)
         const response = await partnerAxios.get(
           "/partner/getAllOrdersOfRestaurant",
           {
@@ -25,6 +28,7 @@ const Orders = () => {
         if (response.status === 200) {
           setOrders(response.data);
         }
+        setIsLoading(false)
       } catch (err) {
         console.log(err);
       }
@@ -61,6 +65,11 @@ const Orders = () => {
 
   return (
     <>
+      {isLoading ? (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Spinner />
+        </div>
+      ) : null}
       <SideBar />
       {isOpen && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
