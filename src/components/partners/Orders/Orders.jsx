@@ -7,6 +7,7 @@ import OrdersModal from "./OrdersModal";
 const Orders = () => {
   const { id } = useParams();
   const [listOrder, setListOrder] = useState([]);
+  const [userName, setUserName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [orders, setOrders] = useState([]);
 
@@ -67,10 +68,11 @@ const Orders = () => {
             open={isOpen}
             close={() => setIsOpen(false)}
             orders={listOrder}
+            userName={userName}
           />
         </div>
       )}
-      <div className="bg-adminDashboard h-screen p-4 sm:ml-64">
+      <div className="bg-adminDashboard min-h-screen p-4 sm:ml-64">
         <div>
           <h1 className="font-bold text-3xl">
             {orders[0]?.restaurant.name} Orders
@@ -83,11 +85,20 @@ const Orders = () => {
               className="my-6 p-4 ms-20 bg-white shadow-lg rounded-lg w-4/5 h-48 font-mono"
               key={order?._id}
             >
-              <h1>User Name: {order?.user.name}</h1>
-              <h1>User Email: {order?.user.email}</h1>
-              <h1>User Phone no: {order?.user.phoneNumber}</h1>
               <div>
-                <span className="font-semibold">Booking On</span>{" "}
+                <span className="font-bold text-lg">User Name:</span>
+                {order?.user.name}
+              </div>
+              <div>
+                <span className="font-bold text-lg">User Email:</span>
+                {order?.user.email}
+              </div>
+              <div>
+                <span className="font-bold text-lg">User Phone no:</span>
+                {order?.user.phoneNumber}
+              </div>
+              <div>
+                <span className="font-semibold text-lg">Booking On:</span>{" "}
                 <span>{formatDate(order?.bookedDate)}</span>{" "}
                 <span className="font-semibold">at</span>{" "}
                 <span>{formatTime(order?.bookedTime)}</span>{" "}
@@ -95,10 +106,11 @@ const Orders = () => {
                 <span>{order?.numberOfSeats} Persons</span>
               </div>
               <button
-                className="bg-blue-300 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-blue-500"
+                className="bg-amber-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-amber-400 border-b-4 border-b-amber-800 hover:border-b-amber-500"
                 onClick={() => {
                   setIsOpen(true);
                   setListOrder(order?.cart);
+                  setUserName(order?.user.name);
                 }}
               >
                 View Orders

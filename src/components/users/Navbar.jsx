@@ -31,7 +31,7 @@ const Navbar = () => {
               <div className="flex justify-center items-center">
                 <span>
                   <img
-                    src="assets/reserve.png"
+                    src="/assets/reserve.png"
                     style={{ height: "48px" }}
                     alt="Logo"
                   />

@@ -71,7 +71,7 @@ const MenuModal = ({ isOpen, closeModal, isId }) => {
               onClick={() => {
                 setAddMenu(true);
               }}
-              className="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+              className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-800 hover:border-blue-500 rounded"
             >
               Add Meal
             </button>

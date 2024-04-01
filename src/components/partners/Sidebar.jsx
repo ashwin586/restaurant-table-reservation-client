@@ -49,11 +49,14 @@ const Sidebar = () => {
             href="https://flowbite.com/"
             className="flex items-center pl-2.5 mb-5"
           >
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-6 mr-3 sm:h-7"
-              alt="Flowbite Logo"
-            />
+            <span>
+              <img
+                className="pe-2"
+                src="/assets/reserve.png"
+                style={{ height: "48px" }}
+                alt="Logo"
+              />
+            </span>
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
               RESERVETABLE
             </span>
@@ -110,33 +113,6 @@ const Sidebar = () => {
                 </span>
               </Link>
             </li>
-            {/* <li>
-              <Link
-                to="/partner/orders"
-                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-                  location.pathname === "/partner/orders"
-                    ? "bg-gray-700"
-                    : "dark:hover:bg-gray-700"
-                }`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"
-                  ></path>
-                </svg>
-
-                <span className="flex-1 ml-3 whitespace-nowrap">Orders</span>
-              </Link>
-            </li> */}
             <li>
               <Link
                 to="/partner/profile"

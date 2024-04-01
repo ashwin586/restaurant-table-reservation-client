@@ -107,13 +107,13 @@ const Restaurants = () => {
                   }}
                 >
                   <h3>
-                    <span className="text-lg font-bold text-indigo-500">
+                    <span className="text-lg font-bold text-blue-500">
                       Restaurant Name:{" "}
                     </span>
                     {restaurant?.name}
                   </h3>
                   <p className="text-md text-gray-800">
-                    <span className="text-lg font-bold text-indigo-500">
+                    <span className="text-lg font-bold text-blue-500">
                       Cuisine Types:{" "}
                     </span>
                     {restaurant?.cuisine.map((cuisine, index) => (
@@ -124,18 +124,18 @@ const Restaurants = () => {
                     ))}{" "}
                   </p>
                   <p className="text-sm text-gray-800">
-                    <span className="text-lg font-bold text-indigo-500">
+                    <span className="text-lg font-bold text-blue-500">
                       Opens:{" "}
                     </span>
                     {moment(restaurant?.openTime).format("h:mmA")} -{" "}
-                    <span className="text-lg font-bold text-indigo-500">
+                    <span className="text-lg font-bold text-blue-500">
                       closes:{" "}
                     </span>
                     {moment(restaurant?.closeTime).format("h:mmA")}
                   </p>
                   <p className="text-sm text-gray-800">
                     {" "}
-                    <span className="text-lg font-bold text-indigo-500">
+                    <span className="text-lg font-bold text-blue-500">
                       Address:{" "}
                     </span>
                     {restaurant?.address}, {restaurant?.pinCode},{" "}
@@ -147,18 +147,18 @@ const Restaurants = () => {
                   <div>
                     <span className="font-serif">Status: {""}</span>
                     {restaurant.isApproved === "Pending" ? (
-                      <span className="text-yellow-500 font-bold">Pending</span>
+                      <span className="text-yellow-500 font-bold text-xl">Pending</span>
                     ) : restaurant.isApproved === "Approved" ? (
-                      <span className="text-green-500 font-bold">Online</span>
+                      <span className="text-green-500 font-bold text-xl">Online</span>
                     ) : (
-                      <span className="text-red-500 font-bold">Rejected</span>
+                      <span className="text-red-500 font-bold text-xl">Rejected</span>
                     )}
                   </div>
                   <div>
                     {restaurant.isApproved === "Approved" && (
                       <div className="flex flex-col space-y-2">
                         <button
-                          className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-green-800"
+                          className="bg-green-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-green-400 border-b-4 border-b-green-800 border-e-2 border-e-green-800 hover:border-b-green-500 hover:border-e-green-500"
                           onClick={() => {
                             setIsMenu(true);
                             setSelectedRestaurant(restaurant._id);
@@ -167,7 +167,7 @@ const Restaurants = () => {
                           Menu
                         </button>
                         <button
-                          className="bg-yellow-300 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-yellow-500"
+                          className="bg-yellow-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-yellow-400 border-b-4 border-e-2 border-b-yellow-800 border-e-yellow-800 hover:border-b-yellow-500 hover:border-e-yellow-500"
                           onClick={() => {
                             navigate(`/partner/${restaurant?._id}/orders`);
                           }}
