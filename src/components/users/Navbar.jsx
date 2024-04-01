@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userAxios } from "../../services/AxiosInterceptors/userAxios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 
 const Navbar = () => {
   const [profile, setProfile] = useState(null);
@@ -71,9 +73,10 @@ const Navbar = () => {
                       className="w-16 h-16 rounded-xl cursor-pointer"
                       onClick={() => navigate("/profile")}
                     />
-                    <p className="text-white font-semibold p-2 text-xl">
+                    {/* <p className="text-white font-semibold p-2 text-xl">
                       {profile?.name}
-                    </p>
+                    </p> */}
+                    <div className="inline-flex items-center"><FontAwesomeIcon icon={faCalendar} size="2xl" className="text-white hover:cursor-pointer ms-6"/></div>
                   </div>
                 </div>
               )}
