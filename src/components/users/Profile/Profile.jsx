@@ -159,12 +159,12 @@ const Profile = () => {
                       {user?.name}
                     </h1>
                   </div>
-                  <div className="absolute right-5 text-black w-36 h-28 rounded-lg bg-blue-300 flex flex-col items-center justify-evenly">
+                  {/* <div className="absolute right-5 text-black w-36 h-28 rounded-lg bg-blue-300 flex flex-col items-center justify-evenly">
                     <h1 className="text-xl font-serif">Wallet Balance:</h1>
                     <h1 className="text-xl font-mono">
                       ₹{user.wallet?.balance}
                     </h1>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="container mx-auto p-4 bg-white rounded-b-xl">

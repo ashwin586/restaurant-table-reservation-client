@@ -26,25 +26,32 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <>
-      <nav className="border-gray-200 bg-navbarBg ">
+      <nav className="border-gray-200 bg-navbarBg">
         <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
           <div className="flex items-center">
             <Link to={"/"} className="flex items-center">
               <div className="flex justify-center items-center">
-                <span>
+                <span className="hidden md:block">
                   <img
                     src="/assets/reserve.png"
                     style={{ height: "48px" }}
                     alt="Logo"
                   />
                 </span>
-                <h1 className="ps-2 text-3xl font-extrabold whitespace-nowrap dark:text-white">
+                <span className="md:hidden">
+                  <img
+                    src="/assets/reserve.png"
+                    style={{ height: "28px" }}
+                    alt="Logo"
+                  />
+                </span>
+                <h1 className="ps-2 lg:text-3xl lg:text-white font-extrabold whitespace-nowrap dark:text-white sm:text-lg text-xs">
                   RESERVETABLE
                 </h1>
               </div>
             </Link>
           </div>
-          <div className="hidden md:block">
+          <div className="md:block">
             <div className="flex items-center">
               {!user ? (
                 <div className="flex items-center">
@@ -70,13 +77,19 @@ const Navbar = () => {
                         "/assets/blank-profile-picture-973460_1920.png"
                       }
                       alt="Avatar"
-                      className="w-16 h-16 rounded-xl cursor-pointer"
+                      className="rounded-xl cursor-pointer w-10 h-10 md:w-16 md:h-16"
                       onClick={() => navigate("/profile")}
                     />
                     {/* <p className="text-white font-semibold p-2 text-xl">
                       {profile?.name}
                     </p> */}
-                    <div className="inline-flex items-center"><FontAwesomeIcon icon={faCalendar} size="2xl" className="text-white hover:cursor-pointer ms-6"/></div>
+                    <div className="inline-flex items-center">
+                      <FontAwesomeIcon
+                        icon={faCalendar}
+                        size="2xl"
+                        className="text-white hover:cursor-pointer ms-6"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

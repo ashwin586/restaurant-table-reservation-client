@@ -207,7 +207,7 @@ const RestaurantDetails = () => {
         ) : null}
         <NavBar />
         <div className="flex justify-center mt-4">
-          <div className="bg-white w-3/5 h-screen grid grid-cols-10">
+          <div className="bg-white w-3/5 h-screen grid grid-cols-10 rounded-lg">
             <div className="col-span-7 overflow-auto">
               <div
                 id="controls-carousel"
@@ -416,7 +416,9 @@ const RestaurantDetails = () => {
             </div>
           </div>
         </div>
-        <Footer />
+        <div className="mt-4">
+          <Footer />
+        </div>
       </div>
     </>
   );

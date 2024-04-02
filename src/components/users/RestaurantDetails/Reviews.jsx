@@ -43,7 +43,7 @@ const Reviews = ({ reviews }) => {
           {reviews &&
             reviews.map((review, index) => (
               <div key={index}>
-                <div className="my-6 p-4 ms-20 bg-slate-100 shadow-lg rounded-lg w-4/5 h-28 transform transition-transform hover:scale-105 font-serif">
+                <div className="my-6 p-4 ms-20 bg-blue-100 shadow-lg rounded-lg w-4/5 h-28 transform transition-transform hover:scale-105 font-serif">
                   <div className="flex">
                     <img
                       src={
@@ -64,7 +64,7 @@ const Reviews = ({ reviews }) => {
                       />
                     </div>
                   </div>
-                  <div className="mt-2 italic text-yellow-500">
+                  <div className="mt-2 italic text-gray-800">
                     <h1>{review?.review}</h1>
                   </div>
                 </div>
