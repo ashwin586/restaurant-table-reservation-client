@@ -16,12 +16,12 @@ const Bookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         const response = await userAxios.get("/getBookings");
         if (response.status === 200) {
           setBookings(response.data);
         }
-        setIsLoading(false)
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -112,20 +112,23 @@ const Bookings = () => {
                     <div className="border-b border-dashed border-black h-1 my-2"></div>
                     {bookings &&
                       bookings?.map((booking, index) => (
-                        <div key={index}>
-                          <div className="flex">
-                            <div>
+                        <div
+                          key={index}
+                          className="border-b border-dashed border-black my-4"
+                        >
+                          <div className="flex flex-col lg:flex-row items-start lg:items-center">
+                            <div className="mb-4 lg:mb-0 lg:mr-4">
                               <img
                                 src={booking?.restaurantDetails.images[0]}
                                 alt="restaurantImage"
-                                className="h-40 w-40 cursor-pointer rounded-lg"
+                                className="h-20 w-20 md:h-30 md:w-30 lg:h-40 lg:w-40 cursor-pointer rounded-lg"
                               />
                             </div>
-                            <div className="flex-1 ms-4 ">
-                              <h2 className="font-semibold text-xl my-3">
+                            <div className="flex-1">
+                              <h2 className="font-semibold text-xl mb-1 lg:mb-3">
                                 {booking.restaurantDetails.name}
                               </h2>
-                              <h2>
+                              <div className="mb-2">
                                 <span className="text-lg">
                                   {booking?.restaurantDetails.address}
                                 </span>
@@ -133,33 +136,36 @@ const Bookings = () => {
                                 <span className="text-lg">
                                   {booking?.restaurantDetails.city}
                                 </span>
-                              </h2>
-                              <h2>
+                              </div>
+                              <div className="mb-2">
                                 <span>{formatDate(booking?.bookedDate)}</span>{" "}
                                 at{" "}
                                 <span>{formatTime(booking?.bookedTime)}</span>{" "}
                                 for{" "}
                                 <span>{booking?.numberOfSeats} guests </span>
-                              </h2>
+                              </div>
                             </div>
-                            <div className="flex-2 me-2 text-center">
+                            <div className="flex-2 text-center">
                               {booking.orderStatus === "Cancelled" && (
-                                <h1 className="text-red-500 text-sm">
+                                <h1 className="text-red-500 lg:text-lg text-sm mr-4 lg:mr-2 lg:font-bold">
                                   {booking?.orderStatus.toUpperCase()}
                                 </h1>
                               )}
-
-                              <h1 className="text-lg font-bold">Paid:</h1>
-                              <h1>₹ {booking?.grandTotal}</h1>
+                              <span className="text-lg font-bold me-2">
+                                Paid:
+                              </span>
+                              <span className="text-blue-500">
+                                ₹ {booking?.grandTotal}
+                              </span>
                               {currentTime <
                                 bookedDateTime(
                                   booking?.bookedDate,
                                   booking?.bookedTime
                                 ) &&
                                 booking.orderStatus !== "Cancelled" && (
-                                  <div>
+                                  <div className="mt-4 lg:mt-0">
                                     <button
-                                      className="w-auto p-2 bg-red-500 text-slate-200 rounded-lg hover:bg-red-700 hover:text-white"
+                                      className="w-full lg:w-auto p-2 bg-red-500 text-slate-200 rounded-lg hover:bg-red-700 hover:text-white"
                                       onClick={() => {
                                         handleCancel(booking._id);
                                       }}
@@ -175,20 +181,25 @@ const Bookings = () => {
                                 ) &&
                                 booking.orderStatus !== "Cancelled" && (
                                   <div
-                                    className="cursor-pointer"
+                                    className="mt-4 lg:mt-0 cursor-pointer"
                                     onClick={() => {
                                       setIsReview(true);
                                       setRestaurantId(booking?.restaurant);
                                     }}
                                   >
-                                    <p className="text-slate-500">
-                                      Write a review <EditIcon boxSize={4} />
+                                    <p className="flex items-center">
+                                      <span className=" text-yellow-500">
+                                        Write a review
+                                      </span>{" "}
+                                      <EditIcon
+                                        boxSize={4}
+                                        className="text-yellow-400 ml-1"
+                                      />
                                     </p>
                                   </div>
                                 )}
                             </div>
                           </div>
-                          <div className="border-b border-dashed border-black h-1 my-2"></div>
                         </div>
                       ))}
                   </div>

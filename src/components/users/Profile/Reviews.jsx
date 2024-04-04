@@ -45,7 +45,7 @@ const Reviews = () => {
                 <div className="container flex justify-center ">
                   <div className="w-3/4 ">
                     <div className="border-b border-dashed border-black h-1 my-2"></div>
-                    {reviews &&
+                    {/* {reviews &&
                       reviews?.map((review, index) => (
                         <div key={index}>
                           <div className="flex">
@@ -53,7 +53,7 @@ const Reviews = () => {
                               <img
                                 src={review?.restaurant.images[0]}
                                 alt="restaurantImage"
-                                className="h-40 w-40 cursor-pointer rounded-lg"
+                                className="h-20 w-20 cursor-pointer rounded-lg"
                               />
                             </div>
                             <div className="flex-1 ms-4">
@@ -61,6 +61,47 @@ const Reviews = () => {
                                 {review?.restaurant.name}
                               </h1>
                               <div>
+                                <ReactStars
+                                  value={review?.rating}
+                                  edit={false}
+                                  size={15}
+                                  color1="gray"
+                                  color2={"#ffd700"}
+                                />
+                              </div>
+                              <p>{review?.review}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))} */}
+                    {reviews &&
+                      reviews?.map((review, index) => (
+                        <div
+                          key={index}
+                          className="border-b border-dashed border-black my-4"
+                        >
+                          <div className="flex flex-col lg:flex-row items-start">
+                            <div className="mb-4 lg:mb-0 lg:mr-4">
+                              <img
+                                src={review?.restaurant.images[0]}
+                                alt="restaurantImage"
+                                className="h-20 w-20 lg:h-20 lg:w-20 cursor-pointer rounded-lg"
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <h1 className="font-semibold text-xl my-2 lg:my-3">
+                                {review?.restaurant.name}
+                              </h1>
+                              <div className="mb-2 md:hidden">
+                                <ReactStars
+                                  value={review?.rating}
+                                  edit={false}
+                                  size={20}
+                                  color1="gray"
+                                  color2={"#ffd700"}
+                                />
+                              </div>
+                              <div className="mb-2 hidden md:block">
                                 <ReactStars
                                   value={review?.rating}
                                   edit={false}
