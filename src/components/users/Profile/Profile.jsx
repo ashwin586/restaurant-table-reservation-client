@@ -136,7 +136,7 @@ const Profile = () => {
         <div className="flex justify-center mt-10">
           {user && (
             <div className="w-3/4 rounded-xl shadow-2xl bg-white">
-              <div className="bg-yellow-300 p-4 text-white rounded-t-xl relative">
+              <div className="bg-yellow-300 p-2 lg:p-4 text-white rounded-t-xl relative">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="relative">
@@ -168,9 +168,9 @@ const Profile = () => {
                 </div>
               </div>
               <div className="container mx-auto p-4 rounded-b-xl">
-                <div className="flex">
+                <div className="flex ">
                   <ProfileSideBar />
-                  <div className="container flex justify-center ">
+                  <div className="container flex justify-center">
                     <div className="w-3/4 ml-4 ">
                       <h2 className="text-2xl font-semibold mb-4">
                         My Profile
@@ -235,7 +235,7 @@ const Profile = () => {
                             >
                               Password
                             </label>
-                            <input 
+                            <input
                               type="password"
                               id="password"
                               name="password"

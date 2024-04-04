@@ -83,13 +83,13 @@ const Navbar = () => {
                     {/* <p className="text-white font-semibold p-2 text-xl">
                       {profile?.name}
                     </p> */}
-                    <div className="inline-flex items-center">
+                    {/* <div className="inline-flex items-center">
                       <FontAwesomeIcon
                         icon={faCalendar}
                         size="2xl"
                         className="text-white hover:cursor-pointer ms-6"
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )}
