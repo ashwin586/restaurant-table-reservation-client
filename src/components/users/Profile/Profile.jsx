@@ -135,7 +135,7 @@ const Profile = () => {
         <Navbar />
         <div className="flex justify-center mt-10">
           {user && (
-            <div className="w-3/4 rounded-xl shadow-2xl">
+            <div className="w-3/4 rounded-xl shadow-2xl bg-white">
               <div className="bg-yellow-300 p-4 text-white rounded-t-xl relative">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -167,7 +167,7 @@ const Profile = () => {
                   </div> */}
                 </div>
               </div>
-              <div className="container mx-auto p-4 bg-white rounded-b-xl">
+              <div className="container mx-auto p-4 rounded-b-xl">
                 <div className="flex">
                   <ProfileSideBar />
                   <div className="container flex justify-center ">
@@ -188,7 +188,7 @@ const Profile = () => {
                             type="text"
                             id="name"
                             name="name"
-                            className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
+                            className="w-full md:w-4/5 lg:w-3/5 lg border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                             value={formik.values.name}
                             onChange={formik.handleChange}
                             readOnly={!isEdit}
@@ -206,7 +206,7 @@ const Profile = () => {
                             id="phone"
                             name="phoneNumber"
                             onChange={formik.handleChange}
-                            className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
+                            className="w-full md:w-4/5 lg:w-3/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                             value={formik.values.phoneNumber}
                             readOnly={!isEdit}
                           />
@@ -222,7 +222,7 @@ const Profile = () => {
                             type="email"
                             id="email"
                             name="email"
-                            className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
+                            className="w-full md:w-4/5 lg:w-3/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                             value={user?.email}
                             readOnly
                           />
@@ -239,7 +239,7 @@ const Profile = () => {
                               type="password"
                               id="password"
                               name="password"
-                              className="w-2/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
+                              className="w-full md:w-4/5 lg:w-3/5 border-2 border-yellow-100 rounded-md py-2 px-3 focus:outline-none focus:border-yellow-500 outline-none"
                               value={formik.values.password}
                               onChange={formik.handleChange}
                             />

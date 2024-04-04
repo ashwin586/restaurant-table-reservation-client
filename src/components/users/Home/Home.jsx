@@ -14,12 +14,12 @@ const Home = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
         const response = await Axios.get("/getAllRestaurants");
         if (response.status === 200) {
           setRestaurants(response.data);
         }
-        setIsLoading(false)
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -49,7 +49,39 @@ const Home = () => {
         ) : null}
         <Navbar />
         <div className="bg-homeBg min-h-screen">
-          <div>
+          <div className="sm:hidden">
+            <img
+              className="w-full"
+              style={{ height: "150px" }}
+              src="/assets/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-banner.jpg"
+              alt="bannerImage"
+            />
+          </div>
+          <div className="hidden sm:block md:hidden">
+            <img
+              className="w-full"
+              style={{ height: "200px" }}
+              src="/assets/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-banner.jpg"
+              alt="bannerImage"
+            />
+          </div>
+          <div className="hidden md:block lg:hidden">
+            <img
+              className="w-full"
+              style={{ height: "300px" }}
+              src="/assets/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-banner.jpg"
+              alt="bannerImage"
+            />
+          </div>
+          <div className="hidden lg:block xl:hidden">
+            <img
+              className="w-full"
+              style={{ height: "450px" }}
+              src="/assets/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-banner.jpg"
+              alt="bannerImage"
+            />
+          </div>
+          <div className="hidden xl:block 2xl:hidden">
             <img
               className="w-full"
               style={{ height: "550px" }}
@@ -57,10 +89,21 @@ const Home = () => {
               alt="bannerImage"
             />
           </div>
-          <div className="absolute top-80 left-52  p-8 ">
-            <h1 className="text-6xl font-bold mb-4 text-white">
-              Pick your favourite <br /> Restaurant
-            </h1>
+          <div className="hidden 2xl:block">
+            <img
+              className="w-full"
+              style={{ height: "650px" }}
+              src="/assets/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-banner.jpg"
+              alt="bannerImage"
+            />
+          </div>
+          <div className="absolute top-14 pt-8 ps-2 md:top-20 md:left-10 lg:top-40 lg:left-10 xl:top-80 xl:left-20">
+            <div className="text-md lg:text-6xl md:text-3xl sm:text-xl font-bold mb-4 text-white">
+              <div className="md:hidden">Pick your favourite Restaurant</div>
+              <div className="hidden md:block">
+                Pick your favourite <br /> Restaurant
+              </div>
+            </div>
             <div className="relative">
               <svg
                 className="w-4 h-4 dark:text-black absolute top-3 left-3"
@@ -79,7 +122,7 @@ const Home = () => {
               </svg>
               <input
                 type="text"
-                className="pl-10 w-full border p-2 rounded-md outline-none"
+                className="pl-10 w-44 md:w-72 lg:w-full border p-2 rounded-md outline-none text-xs sm:text-lg lg:text-xl"
                 placeholder="Search for Restaurants"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -87,15 +130,15 @@ const Home = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <div className="w-2/3 h-full">
+            <div className="w-auto h-full">
               <div>
-                <h1 className="text-2xl font-bold p-5">Restaurants Near By</h1>
+                <h1 className="text-lg md:text-xl lg:text-3xl font-bold mt-5 ms-5">Restaurants Near By</h1>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
                 {filteredRestaurant.map((restaurant) => (
                   <div
-                    className="max-w-xs md:max-w-full md:w-96 md:h-80 bg-white shadow-lg rounded-lg m-10 p-4 hover:cursor-pointer transform transition-transform hover:scale-102"
+                    className="max-w-md lg:w-80 md:h-72 bg-white shadow-lg rounded-lg m-10 p-4 hover:cursor-pointer"
                     key={restaurant?._id}
                     onClick={() =>
                       navigate(`/restaurantDetails/${restaurant?._id}`)
