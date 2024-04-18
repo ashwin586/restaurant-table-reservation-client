@@ -83,7 +83,7 @@ const Bookings = () => {
   return (
     <>
       {/* <div className="flex flex-col min-h-[calc(85vh)]"> */}
-      <div className="min-h-screen bg-homeBg">
+      <div className="flex flex-col min-h-screen bg-homeBg">
         {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
             <Spinner />
@@ -208,7 +208,7 @@ const Bookings = () => {
             </div>
           </div>
         </div>
-        <footer className="flex justify-center mt-10">
+        <footer className="absolute bottom-0 w-full">
           <Footer />
         </footer>
       </div>

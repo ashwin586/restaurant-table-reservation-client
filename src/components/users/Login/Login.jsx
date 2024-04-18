@@ -50,8 +50,30 @@ const Login = () => {
       <div className="flex justify-center items-center h-screen bg-login bg-no-repeat bg-cover">
         <div className="flex justify-center rounded-lg shadow-lg shadow-stone-400 bg-white px-10">
           <div className="mx-5 my-10">
-            <div className="flex justify-center font-bold text-2xl text-gray-900">
-              <h1 className="text-gray-500">Login</h1>
+            <div className="flex flex-col justify-center items-center ">
+              <div
+                className="flex cursor-pointer"
+                onClick={() => navigate("/")}
+              >
+                <span className="hidden md:block mx-2">
+                  <img
+                    src="/assets/reserve.png"
+                    style={{ height: "38px" }}
+                    alt="Logo"
+                  />
+                </span>
+                <span className="md:hidden mx-2">
+                  <img
+                    src="/assets/reserve.png"
+                    style={{ height: "28px" }}
+                    alt="Logo"
+                  />
+                </span>
+                <span className="font-extrabold text-2xl text-gray-900 my-2">
+                  RESERVETABLE
+                </span>
+              </div>
+              <h1 className="font-bold text-2xl text-gray-500">Login</h1>
             </div>
             <Formik
               initialValues={{

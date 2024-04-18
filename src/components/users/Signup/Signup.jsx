@@ -114,7 +114,29 @@ const Signup = () => {
           </div>
           <div className="bg-signupFormBg flex rounded-2xl shadow-xl flex-col items-center">
             <div className="m-5">
-              <h1 className="font-bold text-2xl text-gray-800">Register</h1>
+              <div
+                className="flex cursor-pointer"
+                onClick={() => navigate("/")}
+              >
+                <span className="hidden md:block mx-2">
+                  <img
+                    src="/assets/reserve.png"
+                    style={{ height: "38px" }}
+                    alt="Logo"
+                  />
+                </span>
+                <span className="md:hidden mx-2">
+                  <img
+                    src="/assets/reserve.png"
+                    style={{ height: "28px" }}
+                    alt="Logo"
+                  />
+                </span>
+                <span className="font-extrabold text-2xl text-gray-900 my-2">
+                  RESERVETABLE
+                </span>
+              </div>
+              <h1 className="font-bold text-2xl text-gray-800 text-center">Register</h1>
             </div>
             <div className="flex-column justify-center">
               <form onSubmit={formik.handleSubmit}>
@@ -235,7 +257,10 @@ const Signup = () => {
               <div className="px-5 mt-2 text-sm text-center">
                 <p className="text-signupBorderColor">
                   Already have an account?{" "}
-                  <Link className="text-white" to={"/login"}>
+                  <Link
+                    className="text-white hover:text-gray-200"
+                    to={"/login"}
+                  >
                     Login
                   </Link>
                 </p>
