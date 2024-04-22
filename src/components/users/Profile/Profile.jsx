@@ -25,9 +25,9 @@ const Profile = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const navigate = useNavigate();
 
-  const isImageFile = (data) => {
-    const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
-    return base64HeaderRegex.test(data);
+  const isImageFile = (type) => {
+    const validImageTypes = ["image/jpeg", "image/png", "image/jpg"];
+    return validImageTypes.includes(type);
   };
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
@@ -87,8 +87,19 @@ const Profile = () => {
     input.accept = "image/*";
     input.onchange = (e) => {
       const file = e.target.files[0];
-      setImgType(file.type);
       if (file) {
+        if (!isImageFile(file.type)) {
+          toast.error("Please select a valid image file.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            theme: "dark",
+          });
+          return;
+        }
+        setImgType(file.type);
         setImage(URL.createObjectURL(file));
         setIsCropPopupOpen(true);
       }
