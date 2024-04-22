@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import Cropper from "react-easy-crop";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import Navbar from "../Navbar";
 import { useFormik } from "formik";
@@ -8,11 +9,20 @@ import { Spinner } from "@chakra-ui/react";
 import { toast } from "react-toastify";
 import ProfileSideBar from "./ProfileSideBar";
 import Footer from "../Footer";
+import getCroppedImg from "../../../utils/crop";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
 
 const Profile = () => {
+  const [isCropPopupOpen, setIsCropPopupOpen] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [imgType, setImgType] = useState("image/jpeg");
   const [user, setUser] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const navigate = useNavigate();
 
   const isImageFile = (data) => {
@@ -20,49 +30,69 @@ const Profile = () => {
     return base64HeaderRegex.test(data);
   };
 
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleCloseCropPopup = () => {
+    setIsCropPopupOpen(false);
+  };
+
+  const uploadCroppedImage = useCallback(async () => {
+    try {
+      console.log(image);
+      const croppedImage = await getCroppedImg(
+        image,
+        croppedAreaPixels,
+        imgType
+      );
+      setIsCropPopupOpen(false);
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          setIsLoading(true);
+          await userAxios.get("/checkuser");
+          const imageURL = await uploadUserProfile(croppedImage, user._id);
+          const response = await userAxios.post("/uploadProfilePicture", {
+            userId: user._id,
+            imageURL,
+          });
+          if (response.status === 200) {
+            navigate(0);
+          }
+        } catch (err) {
+          if (err.response.status === 400) {
+            toast.error(err.response.data, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              theme: "dark",
+            });
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      reader.readAsDataURL(croppedImage);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [image, croppedAreaPixels, navigate, user, imgType]);
+
   const handleImageUpload = async () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
     input.onchange = (e) => {
       const file = e.target.files[0];
+      setImgType(file.type);
       if (file) {
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-          if (isImageFile(reader.result)) {
-            try {
-              setIsLoading(true);
-              await userAxios.get("/checkuser");
-              const imageURL = await uploadUserProfile(file, user._id);
-              const response = await userAxios.post("/uploadProfilePicture", {
-                userId: user._id,
-                imageURL,
-              });
-              if (response.status === 200) {
-                navigate(0);
-              }
-            } catch (err) {
-              if (err.response.status === 400) {
-                toast.error(err.response.data, {
-                  position: "top-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  theme: "dark",
-                });
-              }
-            } finally {
-              setIsLoading(false);
-            }
-          } else {
-            alert("Please select a valid image file (JPEG or PNG)");
-          }
-        };
-        reader.readAsDataURL(file);
+        setImage(URL.createObjectURL(file));
+        setIsCropPopupOpen(true);
       }
     };
-
     input.click();
   };
 
@@ -146,31 +176,59 @@ const Profile = () => {
                           "/assets/blank-profile-picture-973460_1920.png"
                         }
                         alt="Avatar"
-                        className="w-20 h-20 rounded-full"
+                        className="w-20 h-20 rounded-xl"
                       />
-                      <button
-                        onClick={handleImageUpload}
-                        className=" text-white p-2 absolute bottom-0 left-5"
-                      >
-                        Edit
-                      </button>
+                      <div className="bg-white w-6 h-6 text-white p-2 absolute bottom-0 rounded-full right-0 cursor-pointer flex items-center justify-center">
+                        <FontAwesomeIcon
+                          icon={faPencil}
+                          onClick={handleImageUpload}
+                          className="text-black"
+                          size="sm"
+                        />
+                      </div>
                     </div>
                     <h1 className="ml-4 text-2xl text-white font-extrabold">
                       {user?.name}
                     </h1>
                   </div>
-                  {/* <div className="absolute right-5 text-black w-36 h-28 rounded-lg bg-blue-300 flex flex-col items-center justify-evenly">
-                    <h1 className="text-xl font-serif">Wallet Balance:</h1>
-                    <h1 className="text-xl font-mono">
-                      ₹{user.wallet?.balance}
-                    </h1>
-                  </div> */}
                 </div>
               </div>
               <div className="container mx-auto p-4 rounded-b-xl">
                 <div className="flex ">
                   <ProfileSideBar />
                   <div className="container flex justify-center">
+                    {isCropPopupOpen && (
+                      <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50 rounded-lg">
+                        <div className="relative w-8/12 h-full bg-white">
+                          <div className="p-4">
+                            <Cropper
+                              image={image}
+                              crop={crop}
+                              zoom={zoom}
+                              aspect={5 / 5}
+                              onCropChange={setCrop}
+                              onZoomChange={setZoom}
+                              onCropComplete={onCropComplete}
+                            />
+                            <div className="absolute bottom-0 left-0 w-full flex justify-end">
+                              <button
+                                className="bg-green-500 text-white font-bold px-4 py-2 rounded-md hover:bg-green-600"
+                                type="button"
+                                onClick={uploadCroppedImage}
+                              >
+                                Save Image
+                              </button>
+                              <button
+                                className="bg-red-500 text-white font-bold px-4 py-2 rounded-md hover:bg-red-600 ms-2"
+                                onClick={handleCloseCropPopup}
+                              >
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div className="w-3/4 ml-4 ">
                       <h2 className="text-2xl font-semibold mb-4">
                         My Profile
