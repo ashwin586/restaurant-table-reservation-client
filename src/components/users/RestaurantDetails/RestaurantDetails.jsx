@@ -4,7 +4,7 @@ import NavBar from "../Navbar";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Axios from "../../../services/axios";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { add, format, isBefore, isAfter, parse, isToday } from "date-fns";
 import ReactCalender from "react-calendar";
 import { razorPay } from "../../../utils/razorPayConfig";
@@ -30,7 +30,8 @@ const RestaurantDetails = () => {
   const [endLong, setEndLong] = useState(null);
   const [section, setSection] = useState("menus");
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.isLogged);
+  // const user = useSelector((state) => state.user.isLogged);
+  const user = localStorage.getItem("userToken")
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
@@ -142,7 +143,7 @@ const RestaurantDetails = () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
       try {
-        await userAxios.get("/checkuser");
+        // await userAxios.get("/checkuser");
         const checkingSeatAvailablity = await userAxios.get(
           "/seatAvailablity",
           {

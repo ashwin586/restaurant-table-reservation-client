@@ -2,33 +2,24 @@ import React, { useState } from "react";
 import Axios from "../../../services/axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { adminLogin } from "../../../redux/slice/adminSlice";
+import showNotification from "../../../utils/Toast/ShowNotification";
+// import { useDispatch } from "react-redux";
+// import { adminLogin } from "../../../redux/slice/adminSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleSubmit = async () => {
     try {
       const response = await Axios.post("/admin/login", { email, password });
       if (response.status === 200) {
-        dispatch(adminLogin());
+        // dispatch(adminLogin());
         localStorage.setItem("adminToken", response.data.adminToken);
         navigate("/admin/dashboard");
-        toast.success(response.data.message, {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          style: {
-            background: "#EEEEFF",
-            color: "green",
-          },
-        });
+        showNotification("success", response.data.message);
       }
     } catch (err) {
       if (err.response && err.response.status === 400) {

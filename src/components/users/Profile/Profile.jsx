@@ -128,12 +128,13 @@ const Profile = () => {
     initialValues: {
       name: user?.name || "",
       phoneNumber: user?.phoneNumber || "",
-      password: "",
+      email: user?.email,
+      password: user?.password || "",
     },
     onSubmit: async (values) => {
       try {
         setIsLoading(true);
-        await userAxios.get("/checkuser");
+        // await userAxios.get("/checkuser");
         const response = await userAxios.put("/editUser", values);
         if (response.status === 200) {
           setIsEdit(false);

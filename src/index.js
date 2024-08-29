@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { store, persistor } from "./redux/store";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+// import { store, persistor } from "./redux/store";
+// import { Provider } from "react-redux";
+// import { PersistGate } from "redux-persist/integration/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import App from "./App";
 import "./index.css";
@@ -10,12 +10,12 @@ import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
+    {/* <Provider store={store}> */}
+      {/* <PersistGate persistor={persistor}> */}
         <ChakraProvider>
           <App />
         </ChakraProvider>
-      </PersistGate>
-    </Provider>
+      {/* </PersistGate> */}
+    {/* </Provider> */}
   </React.StrictMode>
 );

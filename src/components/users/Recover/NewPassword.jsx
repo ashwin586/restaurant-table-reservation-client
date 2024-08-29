@@ -36,7 +36,7 @@ const NewPassword = () => {
                 validationSchema={passwordSchema}
                 onSubmit={async (values) => {
                   try {
-                    const response = await Axios.post("/savenewpassword", {
+                    const response = await Axios.post("/forgotpassword", {
                       password: values.password1,
                       email,
                     });

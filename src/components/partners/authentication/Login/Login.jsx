@@ -1,15 +1,15 @@
 import React from "react";
-import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Axios from "../../../../services/axios";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { partnerLogin } from "../../../../redux/slice/partnerSlice";
+import showNotification from "../../../../utils/Toast/ShowNotification";
+// import { useDispatch } from "react-redux";
+// import { partnerLogin } from "../../../../redux/slice/partnerSlice";
 import * as Yup from "yup";
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const loginValidation = Yup.object().shape({
     phoneNumber: Yup.string()
       .length(10, "Please enter a valid Phone Number")
@@ -31,7 +31,6 @@ const Login = () => {
               try {
                 const response = await Axios.post("/partner/login", values);
                 if (response.status === 200) {
-                  dispatch(partnerLogin());
                   localStorage.setItem(
                     "partnerToken",
                     response.data.partnerToken
@@ -39,15 +38,8 @@ const Login = () => {
                   navigate("/partner/dashboard");
                 }
               } catch (err) {
-                console.log(err);
-                toast.error(err.response.data.message, {
-                  position: "top-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  theme: "dark",
-                });
+                console.log(err.response);
+                showNotification("error", err.response.data);
               }
             }}
           >
@@ -82,7 +74,9 @@ const Login = () => {
               </button>
             </Form>
           </Formik>
-          <Link to={"/partner/forgotpassword"} className="text-blue-500">Forgot Password ?</Link>
+          <Link to={"/partner/forgotpassword"} className="text-blue-500">
+            Forgot Password ?
+          </Link>
         </div>
 
         <div className="text-grey-dark mt-6">

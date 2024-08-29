@@ -1,14 +1,14 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { adminLogout } from "../../redux/slice/adminSlice";
+// import { useDispatch } from "react-redux";
+// import { adminLogout } from "../../redux/slice/adminSlice";
 
 const AdminSideBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const adminlogout = () => {
-    dispatch(adminLogout());
+    // dispatch(adminLogout());
     localStorage.removeItem("adminToken");
     navigate("/admin/login");
   };

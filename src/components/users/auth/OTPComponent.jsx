@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import showNotification from "../../../utils/Toast/ShowNotification";
 import Axios from "../../../services/axios";
 
-const OTPComponent = ({ isOpen, data, resendOTP }) => {
-  const [otpTimer, setOtpTimer] = useState(20);
+const OTPComponent = ({ isOpen, email, resendOTP, setOpen }) => {
+  const [otpTimer, setOtpTimer] = useState(30);
 
   useEffect(() => {
     let timer;
@@ -19,7 +19,7 @@ const OTPComponent = ({ isOpen, data, resendOTP }) => {
   }, [otpTimer]);
 
   const handleOTP = () => {
-    setOtpTimer(20);
+    setOtpTimer(30);
     resendOTP();
   };
 
@@ -35,30 +35,21 @@ const OTPComponent = ({ isOpen, data, resendOTP }) => {
     }),
     onSubmit: async (values) => {
       try {
-        const email = data.email;
         const otp = values.otp;
-        const response = await Axios.post("/otpverify", { otp, email });
+        const response = await Axios.post("/otpVerify", { otp, email });
         if (response.status === 200) {
-          const response = await Axios.post("/registeruser", data);
-          if (response.status === 200) {
-            navigate("/login");
-          }
+          setOpen(false);
+          showNotification("success", "Email verified, Now you can login.");
+          navigate("/login");
         }
       } catch (err) {
-        console.log(err);
         if (err.response && err.response.status === 400) {
-          toast.error(err.response.data.message, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            theme: "dark",
-          });
+          showNotification("error", err.response.data.message);
         }
       }
     },
   });
+
   return (
     <>
       {isOpen && (

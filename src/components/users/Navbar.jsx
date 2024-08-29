@@ -19,10 +19,11 @@ const Navbar = () => {
         console.log(err);
       }
     };
-    fetchProfile();
+    // fetchProfile();
   }, []);
 
-  const user = useSelector((state) => state.user.isLogged);
+  // const user = useSelector((state) => state.user.isLogged);
+  const user = localStorage.getItem("userToken");
   const navigate = useNavigate();
   return (
     <>

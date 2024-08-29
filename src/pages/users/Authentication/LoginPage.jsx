@@ -1,4 +1,4 @@
-import Login from "../../../components/users/Login/Login";
+import Login from '../../../components/users/auth/Login';
 
 import React from 'react'
 

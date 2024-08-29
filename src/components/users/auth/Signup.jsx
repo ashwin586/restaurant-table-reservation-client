@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import Axios from "../../../services/axios";
 import { useFormik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { auth, googleProvider } from "../../../services/firebase/firebase";
 import { signInWithPopup } from "firebase/auth";
 import * as Yup from "yup";
+import showNotification from "../../../utils/Toast/ShowNotification";
 import OTPComponent from "./OTPComponent";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -38,21 +39,14 @@ const Signup = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const email = values.email;
-        const response = await Axios.post("/sendOtp", { email });
+        const response = await Axios.post("/registerUser", values);
         if (response.status === 200) {
+          setEmail(response.data.email);
           setOpen(true);
         }
       } catch (err) {
         if (err.response && err.response.status === 400) {
-          toast.error(err.response.data.message, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            theme: "dark",
-          });
+          showNotification("error", err.response.data.message);
         }
       }
     },
@@ -73,34 +67,24 @@ const Signup = () => {
       }
     } catch (err) {
       if (err.response && err.response.status === 400) {
-        toast.error(err.response.data, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          theme: "dark",
-        });
+        showNotification("error", err.response.data.message);
       }
     }
   };
 
   const resendOTP = async () => {
     try {
-      await Axios.post("/sendOtp", { email: formik.values.email });
+      await Axios.post("/reSendOtp", { email: email });
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <>
       <div>
         {open && (
-          <OTPComponent
-            isOpen={open}
-            data={formik.values}
-            resendOTP={resendOTP}
-          />
+          <OTPComponent isOpen={open} email={email} resendOTP={resendOTP} setOpen={setOpen} />
         )}
       </div>
       <div className="flex items-center justify-center h-screen bg-signup bg-cover bg-no-repeat">
@@ -136,7 +120,9 @@ const Signup = () => {
                   RESERVETABLE
                 </span>
               </div>
-              <h1 className="font-bold text-2xl text-gray-800 text-center">Register</h1>
+              <h1 className="font-bold text-2xl text-gray-800 text-center">
+                Register
+              </h1>
             </div>
             <div className="flex-column justify-center">
               <form onSubmit={formik.handleSubmit}>

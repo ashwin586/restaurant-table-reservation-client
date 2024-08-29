@@ -1,15 +1,14 @@
 import React from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { partnerLogout } from "../../redux/slice/partnerSlice";
-import { useDispatch } from "react-redux";
+// import { partnerLogout } from "../../redux/slice/partnerSlice";
+// import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
   const logout = () => {
-    dispatch(partnerLogout());
     localStorage.removeItem("partnerToken");
     navigate("/partner/login");
   };

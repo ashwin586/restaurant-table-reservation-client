@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { userLogout } from "../../../redux/slice/userSlice";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
@@ -8,12 +8,12 @@ import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 const ProfileSideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const location = useLocation();
 
   const userlogout = () => {
     localStorage.removeItem("userToken");
-    dispatch(userLogout());
+    // dispatch(userLogout());
     navigate("/");
   };
 

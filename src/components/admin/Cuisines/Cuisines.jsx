@@ -46,7 +46,7 @@ const Cuisines = () => {
       try {
         const response = await adminAxios.get("/admin/getAllCusinies");
         if (response.status === 200) {
-          setCuisines(response.data.result);
+          setCuisines(response.data);
         }
       } catch (err) {
         console.log(err);
