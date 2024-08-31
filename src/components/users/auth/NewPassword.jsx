@@ -1,12 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "../../../services/axios";
-import { toast } from "react-toastify";
+import showNotification from "../../../utils/Toast/ShowNotification";
 
 const NewPassword = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
   const passwordSchema = Yup.object().shape({
     password1: Yup.string()
@@ -17,7 +19,6 @@ const NewPassword = () => {
       .oneOf([Yup.ref("password1")], "Passwords must match")
       .required("Password is required"),
   });
-  const email = localStorage.getItem("validEmail");
 
   return (
     <>
@@ -36,38 +37,17 @@ const NewPassword = () => {
                 validationSchema={passwordSchema}
                 onSubmit={async (values) => {
                   try {
-                    const response = await Axios.post("/forgotpassword", {
+                    const response = await Axios.post("/resetpassword", {
                       password: values.password1,
-                      email,
+                      token,
                     });
                     if (response.status === 200) {
-                      localStorage.removeItem("validEmail");
-                      toast.success(`${response.data.message}`, {
-                        position: "top-right",
-                        autoClose: 1000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        style: {
-                          background: "#EEEEFF",
-                          color: "green",
-                        },
-                      });
+                      showNotification("success", response.data.message);
                       navigate("/login");
                     }
                   } catch (err) {
                     if (err.response.status === 400) {
-                      toast.error(`${err.response.data.message}`, {
-                        position: "top-right",
-                        autoClose: 1000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        style: {
-                          background: "#EEEEFF",
-                          color: "red",
-                        },
-                      });
+                      showNotification("error", err.response.data.message);
                     }
                   }
                 }}

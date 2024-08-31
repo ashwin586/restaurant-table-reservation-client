@@ -1,43 +1,45 @@
 import React, { useState } from "react";
 import Axios from "../../../services/axios";
-import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import showNotification from "../../../utils/Toast/ShowNotification";
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ setForgetPasswordOpen }) => {
   const [email, setEmail] = useState("");
-  const navigate = useNavigate()
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      // sendVerificationEmail(email)
-      const response = await Axios.post("/emailverify", { email });
+      const response = await Axios.post("/sendlink", { email });
       if (response.status === 200) {
-        localStorage.setItem("validEmail", email);
-        navigate('/otpverify');
+        setForgetPasswordOpen(false);
+        showNotification("info", response.data.message);
       }
-    } catch (err) {
-      if (err.response.status === 400) {
-        toast.error(err.response.data.message, {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          theme: "dark",
-        });
-      }
+    } catch (error) {
+      console.log(error);
+      // if (error.response.status === 400) {
+      //   console.log(error);
+      //   showNotification("error", "Something went wrong");
+      // }
     }
+  };
+
+  const closeHandler = () => {
+    setForgetPasswordOpen(false);
   };
 
   return (
     <>
-      <section className="">
+      <section className="fixed inset-0 items-center justify-center z-50">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="w-full bg-white rounded-2xl shadow-xl shadow-stone-500 md:mt-0 sm:max-w-md xl:p-0 ">
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div className="p-6 space-y-4 md:space-y-6 sm:p-8 relative">
               <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                 Enter the registered email
               </h1>
+              <div
+                className="absolute -top-4 right-2 font-extrabold hover:cursor-pointer px-3 py-1 rounded-full bg-red-400 hover:bg-red-600 text-white"
+                onClick={closeHandler}
+              >
+                X
+              </div>
               <form className="space-y-4 md:space-y-6" onSubmit={submitHandler}>
                 <div>
                   <input
@@ -53,9 +55,9 @@ const ForgotPassword = () => {
                 <div className="flex justify-center">
                   <button
                     type="submit"
-                    className="text-white bg-button p-3 rounded-xl"
+                    className="text-white bg-blue-400 hover:bg-blue-600 p-3 rounded-xl"
                   >
-                    Send OTP
+                    Send Link
                   </button>
                 </div>
               </form>

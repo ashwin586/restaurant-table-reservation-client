@@ -15,6 +15,7 @@ const Reviews = () => {
       try {
         setIsLoading(true);
         const response = await userAxios.get("/fetchReviews");
+        console.log(response);
         if (response.status === 200) {
           setReviews(response.data);
         }

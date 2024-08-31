@@ -6,11 +6,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { auth, googleProvider } from "../../../services/firebase/firebase";
 import showNotification from "../../../utils/Toast/ShowNotification";
 import OTPComponent from "./OTPComponent";
+import ForgotPassword from "./ForgotPassword";
 import { signInWithPopup } from "firebase/auth";
 
 const Login = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [forgotPasswordOpen, setForgetPasswordOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -88,6 +90,11 @@ const Login = () => {
           setOpen={setOpen}
         />
       )}
+      {forgotPasswordOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 flex items-center justify-center">
+          <ForgotPassword setForgetPasswordOpen={setForgetPasswordOpen} />
+        </div>
+      )}
       <div className="flex justify-center items-center h-screen bg-login bg-no-repeat bg-cover">
         <div className="flex justify-center rounded-lg shadow-lg shadow-stone-400 bg-white px-10">
           <div className="mx-5 my-10">
@@ -152,7 +159,7 @@ const Login = () => {
               </div>
               <Link
                 className="text-blue-400 hover:cursor-pointer text-sm"
-                to={"/forgotpassword"}
+                onClick={() => setForgetPasswordOpen(true)}
               >
                 Forgot Password ?
               </Link>

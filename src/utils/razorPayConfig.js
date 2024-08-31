@@ -21,7 +21,6 @@ export const razorPay = async (amount) => {
   try {
     return new Promise((resolve, reject) => {
       const options = {
-        // key: "rzp_test_Happ5J4dHSI2eF",
         key: process.env.REACT_APP_RAZORPAYKEY,
         currency: "INR",
         amount: amount * 100,
@@ -32,13 +31,11 @@ export const razorPay = async (amount) => {
         handler: function (response) {
           if (response.razorpay_payment_id) {
             console.log("Payment successful", response.razorpay_payment_id);
-            // Resolve the promise with payment details
             resolve({
               paymentId: response.razorpay_payment_id,
             });
           } else {
             console.log("Payment failed");
-            // Reject the promise with an error message
             reject("Payment failed");
           }
         },

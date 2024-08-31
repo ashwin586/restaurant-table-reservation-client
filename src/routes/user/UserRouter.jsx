@@ -4,9 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "../../pages/users/Authentication/LoginPage";
 import SignupPage from "../../pages/users/Authentication/SignupPage";
 import HomePage from "../../pages/users/HomePage";
-import ForgotPasswordPage from "../../pages/users/Authentication/ForgotPasswordPage";
-// import Otp from "../../components/users/Recover/Otp";
-// import NewPassword from "../../components/users/Recover/NewPassword";
+import NewPasswordPage from "../../pages/users/Authentication/NewPasswordPage";
 import ProfilePage from "../../pages/users/Profile/ProfilePage";
 import RestaurantDetailsPage from "../../pages/users/RestaurantDetailsPage";
 import BookingsPage from "../../pages/users/Profile/BookingsPage";
@@ -30,7 +28,7 @@ function UserRouter() {
       <Route element={<UserPublicRoutes />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
-        <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+        <Route path="/newpassword" element={<NewPasswordPage />} />
       </Route>
       <Route path="/" element={<HomePage />} />
     </Routes>
