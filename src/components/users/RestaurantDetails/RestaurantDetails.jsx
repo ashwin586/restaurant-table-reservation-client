@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import NavBar from "../Navbar";
-import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import Axios from "../../../services/axios";
-// import { useSelector } from "react-redux";
 import { add, format, isBefore, isAfter, parse, isToday } from "date-fns";
 import ReactCalender from "react-calendar";
-import { razorPay } from "../../../utils/razorPayConfig";
+import { razorPay } from "../../../services/razorPayConfig";
 import ReactStars from "react-stars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Spinner } from "@chakra-ui/react";
+import showNotification from "../../../utils/Toast/ShowNotification";
 import {
   faClock,
   faLocationDot,
@@ -30,8 +29,7 @@ const RestaurantDetails = () => {
   const [endLong, setEndLong] = useState(null);
   const [section, setSection] = useState("menus");
   const navigate = useNavigate();
-  // const user = useSelector((state) => state.user.isLogged);
-  const user = localStorage.getItem("userToken")
+  const user = localStorage.getItem("userToken");
   const { restaurantId } = useParams();
   const [restaurant, setRestaurant] = useState("");
   const [menus, setMenus] = useState([]);
@@ -43,6 +41,30 @@ const RestaurantDetails = () => {
   });
   const [dateTimeError, setDateTimeError] = useState(false);
   const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    const fetchRestaurant = async () => {
+      try {
+        setIsLoading(true);
+        const response = await Axios.get("/getRestaurantDetails", {
+          params: {
+            id: restaurantId,
+          },
+        });
+        if (response.status === 200) {
+          setRestaurant(response.data?.restaurant);
+          setMenus(response.data?.menus);
+          setReviews(response.data?.reviews);
+          setEndLat(response.data?.restaurant.latitude);
+          setEndLong(response.data?.restaurant.longitude);
+        }
+        setIsLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchRestaurant();
+  }, [restaurantId]);
 
   const addToCart = (id, menu, newQuantity, total) => {
     const existingItemIndex = cart.findIndex((item) => item.menu === menu);
@@ -75,21 +97,23 @@ const RestaurantDetails = () => {
     minute: "2-digit",
     hour12: true,
   });
-
   // Avaiable time slots
   const timeSlots = () => {
     const { justDate } = date;
     const open = new Date(restaurant?.openTime).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
+      hour12: true,
     });
     const close = new Date(restaurant?.closeTime).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
+      hour12: true,
     });
+
     const currentHour = new Date().getHours();
-    const openingTime = parse(open, "HH:mm", new Date());
-    const closingTime = parse(close, "HH:mm", new Date());
+    const openingTime = parse(open, "hh:mm a", new Date());
+    const closingTime = parse(close, "hh:mm a", new Date());
     const extractedOpenHour = openingTime.getHours();
     const extractedCloseHour = closingTime.getHours();
     let beginning;
@@ -111,30 +135,6 @@ const RestaurantDetails = () => {
   };
   const times = timeSlots();
 
-  useEffect(() => {
-    const fetchRestaurant = async () => {
-      try {
-        setIsLoading(true);
-        const response = await Axios.get("/getRestaurantDetails", {
-          params: {
-            id: restaurantId,
-          },
-        });
-        if (response.status === 200) {
-          setRestaurant(response.data?.restaurant);
-          setMenus(response.data?.menus);
-          setReviews(response.data?.reviews);
-          setEndLat(response.data?.restaurant.latitude);
-          setEndLong(response.data?.restaurant.longitude);
-        }
-        setIsLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchRestaurant();
-  }, [restaurantId]);
-
   const handlebooking = async () => {
     if (!date.justDate || !date.dateTime) {
       setDateTimeError(true);
@@ -143,7 +143,6 @@ const RestaurantDetails = () => {
     const amount = cart.reduce((total, item) => total + item.total, 0);
     if (user) {
       try {
-        // await userAxios.get("/checkuser");
         const checkingSeatAvailablity = await userAxios.get(
           "/seatAvailablity",
           {
@@ -157,31 +156,21 @@ const RestaurantDetails = () => {
         );
         if (checkingSeatAvailablity.status === 200) {
           try {
-            await razorPay(amount);
-            const response = await userAxios.post("/bookingTable", {
+            const cartDetails = {
               cart: cart,
               date: date,
               restaurantId: restaurantId,
               selectedSeats: selectedSeats,
-            });
-            if (response.status === 200) {
-              setDateTimeError(false);
-              navigate("/");
-            }
+            };
+            const response = await razorPay(amount, cartDetails);
+            if (response && response.status === "Success") navigate("/");
           } catch (err) {
             console.log(err);
           }
         }
       } catch (err) {
         if (err.response && err.response.status === 400) {
-          toast.error(err.response.data, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            theme: "dark",
-          });
+          showNotification("error", err.response.data);
         }
       }
     } else {
