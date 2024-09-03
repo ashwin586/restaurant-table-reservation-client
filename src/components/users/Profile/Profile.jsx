@@ -5,7 +5,7 @@ import Navbar from "../Navbar";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { uploadUserProfile } from "../../../services/firebase/storage";
-import { Spinner } from "@chakra-ui/react";
+import CircularProgress from '@mui/material/CircularProgress';
 import { toast } from "react-toastify";
 import ProfileSideBar from "./ProfileSideBar";
 import Footer from "../Footer";
@@ -171,7 +171,7 @@ const Profile = () => {
       <div className="bg-homeBg flex flex-col min-h-screen">
         {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-            <Spinner />
+            <CircularProgress />
           </div>
         ) : null}
         <Navbar />

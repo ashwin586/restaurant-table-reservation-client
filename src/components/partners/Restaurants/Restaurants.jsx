@@ -5,8 +5,8 @@ import moment from "moment";
 import AddRestaurantModal from "./AddRestaurantModal";
 import RestaurantDetailsModal from "./RestaurantDetailsModal";
 import MenuModal from "./MenuModal";
-import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import { CircularProgress } from "@mui/material";
 
 const Restaurants = () => {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Restaurants = () => {
     <>
       {isLoading ? (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       ) : null}
       <Sidebar />

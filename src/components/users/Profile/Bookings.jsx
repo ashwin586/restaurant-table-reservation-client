@@ -3,8 +3,8 @@ import Navbar from "../Navbar";
 import ProfileSideBar from "./ProfileSideBar";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
 import ReviewComponent from "./ReviewComponent";
-import { Spinner } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import CircularProgress from "@mui/material/CircularProgress";
+import EditIcon from "@mui/icons-material/Edit";
 import Footer from "../Footer";
 
 const Bookings = () => {
@@ -86,7 +86,7 @@ const Bookings = () => {
       <div className="flex flex-col min-h-screen bg-homeBg">
         {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-            <Spinner />
+            <CircularProgress />
           </div>
         ) : null}
         {isReview && (
@@ -191,10 +191,7 @@ const Bookings = () => {
                                       <span className=" text-yellow-500">
                                         Write a review
                                       </span>{" "}
-                                      <EditIcon
-                                        boxSize={4}
-                                        className="text-yellow-400 ml-1"
-                                      />
+                                      <EditIcon fontSize="inherit" />
                                     </p>
                                   </div>
                                 )}

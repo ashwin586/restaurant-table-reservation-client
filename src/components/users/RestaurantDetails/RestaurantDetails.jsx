@@ -8,7 +8,6 @@ import ReactCalender from "react-calendar";
 import { razorPay } from "../../../services/razorPayConfig";
 import ReactStars from "react-stars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Spinner } from "@chakra-ui/react";
 import showNotification from "../../../utils/Toast/ShowNotification";
 import {
   faClock,
@@ -22,6 +21,7 @@ import Menus from "./Menus";
 import Cart from "./Cart";
 import Reviews from "./Reviews";
 import Footer from "../Footer";
+import { CircularProgress } from "@mui/material";
 
 const RestaurantDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -192,7 +192,7 @@ const RestaurantDetails = () => {
       <div className="bg-homeBg  flex flex-col min-h-screen">
         {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-            <Spinner />
+            <CircularProgress />
           </div>
         ) : null}
         <NavBar />

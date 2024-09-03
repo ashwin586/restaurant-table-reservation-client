@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
-import { Spinner } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import SideBar from "../Sidebar";
 import OrdersModal from "./OrdersModal";
+import { CircularProgress } from "@mui/material";
 
 const Orders = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +67,7 @@ const Orders = () => {
     <>
       {isLoading ? (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       ) : null}
       <SideBar />

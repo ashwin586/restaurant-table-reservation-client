@@ -3,7 +3,7 @@ import AdminHeader from "../AdminHeader";
 import AdminSidebar from "../AdminSideBar";
 import AddCategory from "./AddCategory";
 import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
-import { DeleteIcon } from "@chakra-ui/icons";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
 const Categories = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -81,7 +81,7 @@ const Categories = () => {
                       className="cursor-pointer trasnform transition-transform hover:scale-150"
                       onClick={() => deleteCategory(category?._id)}
                     >
-                      <DeleteIcon />
+                      <DeleteRoundedIcon />
                     </div>
                   </div>
                 </div>

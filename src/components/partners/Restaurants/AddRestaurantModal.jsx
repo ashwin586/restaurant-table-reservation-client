@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import TimePicker from "react-time-picker";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Spinner } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 function AddRestaurantModal({ isOpen, closeModal }) {
   const navigate = useNavigate()
@@ -337,7 +337,7 @@ function AddRestaurantModal({ isOpen, closeModal }) {
       )
       {isLoading && (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       )}
     </>

@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import { uploadFoodImage } from "../../../services/firebase/storage";
-import { Spinner } from "@chakra-ui/react";
+import { CircularProgress } from "@mui/material";
 
 const AddMenuModal = ({ isOpen, closeModal, isId, changedValues }) => {
   const [categories, setCategories] = useState([]);
@@ -238,7 +238,7 @@ const AddMenuModal = ({ isOpen, closeModal, isId, changedValues }) => {
       )}
       {isLoading && (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       )}
     </>

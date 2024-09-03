@@ -4,7 +4,7 @@ import AdminHeader from "../AdminHeader";
 import AddCusine from "./AddCusine";
 import { adminAxios } from "../../../services/AxiosInterceptors/adminAxios";
 import { toast } from "react-toastify";
-import { DeleteIcon } from "@chakra-ui/icons";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
 const Cuisines = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -93,7 +93,7 @@ const Cuisines = () => {
                       className="cursor-pointer trasnform transition-transform hover:scale-150"
                       onClick={() => deleteCusine(cuisine?._id)}
                     >
-                      <DeleteIcon />
+                      <DeleteRoundedIcon />
                     </div>
                   </div>
                 </div>

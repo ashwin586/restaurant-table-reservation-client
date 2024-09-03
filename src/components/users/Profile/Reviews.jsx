@@ -3,8 +3,8 @@ import ProfileSideBar from "./ProfileSideBar";
 import Navbar from "../Navbar";
 import ReactStars from "react-stars";
 import { userAxios } from "../../../services/AxiosInterceptors/userAxios";
-import { Spinner } from "@chakra-ui/react";
 import Footer from "../Footer";
+import { CircularProgress } from "@mui/material";
 
 const Reviews = () => {
   const [reviews, setReviews] = useState(null);
@@ -31,7 +31,7 @@ const Reviews = () => {
       <div className="flex flex-col min-h-screen bg-homeBg">
         {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-            <Spinner />
+            <CircularProgress />
           </div>
         ) : null}
         <Navbar />

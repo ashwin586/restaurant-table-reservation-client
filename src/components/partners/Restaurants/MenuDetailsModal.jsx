@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import { uploadFoodImage } from "../../../services/firebase/storage";
+import { CircularProgress } from "@mui/material";
 
 const MenuDetailsModal = ({ isOpen, closeModal, isSelected, onEditSuccess  }) => {
   const [categories, setCategories] = useState([]);
@@ -273,7 +273,7 @@ const MenuDetailsModal = ({ isOpen, closeModal, isSelected, onEditSuccess  }) =>
       )}
       {isLoading && (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       )}
     </>

@@ -3,7 +3,7 @@ import Navbar from "../Navbar";
 import Axios from "../../../services/axios";
 import ReactStars from "react-stars";
 import { useNavigate } from "react-router-dom";
-import { Spinner } from "@chakra-ui/react";
+import CircularProgress from '@mui/material/CircularProgress';
 import Footer from "../Footer";
 
 const Home = () => {
@@ -45,7 +45,7 @@ const Home = () => {
       <div className="flex flex-col min-h-screen">
         {isLoading ? (
           <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-            <Spinner />
+            <CircularProgress />
           </div>
         ) : null}
         <Navbar />

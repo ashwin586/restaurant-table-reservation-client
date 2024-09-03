@@ -4,7 +4,7 @@ import Sidebar from "../Sidebar";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import { uploadPartnerProfileImage } from "../../../services/firebase/storage";
 import * as Yup from "yup";
-import { Spinner } from "@chakra-ui/react";
+import { CircularProgress } from "@mui/material";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -117,7 +117,7 @@ const Profile = () => {
     <>
       {isLoading ? (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       ) : null}
       <Sidebar />

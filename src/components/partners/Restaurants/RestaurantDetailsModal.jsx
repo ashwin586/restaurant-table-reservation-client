@@ -5,9 +5,10 @@ import { useFormik } from "formik";
 import { uploadRestaurantImage } from "../../../services/firebase/storage";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
 import * as Yup from "yup";
-import TimePicker from "react-time-picker";
-import { Spinner } from "@chakra-ui/react";
+import dayjs from "dayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { CircularProgress } from "@mui/material";
 
 const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -17,6 +18,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
   const mapContainerRef = useRef(null);
   const map = useRef(null);
   const markerRef = useRef(new mapboxgl.Marker());
+
   const isImageFile = (data) => {
     const base64HeaderRegex = /^data:image\/(png|jpeg|jpg);base64,/;
     return base64HeaderRegex.test(data);
@@ -183,40 +185,44 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
                   <p className="error text-red-600 ">{formik.errors.cuisine}</p>
                 )}
               </div>
+
               <div className="flex">
                 <div className="w-full">
-                  <h1>
-                    Opening Time{" "}
-                    <span className="text-indigo-500">
-                      (Use the 24 Hr format:)
-                    </span>
-                  </h1>
+                  {/* <h1>Opening Time </h1> */}
                   <TimePicker
+                    label="Opening Time"
                     name="opens"
                     className="w-full border border-gray-300 rounded p-2 mb-2 me-2"
                     onChange={(time) => {
-                      formik.setFieldValue("opens", toHourMin(time));
+                      formik.setFieldValue(
+                        "opens",
+                        time ? dayjs(time).toISOString() : ""
+                      );
                     }}
-                    value={toHour(formik.values.opens)}
+                    value={
+                      formik.values?.opens ? dayjs(formik.values.opens) : null
+                    }
                   />
                 </div>
                 <div className="w-full ">
-                  <h1>
-                    Closing Time{" "}
-                    <span className="text-indigo-500">
-                      (Use the 24 Hr format:)
-                    </span>{" "}
-                  </h1>
+                  {/* <h1>Closing Time </h1> */}
                   <TimePicker
+                    label="Closing Time"
                     name="closes"
                     className="w-full border border-gray-300 rounded p-2 mb-2 ms-2"
                     onChange={(time) => {
-                      formik.setFieldValue("closes", toHourMin(time));
+                      formik.setFieldValue(
+                        "closes",
+                        time ? dayjs(time).toISOString() : ""
+                      );
                     }}
-                    value={toHour(formik.values?.closes)}
+                    value={
+                      formik.values?.closes ? dayjs(formik.values.closes) : null
+                    }
                   />
                 </div>
               </div>
+
               <div>
                 <h1 className="text-xl">Total Seats:</h1>
                 <input
@@ -386,7 +392,7 @@ const RestaurantDetailsModal = ({ isOpen, isSelected, closeModal }) => {
       )}
       {isLoading && (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       )}
     </>

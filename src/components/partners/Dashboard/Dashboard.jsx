@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import ReactApexChart from "react-apexcharts";
-import { Spinner } from "@chakra-ui/react";
 import { partnerAxios } from "../../../services/AxiosInterceptors/partnerAxios";
+import { CircularProgress } from "@mui/material";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ const Dashboard = () => {
     <>
       {isLoading ? (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
-          <Spinner />
+          <CircularProgress />
         </div>
       ) : null}
       <Sidebar />
